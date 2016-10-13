@@ -1,0 +1,22 @@
+######################################################################################
+# Eco Framework HTACCESS
+# @package Eco
+# @author Shay Anderson
+######################################################################################
+
+RewriteEngine On
+
+# force www. (optional)
+# RewriteCond %{HTTP_HOST} !^www\.
+# RewriteRule ^(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]
+
+# deny access to './_app' dir
+RewriteRule ^_app\/(.*)$ - [R=404,L]
+
+# deny access to SVN dirs
+RewriteRule ^.*?\.svn\/(.*)$ - [R=404,L]
+
+# route to Eco
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
