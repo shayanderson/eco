@@ -1,5 +1,11 @@
 # Eco
-PHP Micro-Framework for PHP 5.5+
+Eco is a PHP Micro-Framework for PHP 5.5+
+
+Install example:
+```
+# wget shayanderson.com/eco.zip
+# unzip ./eco.zip
+```
 
 #### Documentation Topics
 - [**Routing**](#routing)
@@ -345,6 +351,7 @@ Eco offers the following methods:
 
 ## Helper Classes
 Helper classes can be used to simplify common application tasks:
+- [`\Eco\Cache`](https://github.com/shayanderson/eco/blob/master/docs/cache.md) - Server-side cache helper class
 - [`\Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form helper class
 - [`\Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request helper class
 - [`\Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table helper class
