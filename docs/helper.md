@@ -22,12 +22,12 @@ The core helper functions are mostly used to quickly access Eco methods (shortha
 ### Alias Helper Functions
 The alias helper functions are alias functions for the core Eco methods:
 - `breadcrumb()` - `eco::breadcrumb()` alias, example:
-  ```php
-  // access object
-  breadcrumb()->add('x', '/y/z');
-  // or use as function
-  breadcrumb('x', '/y/z');
-  ```
+	```php
+	// access object
+	breadcrumb()->add('x', '/y/z');
+	// or use as function
+	breadcrumb('x', '/y/z');
+	```
 - `conf($file_path, $store)` - `eco::conf()` alias
 - `filter()` - `eco::filter()` alias
 - `flash()` - `eco::flash()` alias, example:
