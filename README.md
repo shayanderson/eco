@@ -1,5 +1,5 @@
 # Eco
-Eco is a PHP Micro-Framework for PHP 5.5+
+Eco is a PHP Framework for PHP 5.5+
 
 Install example:
 ```

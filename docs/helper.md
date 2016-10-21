@@ -11,24 +11,52 @@ Eco offers a collection of helper functions that can be used to quickly access w
 
 ### Core Helper Functions
 The core helper functions are mostly used to quickly access Eco methods (shorthand) and include several other useful functions:
-- `error()` - `eco::error()` alias
+- `error($message, $code, $http_response_code)` - `eco::error()` alias
 - `logger()` - `eco::log()` alias
 - `pa($v)` - HTML or CLI friendly printer for all PHP types
 - `session_exists()` - determine if a PHP session exists
 - `stop()` - `eco::stop()` alias
-- `view()` - `eco::view()` alias
+- `view($template, $view_params)` - `eco::view()` alias
 
 
 ### Alias Helper Functions
 The alias helper functions are alias functions for the core Eco methods:
-- `breadcrumb()` - `eco::breadcrumb()` alias
+- `breadcrumb()` - `eco::breadcrumb()` alias, example:
+  ```php
+  // access object
+  breadcrumb()->add('x', '/y/z');
+  // or use as function
+  breadcrumb('x', '/y/z');
+  ```
 - `conf($file_path, $store)` - `eco::conf()` alias
 - `filter()` - `eco::filter()` alias
-- `flash()` - `eco::flash()` alias
+- `flash()` - `eco::flash()` alias, example:
+  ```php
+  // access object
+  flash()->set('x', 'y');
+  // or use as function
+  flash('x', 'y'); // set
+  flash('x'); // get
+  ```
 - `format()` - `eco::format()` alias
+- `keep()` - alias for eco::clear(), eco::get(), eco::has(), eco::set(), example:
+  ```php
+  // access keep object
+  keep()->set('x', 'y');
+  // or use as function
+  keep('x', 'y'); // set
+  $x = keep('x'); // get
+  ```
 - `param($id, $callback)` - `eco::param()` alias
 - `request()` - `eco::request()` alias
-- `session()` - `eco::session()` alias
+- `session()` - `eco::session()` alias, example:
+  ```php
+  // access object
+  session()->set('x', 'y');
+  // or use as function
+  session('x', 'y'); // set
+  $x = session('x'); // get
+  ```
 - `validate()` - `eco::validate()` alias
 
 

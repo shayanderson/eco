@@ -1,6 +1,6 @@
 <?php
 /**
- * Eco is a PHP Micro-Framework for PHP 5.5+
+ * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
  * @copyright 2015-2016 Shay Anderson <http://www.shayanderson.com>
@@ -8,6 +8,7 @@
  * @link <https://github.com/shayanderson/eco>
  */
 
+use Eco\Factory\Keep;
 use Eco\System;
 
 /**
@@ -17,10 +18,17 @@ use Eco\System;
 /**
  * View breadcrumb helper
  *
+ * @param string $title
+ * @param string $url
  * @return \Eco\Factory\Breadcrumb
  */
-function breadcrumb()
+function breadcrumb($title = null, $url = null)
 {
+	if(func_num_args())
+	{
+		System::breadcrumb()->add($title, $url);
+	}
+
 	return System::breadcrumb();
 }
 
@@ -54,10 +62,21 @@ function filter()
 /**
  * Session flash helper
  *
+ * @param string $key
+ * @param mixed $value
  * @return \Eco\Factory\Session\Flash
  */
-function flash()
+function flash($key = null, $value = null)
 {
+	if(func_num_args() === 1)
+	{
+		System::flash()->get($key);
+	}
+	else if(func_num_args() === 2)
+	{
+		System::flash()->set($key, $value);
+	}
+
 	return System::flash();
 }
 
@@ -69,6 +88,27 @@ function flash()
 function format()
 {
 	return System::format();
+}
+
+/**
+ * Keep helper
+ *
+ * @param string $key
+ * @param mixed $value
+ * @return \Eco\Factory\Keep
+ */
+function keep($key = null, $value = null)
+{
+	if(func_num_args() === 1)
+	{
+		return Keep::getInstance()->get($key);
+	}
+	else if(func_num_args() === 2)
+	{
+		Keep::getInstance()->set($key, $value);
+	}
+
+	return Keep::getInstance();
 }
 
 /**
@@ -96,10 +136,21 @@ function request()
 /**
  * Session helper
  *
+ * @param string $key
+ * @param mixed $value
  * @return \Eco\Factory\Session
  */
-function session()
+function session($key = null, $value = null)
 {
+	if(func_num_args() === 1)
+	{
+		System::session()->get($key);
+	}
+	else if(func_num_args() === 2)
+	{
+		System::session()->set($key, $value);
+	}
+
 	return System::session();
 }
 
