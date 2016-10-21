@@ -33,32 +33,37 @@ The alias helper functions are alias functions for the core Eco methods:
 - `conf($file_path, $store)` - `eco::conf()` alias
 - `filter()` - `eco::filter()` alias
 - `flash()` - `eco::flash()` alias, example:
-  ```php
-  // access object
-  flash()->set('x', 'y');
-  // or use as function
-  flash('x', 'y'); // set
-  flash('x'); // get
-  ```
+
+    ```php
+    // access object
+    flash()->set('x', 'y');
+    // or use as function
+    flash('x', 'y'); // set
+    flash('x'); // get
+    ```
+
 - `format()` - `eco::format()` alias
 - `keep()` - alias for eco::clear(), eco::get(), eco::has(), eco::set(), example:
-  ```php
-  // access keep object
-  keep()->set('x', 'y');
-  // or use as function
-  keep('x', 'y'); // set
-  $x = keep('x'); // get
-  ```
+
+    ```php
+    // access keep object
+    keep()->set('x', 'y');
+    // or use as function
+    keep('x', 'y'); // set
+    $x = keep('x'); // get
+    ```
+
 - `param($id, $callback)` - `eco::param()` alias
 - `request()` - `eco::request()` alias
 - `session()` - `eco::session()` alias, example:
-  ```php
-  // access object
-  session()->set('x', 'y');
-  // or use as function
-  session('x', 'y'); // set
-  $x = session('x'); // get
-  ```
+    ```php
+    // access object
+    session()->set('x', 'y');
+    // or use as function
+    session('x', 'y'); // set
+    $x = session('x'); // get
+    ```
+
 - `validate()` - `eco::validate()` alias
 
 
