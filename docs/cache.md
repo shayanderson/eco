@@ -112,4 +112,5 @@ These are the `\Eco\Cache` methods:
 - `metadata($use_metadata)` - use metadata
 - `path($path)` - set cache subpath
 - `prefix($name)` - set cache file prefix
+- `serialize($use_serialization)` - use cache data serialization
 - `set($value)` - write cache value
