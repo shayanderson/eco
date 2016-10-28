@@ -17,39 +17,28 @@ namespace Eco;
 class Cache
 {
 	/**
-	 * Global use compression flag
-	 *
-	 * @var boolean
+	 * Global conf keys
 	 */
-	private static $__conf_compression = false;
+	const CONF_COMPRESSION = 'compression';
+	const CONF_ENCODING = 'encoding';
+	const CONF_EXPIRE = 'expire';
+	const CONF_METADATA = 'metadata';
+	const CONF_PATH = 'path';
+	const CONF_SERIALIZE = 'serialize';
 
 	/**
-	 * Global use encoding flag
+	 * Global conf
 	 *
-	 * @var boolean
+	 * @var array
 	 */
-	private static $__conf_encode = false;
-
-	/**
-	 * Global expire time
-	 *
-	 * @var mixed
-	 */
-	private static $__conf_expire = 0;
-
-	/**
-	 * Global metadata flag
-	 *
-	 * @var boolean
-	 */
-	private static $__conf_is_metadata = false;
-
-	/**
-	 * Global cache path
-	 *
-	 * @var string
-	 */
-	private static $__conf_path;
+	private static $__conf = [
+		self::CONF_COMPRESSION => false,
+		self::CONF_ENCODING => false,
+		self::CONF_EXPIRE => 0,
+		self::CONF_METADATA => false,
+		self::CONF_PATH => null,
+		self::CONF_SERIALIZE => true
+	];
 
 	/**
 	 * Expire time
@@ -85,6 +74,13 @@ class Cache
 	 * @var boolean
 	 */
 	private $__is_metadata = false;
+
+	/**
+	 * Use serialization
+	 *
+	 * @var boolean
+	 */
+	private $__is_serialize = true;
 
 	/**
 	 * Cache key
@@ -129,17 +125,21 @@ class Cache
 	 */
 	public function __construct($key = null)
 	{
-		if(!self::$__conf_path)
+		if(!self::$__conf[self::CONF_PATH])
 		{
 			throw new \Exception(__METHOD__ . ': global cache path is not set');
 		}
 
+		self::$__conf[self::CONF_PATH] = rtrim(self::$__conf[self::CONF_PATH],
+			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
 		// set defaults
-		$this->compression(self::$__conf_compression);
-		$this->encoding(self::$__conf_encode);
-		$this->expire(self::$__conf_expire);
-		$this->__path = self::$__conf_path;
-		$this->metadata(self::$__conf_is_metadata);
+		$this->compression(self::$__conf[self::CONF_COMPRESSION]);
+		$this->encoding(self::$__conf[self::CONF_ENCODING]);
+		$this->expire(self::$__conf[self::CONF_EXPIRE]);
+		$this->metadata(self::$__conf[self::CONF_METADATA]);
+		$this->__path = self::$__conf[self::CONF_PATH];
+		$this->serialize(self::$__conf[self::CONF_SERIALIZE]);
 
 		if(func_num_args())
 		{
@@ -156,14 +156,29 @@ class Cache
 	{
 		if($this->__is_compression)
 		{
+			if(!$this->__is_serialize && !$this->__is_metadata)
+			{
+				return @gzuncompress(file_get_contents($this->getFilePath()));
+			}
+
 			return @unserialize(gzuncompress(file_get_contents($this->getFilePath())));
 		}
 		else if($this->__is_encode)
 		{
+			if(!$this->__is_serialize && !$this->__is_metadata)
+			{
+				return @base64_decode(file_get_contents($this->getFilePath()));
+			}
+
 			return @unserialize(base64_decode(file_get_contents($this->getFilePath())));
 		}
 		else
 		{
+			if(!$this->__is_serialize && !$this->__is_metadata)
+			{
+				@file_get_contents($this->getFilePath());
+			}
+
 			return @unserialize(file_get_contents($this->getFilePath()));
 		}
 	}
@@ -425,7 +440,7 @@ class Cache
 	{
 		$this->__path_relative = rtrim(ltrim($path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR)
 			. DIRECTORY_SEPARATOR;
-		$this->__path = self::$__conf_path . $this->__path_relative;
+		$this->__path = self::$__conf[self::CONF_PATH] . $this->__path_relative;
 	}
 
 	/**
@@ -437,6 +452,17 @@ class Cache
 	public function prefix($name)
 	{
 		$this->__prefix = $name;
+	}
+
+	/**
+	 * Use serialization flag setter
+	 *
+	 * @param boolean $use_serialization
+	 * @return void
+	 */
+	public function serialize($use_serialization)
+	{
+		$this->__is_serialize = (bool)$use_serialization;
 	}
 
 	/**
@@ -452,7 +478,7 @@ class Cache
 		{
 			$parts = explode(DIRECTORY_SEPARATOR, rtrim($this->__path_relative,
 				DIRECTORY_SEPARATOR));
-			$path = self::$__conf_path;
+			$path = self::$__conf[self::CONF_PATH];
 
 			foreach($parts as $v)
 			{
@@ -480,17 +506,39 @@ class Cache
 
 		if($this->__is_compression)
 		{
-			$is_write = @file_put_contents($this->getFilePath(), gzcompress(serialize($value)),
-				LOCK_EX);
+			if(!$this->__is_serialize && !$this->__is_metadata)
+			{
+				$is_write = @file_put_contents($this->getFilePath(), gzcompress($value), LOCK_EX);
+			}
+			else
+			{
+				$is_write = @file_put_contents($this->getFilePath(), gzcompress(serialize($value)),
+					LOCK_EX);
+			}
 		}
 		else if($this->__is_encode)
 		{
-			$is_write = @file_put_contents($this->getFilePath(), base64_encode(serialize($value)),
-				LOCK_EX);
+			if(!$this->__is_serialize && !$this->__is_metadata)
+			{
+				$is_write = @file_put_contents($this->getFilePath(), base64_encode($value),
+					LOCK_EX);
+			}
+			else
+			{
+				$is_write = @file_put_contents($this->getFilePath(),
+					base64_encode(serialize($value)), LOCK_EX);
+			}
 		}
 		else
 		{
-			$is_write = @file_put_contents($this->getFilePath(), serialize($value), LOCK_EX);
+			if(!$this->__is_serialize && !$this->__is_metadata)
+			{
+				$is_write = @file_put_contents($this->getFilePath(), $value, LOCK_EX);
+			}
+			else
+			{
+				$is_write = @file_put_contents($this->getFilePath(), serialize($value), LOCK_EX);
+			}
 		}
 
 		if($is_write === false)
@@ -501,57 +549,27 @@ class Cache
 	}
 
 	/**
-	 * Global use compression flag setter (requires ZLIB functions)
+	 * Global config setter
 	 *
-	 * @param boolean $use_compression
+	 * @param mixed $key (array|string)
+	 * @param mixed $value
 	 * @return void
 	 */
-	public static function setGlobalCompression($use_compression)
+	public static function setGlobalConf($key, $value = null)
 	{
-		self::$__conf_compression = (bool)$use_compression;
-	}
+		if(is_array($key))
+		{
+			foreach($key as $k => $v)
+			{
+				self::setGlobalConf($k, $v);
+			}
 
-	/**
-	 * Global use encoding flag setter
-	 *
-	 * @param boolean $use_encoding
-	 * @return void
-	 */
-	public static function setGlobalEncoding($use_encoding)
-	{
-		self::$__conf_encode = (bool)$use_encoding;
-	}
+			return;
+		}
 
-	/**
-	 * Global expire time setter
-	 *
-	 * @param mixed $time (ex: '30 seconds', or 0 for no expire)
-	 * @return void
-	 */
-	public static function setGlobalExpire($time)
-	{
-		self::$__conf_expire = strtotime($time);
-	}
-
-	/**
-	 * Global use metadata flag setter
-	 *
-	 * @param boolean $use_metadata
-	 * @return void
-	 */
-	public static function setGlobalMetadata($use_metadata)
-	{
-		self::$__conf_is_metadata = (bool)$use_metadata;
-	}
-
-	/**
-	 * Global cache path setter
-	 *
-	 * @param string $path
-	 * @return void
-	 */
-	public static function setGlobalPath($path)
-	{
-		self::$__conf_path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		if(isset(self::$__conf[$key]) || array_key_exists($key, self::$__conf))
+		{
+			self::$__conf[$key] = $value;
+		}
 	}
 }

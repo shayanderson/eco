@@ -2,7 +2,7 @@
 The `\Eco\Cache` class can be used for server-side caching, for example:
 ```php
 // set global cache root directory (required)
-\Eco\Cache::setGlobalPath(PATH_APP . 'var/cache');
+\Eco\Cache::setGlobalConf('path', PATH_APP . 'var/cache');
 
 // set cache object with cache key
 $cache = new \Eco\Cache('article-14');
@@ -25,12 +25,12 @@ else
     echo $cache->get();
 }
 ```
-All cache data is serialized so all PHP types can be cached, for example:
+All cache data is serialized by default so all PHP types can be cached, for example:
 ```php
 $data = ['x' => 'y'];
 $cache->set($data);
 var_dump($cache->get());
-// array(1) { ["x"]=> string(1) "y" } 
+// array(1) { ["x"]=> string(1) "y" }
 ```
 
 ### Cache Path
@@ -45,7 +45,7 @@ $cache->path('account');
 An expire time can be set for cache files:
 ```php
 // globally set for all cache files
-\Eco\Cache::setGlobalExpire('5 minutes');
+\Eco\Cache::setGlobalConf('expire', '5 minutes');
 
 // or set locally (override global expire)
 $cache->expire('30 seconds');
@@ -72,13 +72,27 @@ $cache->encoding(true);
 ```
 > Encoding cannot be used with compression
 
-### Global Class Methods
-These are the `\Eco\Cache` methods use for global settings:
-- `setGlobalCompression($use_compression)` - use cache file compression (requires ZLIB functions), cannot be used with encoding
-- `setGlobalEncoding($use_encoding)` - use cache file encoding (base64), cannot be used with compression
-- `setGlobalExpire($time)` - set global expire time
-- `setGlobalMetadata($use_metadata)` - use cache file metadata
-- `setGlobalPath($path)` - set global cache path
+### Global Configuration Settings
+Global cache settings are handled by the `\Eco\Cache::setGlobalConf()` method, for example:
+```php
+\Eco\Cache::setGlobalConf('path', PATH_APP . 'var/cache');
+
+// or use class const config key
+\Eco\Cache::setGlobalConf(\Eco\Cache::CONF_PATH, PATH_APP . 'var/cache');
+
+// or set as array
+\Eco\Cache::setGlobalConf([
+    'path' => PATH_ROOT . 'cache',
+    'expire' => '30 seconds'
+]);
+```
+All the global settings are:
+- `compression` (or `\Eco\Cache::CONF_COMPRESSION`) - use cache file compression (requires ZLIB functions), cannot be used with encoding (default: `false`)
+- `encoding` (or `\Eco\Cache::CONF_ENCODING`) - use cache file encoding (base64), cannot be used with compression (default: `false`)
+- `expire` (or `\Eco\Cache::CONF_EXPIRE`) - set global expire time (default: `0`, no expire)
+- `metadata` (or `\Eco\Cache::CONF_METADATA`) - use cache file metadata (default: `false`)
+- `path` (or `\Eco\Cache::CONF_PATH`) - set global cache path (required)
+- `serialize` (or `\Eco\Cache::CONF_SERIALIZE`) - serialize the cache data, if metadata is used serialization is forced (default: `true`)
 
 ### Class Methods
 These are the `\Eco\Cache` methods:

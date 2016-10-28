@@ -169,7 +169,11 @@ class PageController
         $page = PageModel::get($id);
 
         // set view param
-        view()->set('title', $page->title);
+        eco::view()->set('title', $page->title);
+        
+        // or use view() helper function
+        // view()->set('title', $page->title);
+        
         // or like this:
         view()->author = $page->author;
 
@@ -181,6 +185,7 @@ class PageController
     }
 }
 ```
+> Route parameters can also be accessed using [`Router`](https://github.com/shayanderson/eco/blob/master/docs/router.md) class methods.
 
 #### View Template
 The `_app/tpl/page/view.tpl` file example:

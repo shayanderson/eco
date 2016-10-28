@@ -24,12 +24,12 @@ eco::configure([
 
 // load helper functions (optional)
 require_once PATH_LIB . 'vendor/Eco/helper/eco.php';
-// require_once PATH_LIB . 'vendor/Eco/helper/alias.php';
-// require_once PATH_LIB . 'vendor/Eco/helper/factory.php';
-// require_once PATH_LIB . 'vendor/Eco/helper/flash.php';
-// require_once PATH_LIB . 'vendor/Eco/helper/redirect.php';
-// require_once PATH_LIB . 'vendor/Eco/helper/request.php';
-// require_once PATH_LIB . 'vendor/Eco/helper/view.php';
+require_once PATH_LIB . 'vendor/Eco/helper/alias.php';
+require_once PATH_LIB . 'vendor/Eco/helper/factory.php';
+require_once PATH_LIB . 'vendor/Eco/helper/flash.php';
+require_once PATH_LIB . 'vendor/Eco/helper/redirect.php';
+require_once PATH_LIB . 'vendor/Eco/helper/request.php';
+require_once PATH_LIB . 'vendor/Eco/helper/view.php';
 
 // set routes
 eco::route([
