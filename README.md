@@ -17,7 +17,7 @@ Install example:
 - [**Configuration**](#configuration)
 - [**Core Methods**](#core-methods)
 - [**Helper Classes**](#helper-classes)
-- [**Helper Functions**](#helper-functions)
+- [**Helper Functions**](https://github.com/shayanderson/eco/blob/master/docs/helper.md)
 - [**Extending Eco**](#extending-eco)
 
 ## Routing

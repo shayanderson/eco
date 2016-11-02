@@ -25,7 +25,7 @@ else
     echo $cache->get();
 }
 ```
-All cache data is serialized by default so all PHP types can be cached, for example:
+All cache data is serialized by default so different PHP types can be cached, for example:
 ```php
 $data = ['x' => 'y'];
 $cache->set($data);
@@ -59,7 +59,7 @@ $cache->metadata(true);
 ```
 
 ### Cache File Compression
-Cache file compression can be used (is disabled by default) and requires the ZLIB functions, for example:
+Cache file compression can be used (disabled by default) and requires the ZLIB functions, for example:
 ```php
 $cache->compression(true);
 ```
