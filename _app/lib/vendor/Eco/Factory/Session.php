@@ -21,8 +21,7 @@ class Session extends \Eco\Factory
 	 */
 	protected function __construct()
 	{
-		session_cache_limiter(false);
-		session_start();
+		$this->start();
 	}
 
 	/**
@@ -41,8 +40,8 @@ class Session extends \Eco\Factory
 				$c['path'], $c['domain'], $c['secure'], $c['httponly']);
 		}
 
-		session_destroy();
 		session_regenerate_id();
+		session_destroy();
 	}
 
 	/**
@@ -131,5 +130,16 @@ class Session extends \Eco\Factory
 	public function setChild($key, $child_key, $value)
 	{
 		$_SESSION[$key][$child_key] = $value;
+	}
+
+	/**
+	 * Start session
+	 *
+	 * @return void
+	 */
+	public function start()
+	{
+		session_cache_limiter(false);
+		@session_start();
 	}
 }

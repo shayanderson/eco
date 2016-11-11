@@ -19,6 +19,13 @@ eco::session()->clear('user_id');
 // destroy entire session
 eco::session()->destroy();
 ```
+> If a session is stopped a new session can be started with the `start()` method:
+```php
+eco::session()->destroy();
+// more
+eco::session()->start(); // start new session
+```
+
 Arrays can also be handled with the Session class, for example:
 ```php
 // sets session array ['user' => ['id' => 14]]
