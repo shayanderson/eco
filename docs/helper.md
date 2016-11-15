@@ -1,12 +1,12 @@
 ## Helper Functions
 Eco offers a collection of helper functions that can be used to quickly access widely used methods and other functionality. The available helper functions are divided into files that can be included as desired:
-- **core** - `PATH_LIB . 'vendor/Eco/helper/eco.php'`
-- **alias** - `PATH_LIB . 'vendor/Eco/helper/alias.php'`
-- **factory** - `PATH_LIB . 'vendor/Eco/helper/factory.php'`
-- **flash** - `PATH_LIB . 'vendor/Eco/helper/flash.php'`
-- **redirect** - `PATH_LIB . 'vendor/Eco/helper/redirect.php'`
-- **request** - `PATH_LIB . 'vendor/Eco/helper/request.php'`
-- **view** - `PATH_LIB . 'vendor/Eco/helper/view.php'`
+- [**core**](#core-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/eco.php'`
+- [**alias**](#alias-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/alias.php'`
+- [**factory**](#factory-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/factory.php'`
+- [**flash**](#flash-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/flash.php'`
+- [**redirect**](#redirect-helper-function) - `PATH_LIB . 'vendor/Eco/helper/redirect.php'`
+- [**request**](#request-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/request.php'`
+- [**view**](#view-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/view.php'`
 
 
 ### Core Helper Functions
