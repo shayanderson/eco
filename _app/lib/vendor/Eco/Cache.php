@@ -176,7 +176,7 @@ class Cache
 		{
 			if(!$this->__is_serialize && !$this->__is_metadata)
 			{
-				@file_get_contents($this->getFilePath());
+				return @file_get_contents($this->getFilePath());
 			}
 
 			return @unserialize(file_get_contents($this->getFilePath()));
