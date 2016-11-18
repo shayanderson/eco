@@ -57,19 +57,20 @@ class View extends \Eco\Factory
 	public function display($template)
 	{
 		// format template name
-		$template = rtrim(System::configure(System::CONF_PATH_TEMPLATE), DIRECTORY_SEPARATOR)
+		$template = rtrim(System::conf()->__eco__->path->template, DIRECTORY_SEPARATOR)
 			. DIRECTORY_SEPARATOR . preg_replace('/[^\w\-\.\/\\\\]{1}/', '#', $template) . '.tpl';
 
 		if(!is_file($template))
 		{
-			System::log()->error('Template file does not exist \'' . $template . '\'', 'Eco');
-			System::error('A framework error has occurred');
+			System::error('Template file does not exist \'' . $template . '\'', null, 'Eco');
 			return;
 		}
 
 		extract($this->__param, EXTR_OVERWRITE);
 
 		include $template; // display template file
+
+		System::log()->debug('View template file loaded \'' . $template . '\'');
 	}
 
 	/**

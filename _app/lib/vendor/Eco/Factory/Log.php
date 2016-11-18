@@ -19,6 +19,15 @@ use Eco\System;
 class Log extends \Eco\Factory
 {
 	/**
+	 * Log levels
+	 */
+	const LOG_DEBUG = 4;
+	const LOG_ERROR = 1;
+	const LOG_NONE = 5;
+	const LOG_NOTICE = 3;
+	const LOG_WARNING = 2;
+
+	/**
 	 * Log handler
 	 *
 	 * @var \callable
@@ -50,7 +59,7 @@ class Log extends \Eco\Factory
 	 */
 	private function __add($message, $category, $level, $info)
 	{
-		if($level < System::LOG_NONE && $level <= System::configure(System::CONF_LOG_LEVEL))
+		if($level < self::LOG_NONE && $level <= System::conf()->__eco__->log->level)
 		{
 			if($this->__handler !== null) // log handler
 			{
@@ -85,7 +94,7 @@ class Log extends \Eco\Factory
 	 */
 	public function debug($message, $category = null, $info = null)
 	{
-		$this->__add($message, $category, System::LOG_DEBUG, $info);
+		$this->__add($message, $category, self::LOG_DEBUG, $info);
 	}
 
 	/**
@@ -98,7 +107,7 @@ class Log extends \Eco\Factory
 	 */
 	public function error($message, $category = null, $info = null)
 	{
-		$this->__add($message, $category, System::LOG_ERROR, $info);
+		$this->__add($message, $category, self::LOG_ERROR, $info);
 	}
 
 	/**
@@ -121,7 +130,7 @@ class Log extends \Eco\Factory
 	 */
 	public function notice($message, $category = null, $info = null)
 	{
-		$this->__add($message, $category, System::LOG_NOTICE, $info);
+		$this->__add($message, $category, self::LOG_NOTICE, $info);
 	}
 
 	/**
@@ -145,6 +154,6 @@ class Log extends \Eco\Factory
 	 */
 	public function warning($message, $category = null, $info = null)
 	{
-		$this->__add($message, $category, System::LOG_WARNING, $info);
+		$this->__add($message, $category, self::LOG_WARNING, $info);
 	}
 }

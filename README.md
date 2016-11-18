@@ -66,6 +66,27 @@ class AccountController
 }
 ```
 
+#### CLI Routing
+CLI routing is simple to use, for example:
+```php
+eco:route('bin/test/:id', function($id) {
+    echo 'CLI test, id: ' . $id;
+});
+```
+Now a CLI command can be issued:
+```
+$ php index.php bin/test/5
+Bin test: 5
+```
+> The above example would also work in a Web browser. To create a CLI only route (will not work in Web browser) add a `$` to the beginning of route, for example:
+```php
+// this route will only work as CLI command
+// the request '/bin/test/5' in a Web browser would result in a 404 error
+eco:route('$bin/test/:id', function($id) {
+    echo 'CLI test, id: ' . $id;
+});
+```
+
 
 ## Route Parameters
 Named route parameters:
@@ -170,10 +191,10 @@ class PageController
 
         // set view param
         eco::view()->set('title', $page->title);
-        
+
         // or use view() helper function
         // view()->set('title', $page->title);
-        
+
         // or like this:
         view()->author = $page->author;
 
@@ -238,9 +259,11 @@ eco::error('Error message');
 error('Something bad');
 // custom error code
 error('Page not found', 404);
+// add log category
+error('Failed to load user', null, 'account');
 // by default the HTTP error response code is sent
 // to not send HTTP code use:
-error('Page not found', 404, false);
+error('Page not found', 404, 'category' false);
 ```
 The error message sent to the `eco::error()` function can be accessed using:
 ```php
@@ -267,6 +290,9 @@ eco::hook(eco::HOOK_AFTER, function() { /* do something */ });
 ## Configuration
 Application and Eco configuration settings are handled separately.
 
+#### Eco Configuration
+The Eco configuration settings file is located at `_app/com/conf/eco.conf.php` and contains all framework settings. All documentation for Eco configuration settings can be found in the file.
+
 #### Application Configuration
 Application configuration settings can be stored by Eco, example:
 ```php
@@ -286,7 +312,7 @@ return [
     'core' => [ /* more */ ]
 ];
 ```
-> Configuration settings cannot be overwritten when using multiple files, so the primary array keys must be unique even in different files
+> Configuration settings cannot be overwritten when using multiple files, so the primary array keys must be unique even in different files. Never use the primary array key `__eco__` which is used by Eco for internal framework settings.
 
 Configuration settings can also be used separately from Eco, for example:
 ```php
@@ -296,44 +322,14 @@ $conf = eco::conf(PATH_COM . 'app.conf.php', false);
 $db_password = $conf->db->password;
 ```
 
-#### Eco Configuration
-The Eco configuration settings are set in the `_app/com/app.bootstrap.php` file:
-```php
-eco::configure([
-	eco::CONF_PATH => PATH_MODULE,
-	// more
-]);
-// or set single:
-eco::configure(eco::CONF_PATH_TEMPLATE, PATH_TEMPLATE);
-```
-This is all Eco settings:
-- **eco::CONF_LOG_ERROR_LEVEL** - sets what errors are logged (default: `eco::ERROR_LOG_ALL`), options:
-  - eco::ERROR_LOG_ALL - all errors are logged (403, 404, 500)
-  - eco::ERROR_LOG_SERVER - only 500 errors are logged
-  - eco::ERROR_LOG_NONE - no errors are logged
-- **eco::CONF_LOG_ERROR_WRITE_LEVEL** - sets what errors are sent to local system log writer (default `eco::ERROR_LOG_SERVER`), options:
-  - eco::ERROR_LOG_ALL - all errors are logged (403, 404, 500)
-  - eco::ERROR_LOG_SERVER - only 500 errors are logged
-  - eco::ERROR_LOG_NONE - no errors are logged
-- **eco::CONF_LOG_LEVEL** - set what level of log messages are logged (default: `eco::LOG_ERROR`), options:
-  - eco::LOG_NONE - no messages
-  - eco::LOG_ERROR - error messages
-  - eco::LOG_WARNING - warnings and above
-  - eco::LOG_NOTICE - notices and above
-  - eco::LOG_DEBUG - all messages
-- **eco::CONF_PATH** - sets path where controller files are loaded from
-- **eco::CONF_PATH_TEMPLATE** - sets path where view template files are loaded from
-- **eco::CONF_SANITIZE_REQUEST_PARAMS** - auto sanitize request params GET and POST (default: `true`), options: `true` or `false`
-
 
 ## Core Methods
 Eco offers the following methods:
 - [`eco::autoload($paths)`](https://github.com/shayanderson/eco/blob/master/docs/autoload.md) - class autoloader
 - [`eco::breadcrumb()`](https://github.com/shayanderson/eco/blob/master/docs/breadcrumb.md) - access Breadcrumb class ([`breadcrumb()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
 - [`eco::clear($key)`](https://github.com/shayanderson/eco/blob/master/docs/vars.md) - clear global variable
-- [`eco::conf($file_path, $store)`](#application-configuration) - register / load application configuration settings file ([`conf()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
-- [`eco::configure($key, $value)`](#eco-configuration) - set Eco core configuration settings
-- [`eco::error($message, $code, $http_response_code)`](#error-handling) - trigger an error ([`error()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function available)
+- [`eco::conf($file_path, $store)`](#configuration) - register / load application configuration settings file ([`conf()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
+- [`eco::error($message, $code, $log_category, $http_response_code)`](#error-handling) - trigger an error ([`error()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function available)
 - [`eco::filter()`](https://github.com/shayanderson/eco/blob/master/docs/data.md#filter-class) - access data Filter class ([`filter()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
 - [`eco::flash()`](https://github.com/shayanderson/eco/blob/master/docs/session.md#flash-class) - access session Flash class ([`flash()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
 - [`eco::format()`](https://github.com/shayanderson/eco/blob/master/docs/data.md#format-class) - access data Format class ([`format()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)

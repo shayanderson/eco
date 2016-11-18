@@ -29,28 +29,11 @@ use Eco\Factory\View;
 class System
 {
 	/**
-	 * Configure keys
-	 */
-	const CONF_LOG_ERROR_LEVEL = 1;
-	const CONF_LOG_ERROR_WRITE_LEVEL = 2;
-	const CONF_LOG_LEVEL = 3;
-	const CONF_PATH = 4;
-	const CONF_PATH_TEMPLATE = 5;
-	const CONF_SANITIZE_REQUEST_PARAMS = 6;
-
-	/**
 	 * Error codes
 	 */
 	const ERROR_FORBIDDEN = 403;
 	const ERROR_NOT_FOUND = 404;
 	const ERROR_SERVER = 500;
-
-	/**
-	 * Error log levels
-	 */
-	const ERROR_LOG_ALL = 2;
-	const ERROR_LOG_NONE = 3;
-	const ERROR_LOG_SERVER = 1;
 
 	/**
 	 * Hook types
@@ -60,27 +43,11 @@ class System
 	const HOOK_MIDDLE = 'middle';
 
 	/**
-	 * Log levels
-	 */
-	const LOG_DEBUG = 4;
-	const LOG_ERROR = 1;
-	const LOG_NONE = 5;
-	const LOG_NOTICE = 3;
-	const LOG_WARNING = 2;
-
-	/**
 	 * Application configuration settings
 	 *
 	 * @var \stdClass
 	 */
 	private static $__conf;
-
-	/**
-	 * Configuration settings
-	 *
-	 * @var array
-	 */
-	private static $__configure;
 
 	/**
 	 * Last error message
@@ -203,61 +170,17 @@ class System
 	}
 
 	/**
-	 * Configure Eco settings
-	 *
-	 * @return mixed
-	 */
-	final public static function configure($key, $value = null)
-	{
-		if(self::$__configure === null) // init default settings
-		{
-			self::$__configure = [
-				self::CONF_LOG_ERROR_LEVEL => self::ERROR_LOG_ALL,
-				self::CONF_LOG_ERROR_WRITE_LEVEL => self::ERROR_LOG_SERVER,
-				self::CONF_LOG_LEVEL => self::LOG_ERROR,
-				self::CONF_PATH => null,
-				self::CONF_PATH_TEMPLATE => null,
-				self::CONF_SANITIZE_REQUEST_PARAMS => true
-			];
-		}
-
-		if(func_num_args() === 1)
-		{
-			if(is_array($key))
-			{
-				foreach($key as $k => $v)
-				{
-					self::configure($k, $v);
-				}
-
-				return;
-			}
-
-			if($key === null) // get all
-			{
-				return self::$__configure;
-			}
-
-			return isset(self::$__configure[$key]) || array_key_exists($key, self::$__configure)
-				? self::$__configure[$key] : null;
-		}
-
-		if(isset(self::$__configure[$key]) || array_key_exists($key, self::$__configure))
-		{
-			self::$__configure[$key] = $value; // setter
-		}
-	}
-
-	/**
 	 * Error handler (ex: 403 Forbidden, 404 Not Found, 500 Internal Server Error)
 	 *
 	 * @staticvar boolean $is_error
 	 * @param string $message
 	 * @param int $code (ex: 403)
+	 * @param string $log_category
 	 * @param boolean $http_response_code (set HTTP response code)
 	 * @return void
 	 */
-	final public static function error($message, $code = null, $http_response_code = true)
+	final public static function error($message, $code = null, $log_category = null,
+		$http_response_code = true)
 	{
 		static $is_error = false;
 
@@ -287,25 +210,22 @@ class System
 			self::$__error_last = $message;
 		}
 
-		$error_log_level = self::configure(self::CONF_LOG_ERROR_LEVEL);
-		if($error_log_level < self::ERROR_LOG_NONE)
+		$error_log_level = (int)self::conf()->__eco__->log->error_level;
+		if($error_log_level < 3)
 		{
-			if($error_log_level === self::ERROR_LOG_ALL
-				|| ( $error_log_level === self::ERROR_LOG_SERVER
-					&& $code === self::ERROR_SERVER ))
+			if($error_log_level === 2 || ( $error_log_level === 1 && $code === self::ERROR_SERVER ))
 			{
 				// log error
 				self::log()->error('Error (' . $code . ')' . ( $message !== null
-					? ': ' . $message : '' ), 'Eco');
+					? ': ' . $message : '' ), $log_category);
 			}
 		}
 
-		$error_log_write_level = self::configure(self::CONF_LOG_ERROR_WRITE_LEVEL);
-		if($error_log_write_level < self::ERROR_LOG_NONE)
+		$error_log_write_level = (int)self::conf()->__eco__->log->error_write_level;
+		if($error_log_write_level < 3)
 		{
-			if($error_log_write_level === self::ERROR_LOG_ALL
-				|| ( $error_log_write_level === self::ERROR_LOG_SERVER
-					&& $code === self::ERROR_SERVER ))
+			if($error_log_write_level === 2
+				|| ( $error_log_write_level === 1 && $code === self::ERROR_SERVER ))
 			{
 				// write error to log
 				error_log('Eco Error (' . $code . '): '
@@ -495,25 +415,18 @@ class System
 	 */
 	final public static function run()
 	{
-		if(self::configure(self::CONF_SANITIZE_REQUEST_PARAMS))
+		if(self::conf()->__eco__->request->sanitize_params)
 		{
 			// sanitize request params
 			$_GET = filter_var_array($_GET, FILTER_SANITIZE_STRING);
 			$_POST = filter_var_array($_POST, FILTER_SANITIZE_STRING);
 		}
 
-		if(empty(self::configure(self::CONF_PATH)))
-		{
-			self::log()->error('Failed to validate \'CONF_PATH\' value, must not be empty', 'Eco');
-			self::error('A framework error has occurred');
-			return;
-		}
-
 		self::hook(self::HOOK_BEFORE);
 
 		// format path
-		self::configure(self::CONF_PATH, rtrim(self::configure(self::CONF_PATH),
-			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR);
+		self::conf()->__eco__->path->controller = rtrim(self::conf()->__eco__->path->controller,
+			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		Router::getInstance()->dispatch();
 	}

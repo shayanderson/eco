@@ -61,6 +61,13 @@ class Router extends \Eco\Factory
 	private $__route_callback = [];
 
 	/**
+	 * CLI only routes
+	 *
+	 * @var array
+	 */
+	private $__route_cli = [];
+
+	/**
 	 * Request
 	 *
 	 * @var string
@@ -80,7 +87,19 @@ class Router extends \Eco\Factory
 	protected function __construct()
 	{
 		// set request
-		$request = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
+		if(isset($_SERVER['REQUEST_URI']))
+		{
+			$request = $_SERVER['REQUEST_URI'];
+		}
+		else if($this->__isCli()) // CLI
+		{
+			$request = $_SERVER['argv'][1];
+		}
+		else
+		{
+			System::log()->warning('Failed to detect request', 'Eco');
+			$request = '/';
+		}
 
 		if(($pos = strpos($request, '?')) !== false)
 		{
@@ -117,7 +136,7 @@ class Router extends \Eco\Factory
 	 */
 	private function __classLoad($class, $type)
 	{
-		$class_path = System::configure(System::CONF_PATH)
+		$class_path = System::conf()->__eco__->path->controller
 			. str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
 
 		if(class_exists($class, false)) // class is ready
@@ -137,14 +156,12 @@ class Router extends \Eco\Factory
 				return true;
 			}
 
-			System::log()->error('Class \'' . $class . '\' does not exist in class file \''
-				. $class_path . '\'');
-			System::error('A framework error has occurred');
+			System::error('Class \'' . $class . '\' does not exist in class file \''
+				. $class_path . '\'', null, 'Eco');
 		}
 		else
 		{
-			System::log()->error('Class path does not exist \'' . $class_path . '\'');
-			System::error('A framework error has occurred');
+			System::error('Class path does not exist \'' . $class_path . '\'', null, 'Eco');
 		}
 
 		return false;
@@ -186,18 +203,26 @@ class Router extends \Eco\Factory
 				}
 				else
 				{
-					System::log()->error('Route loader class \'' . $loader[0] . '\' method \''
-						. $loader[1] . '\' does not exist or is not a static method', 'Eco');
-					System::error('A framework error has occurred');
+					System::error('Route loader class \'' . $loader[0] . '\' method \''
+						. $loader[1] . '\' does not exist or is not a static method', null, 'Eco');
 				}
 			}
 		}
 		else
 		{
-			System::log()->error('Invalid route loader method call for \'' . $class_method . '\','
-				. ' must be a static method call', 'Eco');
-			System::error('A framework error has occurred');
+			System::error('Invalid route loader method call for \'' . $class_method . '\','
+				. ' must be a static method call', null, 'Eco');
 		}
+	}
+
+	/**
+	 * Detect CLI run
+	 *
+	 * @return boolean
+	 */
+	private function __isCli()
+	{
+		return php_sapi_name() === 'cli' && isset($_SERVER['argv'][1]);
 	}
 
 	/**
@@ -268,17 +293,15 @@ class Router extends \Eco\Factory
 						}
 						else
 						{
-							System::log()->error('Class \'' . $action[0] . '\' method \''
-								. $action[1] .'\' does not exist', 'Eco');
-							System::error('A framework error has occurred');
+							System::error('Class \'' . $action[0] . '\' method \''
+								. $action[1] .'\' does not exist', null, 'Eco');
 						}
 					}
 				}
 				else
 				{
-					System::log()->error('Invalid route Class->method call for \''
-						. $action . '\'', 'Eco');
-					System::error('A framework error has occurred');
+					System::error('Invalid route Class->method call for \'' . $action . '\'',
+						null, 'Eco');
 				}
 			}
 			else if(is_callable($action)) // func
@@ -315,10 +338,15 @@ class Router extends \Eco\Factory
 
 		$key = ltrim($route, '/');
 
+		if($key && $key[0] === '$') // cli only
+		{
+			$key = substr($key, 1);
+			$this->__route_cli[$key] = true;
+		}
+
 		if(isset($this->__route[$key]))
 		{
-			System::log()->error('Cannot redeclare route \'' . $route . '\'', 'Eco');
-			System::error('A framework error has occurred');
+			System::error('Cannot redeclare route \'' . $route . '\'', null, 'Eco');
 			return;
 		}
 
@@ -483,8 +511,11 @@ class Router extends \Eco\Factory
 
 		$this->route = '/' . $route_id;
 
-		if($route_id === null)
+		// no route || CLI only route + not CLI run
+		if($route_id === null || ( isset($this->__route_cli[$route_id]) && !$this->__isCli() ))
 		{
+			$route_id = null;
+
 			if($this->__404_callback !== null)
 			{
 				System::hook(System::HOOK_MIDDLE);
@@ -506,7 +537,7 @@ class Router extends \Eco\Factory
 		// call action
 		if(($route_id === null ? System::ERROR_NOT_FOUND : $this->action($route_id)) !== true)
 		{
-			System::error('Not found: \'' . $this->request . '\'', System::ERROR_NOT_FOUND);
+			System::error('Not found: \'' . $this->request . '\'', System::ERROR_NOT_FOUND, 'Eco');
 		}
 
 		System::stop();

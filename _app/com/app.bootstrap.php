@@ -12,15 +12,8 @@ eco::autoload([
 	PATH_LIB . 'vendor'
 ]);
 
-// configure settings
-eco::configure([
-	// eco::CONF_LOG_ERROR_LEVEL => eco::ERROR_LOG_ALL, // default
-	// eco::CONF_LOG_ERROR_WRITE_LEVEL => eco::ERROR_LOG_SERVER, // default
-	eco::CONF_LOG_LEVEL => eco::LOG_DEBUG, // default: eco::LOG_ERROR
-	eco::CONF_PATH => PATH_MODULE,
-	eco::CONF_PATH_TEMPLATE => PATH_TEMPLATE,
-	// eco::CONF_SANITIZE_REQUEST_PARAMS => true // default
-]);
+// load configuration settings
+eco::conf(PATH_CONF . 'eco.conf.php');
 
 // load helper functions (optional)
 require_once PATH_LIB . 'vendor/Eco/helper/eco.php';
