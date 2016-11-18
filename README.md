@@ -300,7 +300,7 @@ Application configuration settings can be stored by Eco, example:
 eco::conf(PATH_CONF . 'app.conf.php');
 eco::conf(PATH_CONF . 'api.conf.php');
 // use config settings
-$app_password = eco::conf()->app->username;
+$app_username = eco::conf()->app->username;
 ```
 The configuration files must return an array, `app.conf.php` example:
 ```php
@@ -319,7 +319,7 @@ Configuration settings can also be used separately from Eco, for example:
 // do not store internally
 $conf = eco::conf(PATH_CONF . 'app.conf.php', false);
 // use config settings
-$app_password = $conf->app->username;
+$app_username = $conf->app->username;
 ```
 
 
