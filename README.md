@@ -297,8 +297,8 @@ The Eco configuration settings file is located at `_app/com/conf/eco.conf.php` a
 Application configuration settings can be stored by Eco, example:
 ```php
 // load config file(s)
-eco::conf(PATH_COM . 'app.conf.php');
-eco::conf(PATH_COM . 'api.conf.php');
+eco::conf(PATH_CONF . 'app.conf.php');
+eco::conf(PATH_CONF . 'api.conf.php');
 // use config settings
 $db_password = eco::conf()->db->password;
 ```
