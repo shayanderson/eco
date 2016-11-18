@@ -78,7 +78,7 @@ Now a CLI command can be issued:
 $ php index.php bin/test/5
 Bin test: 5
 ```
-> The above example would also work in a Web browser. To create a CLI only route (will not work in Web browser) add a `$` to the beginning of route, for example:
+> The above route would also work in a Web browser. To create a CLI only route (will not work in Web browser) add a `$` to the beginning of route, for example:
 ```php
 // this route will only work as CLI command
 // the request '/bin/test/5' in a Web browser would result in a 404 error
