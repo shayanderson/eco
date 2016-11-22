@@ -91,9 +91,17 @@ class Router extends \Eco\Factory
 		{
 			$request = $_SERVER['REQUEST_URI'];
 		}
-		else if($this->__isCli()) // CLI
+		else if($this->isCli()) // CLI
 		{
-			$request = $_SERVER['argv'][1];
+			if(isset($_SERVER['argv'][1]))
+			{
+				$request = $_SERVER['argv'][1];
+			}
+			else
+			{
+				System::log()->error('Failed to detect CLI route', 'Eco');
+				$request = '/';
+			}
 		}
 		else
 		{
@@ -213,16 +221,6 @@ class Router extends \Eco\Factory
 			System::error('Invalid route loader method call for \'' . $class_method . '\','
 				. ' must be a static method call', null, 'Eco');
 		}
-	}
-
-	/**
-	 * Detect CLI run
-	 *
-	 * @return boolean
-	 */
-	private function __isCli()
-	{
-		return php_sapi_name() === 'cli' && isset($_SERVER['argv'][1]);
 	}
 
 	/**
@@ -512,7 +510,7 @@ class Router extends \Eco\Factory
 		$this->route = '/' . $route_id;
 
 		// no route || CLI only route + not CLI run
-		if($route_id === null || ( isset($this->__route_cli[$route_id]) && !$this->__isCli() ))
+		if($route_id === null || ( isset($this->__route_cli[$route_id]) && !$this->isCli() ))
 		{
 			$route_id = null;
 
@@ -578,6 +576,16 @@ class Router extends \Eco\Factory
 	public function hasParam($id)
 	{
 		return isset($this->__param[$id]) || array_key_exists($id, $this->__param);
+	}
+
+	/**
+	 * Detect CLI run
+	 *
+	 * @return boolean
+	 */
+	public function isCli()
+	{
+		return php_sapi_name() === 'cli';
 	}
 
 	/**

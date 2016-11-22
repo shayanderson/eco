@@ -37,3 +37,10 @@ eco::router()->set404Callback(function($request){
 // static class method example:
 // eco::router()->set404Callback(['ClassName', 'staticMethod']);
 ```
+CLI execution can be detected using the router `isCli()` method:
+```php
+if(eco::router()->isCli())
+{
+    // do something
+}
+```
