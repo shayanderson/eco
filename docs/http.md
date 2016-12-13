@@ -50,7 +50,7 @@ The `\Eco\Http` class properties are used a configuration settings for the reque
 - `$proxy` - proxy server IP address and port like `1.2.3.4:8080`
 - `$redirects_ignore` - ignore request redirects
 - `$referer` - request referer
-- `$timeout` - max seconds to allow cURL functions to execute
+- `$timeout` - max seconds to allow cURL functions to execute (use `0` to wait indefinitely)
 - `$timeout_connection` - seconds to wait while trying to connect (use `0` to wait indefinitely)
 - `$user_agent` - request user agent
 - `$verify_peer` - verify peers certificate

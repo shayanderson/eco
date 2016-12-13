@@ -115,7 +115,7 @@ class Http
 	public $referer;
 
 	/**
-	 * Max seconds to allow cURL functions to execute
+	 * Max seconds to allow cURL functions to execute (use 0 to wait indefinitely)
 	 *
 	 * @var int
 	 */

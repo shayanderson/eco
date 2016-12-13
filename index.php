@@ -9,9 +9,10 @@ define('PATH_LIB', PATH_APP . 'lib' . DIRECTORY_SEPARATOR);
 define('PATH_MODULE', PATH_APP . 'mod' . DIRECTORY_SEPARATOR);
 define('PATH_TEMPLATE', PATH_APP . 'tpl' . DIRECTORY_SEPARATOR);
 define('PATH_TEMPLATE_GLOBAL', PATH_TEMPLATE . '_global' . DIRECTORY_SEPARATOR);
+define('PATH_VENDOR', PATH_APP . 'vendor' . DIRECTORY_SEPARATOR);
 
 // load Eco
-require_once PATH_LIB . 'vendor/Eco/System.php';
+require_once PATH_VENDOR . 'Eco/System.php';
 
 // application bootstrap
 require_once PATH_COM . 'app.bootstrap.php';

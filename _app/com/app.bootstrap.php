@@ -9,20 +9,20 @@ class eco extends \Eco\System {}
 // class autoloading
 eco::autoload([
 	PATH_LIB,
-	PATH_LIB . 'vendor'
+	PATH_VENDOR
 ]);
 
 // load configuration settings
 eco::conf(PATH_CONF . 'eco.conf.php');
 
 // load helper functions (optional)
-require_once PATH_LIB . 'vendor/Eco/helper/eco.php';
-require_once PATH_LIB . 'vendor/Eco/helper/alias.php';
-require_once PATH_LIB . 'vendor/Eco/helper/factory.php';
-require_once PATH_LIB . 'vendor/Eco/helper/flash.php';
-require_once PATH_LIB . 'vendor/Eco/helper/redirect.php';
-require_once PATH_LIB . 'vendor/Eco/helper/request.php';
-require_once PATH_LIB . 'vendor/Eco/helper/view.php';
+require_once PATH_VENDOR . 'Eco/helper/eco.php';
+require_once PATH_VENDOR . 'Eco/helper/alias.php';
+require_once PATH_VENDOR . 'Eco/helper/factory.php';
+require_once PATH_VENDOR . 'Eco/helper/flash.php';
+require_once PATH_VENDOR . 'Eco/helper/redirect.php';
+require_once PATH_VENDOR . 'Eco/helper/request.php';
+require_once PATH_VENDOR . 'Eco/helper/view.php';
 
 // set routes
 eco::route([
