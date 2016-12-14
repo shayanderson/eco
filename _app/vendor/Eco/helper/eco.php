@@ -19,13 +19,13 @@ use Eco\System;
  *
  * @param string $message
  * @param int $code (ex: 403)
- * @param string $log_category
+ * @param string $category
  * @param boolean $http_response_code (set HTTP response code)
  * @return void
  */
-function error($message, $code = null, $log_category = null, $http_response_code = true)
+function error($message, $code = null, $category = null, $http_response_code = true)
 {
-	System::error($message, $code, $log_category, $http_response_code);
+	System::error($message, $code, $category, $http_response_code);
 }
 
 /**

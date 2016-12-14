@@ -11,7 +11,7 @@ Eco offers a collection of helper functions that can be used to quickly access w
 
 ### Core Helper Functions
 The core helper functions are mostly used to quickly access Eco methods (shorthand) and include several other useful functions:
-- `error($message, $code, $log_category, $http_response_code)` - `eco::error()` alias
+- `error($message, $code, $category, $http_response_code)` - `eco::error()` alias
 - `logger()` - `eco::log()` alias
 - `pa($v)` - HTML or CLI friendly printer for all PHP types
 - `session_exists()` - determine if a PHP session exists

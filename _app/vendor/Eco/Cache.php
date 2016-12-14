@@ -69,6 +69,13 @@ class Cache
 	private $__is_encode = false;
 
 	/**
+	 * Exact cache key flag
+	 *
+	 * @var boolean
+	 */
+	private $__is_encoded_key = false;
+
+	/**
 	 * Use metadata flag
 	 *
 	 * @var boolean
@@ -205,6 +212,17 @@ class Cache
 	}
 
 	/**
+	 * Encode key to cache key
+	 *
+	 * @param mixed $key
+	 * @return string
+	 */
+	public function encodeKey($key)
+	{
+		return sha1($key);
+	}
+
+	/**
 	 * Use encoding flag setter
 	 *
 	 * @param boolean $use_encoding
@@ -288,17 +306,6 @@ class Cache
 	}
 
 	/**
-	 * Format cache key
-	 *
-	 * @param mixed $key
-	 * @return string
-	 */
-	public function formatKey($key)
-	{
-		return sha1($key);
-	}
-
-	/**
 	 * Cache value getter
 	 *
 	 * @return mixed (false when no cache)
@@ -346,7 +353,8 @@ class Cache
 			throw new \Exception(__METHOD__ . ': cache key has not been set');
 		}
 
-		return $this->__prefix . $this->formatKey($this->__key);
+		return $this->__prefix
+			. ( $this->__is_encoded_key ? $this->__key : $this->encodeKey($this->__key) );
 	}
 
 	/**
@@ -412,10 +420,16 @@ class Cache
 	 * Cache key setter
 	 *
 	 * @param mixed $key
+	 * @param boolean $is_encoded_key
 	 * @return void
 	 */
-	public function key($key)
+	public function key($key, $is_encoded_key = false)
 	{
+		if($is_encoded_key)
+		{
+			$this->__is_encoded_key = true;
+		}
+
 		$this->__key = $key;
 	}
 

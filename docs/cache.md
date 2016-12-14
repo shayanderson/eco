@@ -37,7 +37,7 @@ var_dump($cache->get());
 A cache subpath can be used:
 ```php
 // this local cache will be written in the subpath:
-// <global cache path>/account
+// '<global cache path>/account'
 $cache->path('account');
 ```
 
@@ -72,6 +72,14 @@ $cache->encoding(true);
 ```
 > Encoding cannot be used with compression
 
+### Using Encoded Cache Key
+A cache file can be loaded using the actual encoded cache key, for example:
+```php
+// will load the cache file:
+// '<global cache path>/a94a8fe5ccb19ba61c4c0873d391e987982fbbd3'
+$cache->key('a94a8fe5ccb19ba61c4c0873d391x187982fbbd3', true);
+```
+
 ### Global Configuration Settings
 Global cache settings are handled by the `\Eco\Cache::setGlobalConf()` method, for example:
 ```php
@@ -98,17 +106,17 @@ All the global settings are:
 These are the `\Eco\Cache` methods:
 - `compression($use_compression)` - use cache file compression, cannot be used with encoding
 - `delete()` - delete cache file
+- `encodeKey($key)` - encode key to cache key
 - `encoding($use_encoding)` - use cache file encoding, cannot be used with compression
 - `expire($time)` - set expire time
 - `extension($file_extension)` - set cache file extension (ex: `.cache`)
 - `flush()` - flush entire cache directory, or subdirectory
-- `formatKey($key)` - format cache key
 - `get()` - get cache value
 - `getFilePath()` - get cache file path
 - `getKey()` - get cache key
 - `getPath()` - get cache path
 - `has()` - check if cache file exists (or is expired)
-- `key($key)` - set key (if not set by class constructor)
+- `key($key, $is_encoded_key)` - set key (if not set by class constructor)
 - `metadata($use_metadata)` - use metadata
 - `path($path)` - set cache subpath
 - `prefix($name)` - set cache file prefix

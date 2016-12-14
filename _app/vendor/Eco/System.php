@@ -175,11 +175,11 @@ class System
 	 * @staticvar boolean $is_error
 	 * @param string $message
 	 * @param int $code (ex: 403)
-	 * @param string $log_category
+	 * @param string $category
 	 * @param boolean $http_response_code (set HTTP response code)
 	 * @return void
 	 */
-	final public static function error($message, $code = null, $log_category = null,
+	final public static function error($message, $code = null, $category = null,
 		$http_response_code = true)
 	{
 		static $is_error = false;
@@ -217,7 +217,7 @@ class System
 			{
 				// log error
 				self::log()->error('Error (' . $code . ')' . ( $message !== null
-					? ': ' . $message : '' ), $log_category);
+					? ': ' . $message : '' ), $category);
 			}
 		}
 
