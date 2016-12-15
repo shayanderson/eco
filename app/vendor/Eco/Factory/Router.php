@@ -12,7 +12,7 @@ namespace Eco\Factory;
 use Eco\System;
 
 /**
- * Router class
+ * Router
  *
  * @author Shay Anderson
  */

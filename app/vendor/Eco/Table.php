@@ -10,7 +10,7 @@
 namespace Eco;
 
 /**
- * HTML table class
+ * HTML table
  *
  * @author Shay Anderson
  */

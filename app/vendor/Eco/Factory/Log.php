@@ -28,6 +28,11 @@ class Log extends \Eco\Factory
 	const LOG_WARNING = 2;
 
 	/**
+	 * Max log entries (mem safe)
+	 */
+	const MAX_ENTRIES = 5000;
+
+	/**
 	 * Log handler
 	 *
 	 * @var \callable
@@ -68,6 +73,11 @@ class Log extends \Eco\Factory
 				{
 					return; // handled
 				}
+			}
+
+			if(count($this->__log) > self::MAX_ENTRIES) // limit entries (mem safe)
+			{
+				array_shift($this->__log);
 			}
 
 			$this->__id++;

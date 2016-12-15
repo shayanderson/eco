@@ -21,7 +21,7 @@ Install example:
 - [**Extending Eco**](#extending-eco)
 
 ## Routing
-Basic routes can be setup in `_app/com/app.bootstrap.php`, for example:
+Basic routes can be setup in `app/com/app.bootstrap.php`, for example:
 ```php
 // set routes
 eco::route([
@@ -34,9 +34,9 @@ eco::route([
 	// more routes
 ]);
 ```
-The request `/` would call the method `home` in the class `IndexController` in file `_app/mod/IndexController.php`.
+The request `/` would call the method `home` in the class `IndexController` in file `app/mod/IndexController.php`.
 
-The request `/login` would call the method `login` in the class `\Account\UserController` in file `_app/mod/Account/UserController.php`.
+The request `/login` would call the method `login` in the class `\Account\UserController` in file `app/mod/Account/UserController.php`.
 
 #### Route Callbacks
 Route callbacks can be a callable name or callable (the first array element must be the controller/action):
@@ -209,7 +209,7 @@ class PageController
 > Route parameters can also be accessed using [`Router`](https://github.com/shayanderson/eco/blob/master/docs/router.md) class methods.
 
 #### View Template
-The `_app/tpl/page/view.tpl` file example:
+The `app/tpl/page/view.tpl` file example:
 ```php
 <?php include PATH_TEMPLATE_GLOBAL . 'header.tpl'; ?>
 <h1><?=$title?></h1>
@@ -291,7 +291,7 @@ eco::hook(eco::HOOK_AFTER, function() { /* do something */ });
 Application and Eco configuration settings are handled separately.
 
 #### Eco Configuration
-The Eco configuration settings file is located at `_app/com/conf/eco.conf.php` and contains all framework settings. All documentation for Eco configuration settings can be found in the file.
+The Eco configuration settings file is located at `app/com/conf/eco.conf.php` and contains all framework settings. All documentation for Eco configuration settings can be found in the file.
 
 #### Application Configuration
 Application configuration settings can be stored by Eco, example:
@@ -363,7 +363,7 @@ Helper functions can be used to quickly access Eco core methods or other useful 
 
 
 ## Extending Eco
-Eco can be extended by extending the core `\Eco\System` class. Initially this is setup in the `_app/com/app.bootstrap.php` file:
+Eco can be extended by extending the core `\Eco\System` class. Initially this is setup in the `app/com/app.bootstrap.php` file:
 ```php
 // set Eco access class
 class eco extends \Eco\System {}

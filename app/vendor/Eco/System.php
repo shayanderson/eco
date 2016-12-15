@@ -22,7 +22,7 @@ use Eco\Factory\Validate;
 use Eco\Factory\View;
 
 /**
- * Eco core class
+ * Eco core
  *
  * @author Shay Anderson
  */

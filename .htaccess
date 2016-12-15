@@ -10,8 +10,8 @@ RewriteEngine On
 # RewriteCond %{HTTP_HOST} !^www\.
 # RewriteRule ^(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]
 
-# deny access to './_app' dir
-RewriteRule ^_app\/(.*)$ - [R=404,L]
+# deny access to './app' dir
+RewriteRule ^app\/(.*)$ - [R=404,L]
 
 # deny access to SVN dirs
 RewriteRule ^.*?\.svn\/(.*)$ - [R=404,L]

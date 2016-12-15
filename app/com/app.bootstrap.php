@@ -35,5 +35,5 @@ eco::route([
 
 // set hook to display log
 eco::hook(eco::HOOK_AFTER, function() {
-	echo '<pre>' . print_r(eco::log()->get(), true) . '</pre>';
+	// echo '<pre>' . print_r(eco::log()->get(), true) . '</pre>';
 });

@@ -12,7 +12,7 @@ namespace Eco;
 use Eco\Factory\Validate;
 
 /**
- * HTML form class
+ * HTML form
  *
  * @author Shay Anderson
  */

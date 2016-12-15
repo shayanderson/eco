@@ -12,7 +12,7 @@ namespace Eco\Factory;
 use Eco\System;
 
 /**
- * View class
+ * View
  *
  * @author Shay Anderson
  */

@@ -2,7 +2,7 @@
 
 // paths
 define('PATH_ROOT', __DIR__ . DIRECTORY_SEPARATOR);
-define('PATH_APP' , PATH_ROOT . '_app' . DIRECTORY_SEPARATOR);
+define('PATH_APP' , PATH_ROOT . 'app' . DIRECTORY_SEPARATOR);
 define('PATH_COM', PATH_APP . 'com' . DIRECTORY_SEPARATOR);
 define('PATH_CONF', PATH_COM . 'conf' . DIRECTORY_SEPARATOR);
 define('PATH_LIB', PATH_APP . 'lib' . DIRECTORY_SEPARATOR);

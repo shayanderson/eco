@@ -10,7 +10,7 @@
 namespace Eco;
 
 /**
- * Factory class
+ * Factory
  *
  * @author Shay Anderson
  */
