@@ -3,13 +3,14 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2016 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
 namespace Eco;
 
 use Eco\Factory\Breadcrumb;
+use Eco\Factory\Database;
 use Eco\Factory\Filter;
 use Eco\Factory\Format;
 use Eco\Factory\Keep;
@@ -118,7 +119,7 @@ class System
 	}
 
 	/**
-	 * View breadcrumb helper
+	 * View breadcrumb object getter
 	 *
 	 * @return \Eco\Factory\Breadcrumb
 	 */
@@ -167,6 +168,22 @@ class System
 		}
 
 		return self::arrayToObject(require $file_path);
+	}
+
+	/**
+	 * Database object getter
+	 *
+	 * @param mixed $connection_id
+	 * @return \Eco\Factory\Database
+	 */
+	final public static function db($connection_id = null)
+	{
+		if($connection_id !== null) // connection ID setter
+		{
+			Database::getInstance()->connection($connection_id);
+		}
+
+		return Database::getInstance();
 	}
 
 	/**
@@ -249,7 +266,7 @@ class System
 	}
 
 	/**
-	 * Data filter helper
+	 * Data filter object getter
 	 *
 	 * @return \Eco\Factory\Filter
 	 */
@@ -259,7 +276,7 @@ class System
 	}
 
 	/**
-	 * Session flash helper
+	 * Session flash object getter
 	 *
 	 * @return \Eco\Factory\Session\Flash
 	 */
@@ -269,7 +286,7 @@ class System
 	}
 
 	/**
-	 * Data format helper
+	 * Data format object getter
 	 *
 	 * @return \Eco\Factory\Format
 	 */
@@ -339,13 +356,59 @@ class System
 	}
 
 	/**
-	 * Log helper
+	 * Log object getter
 	 *
 	 * @return \Eco\Factory\Log
 	 */
 	final public static function log()
 	{
 		return Log::getInstance();
+	}
+
+	/**
+	 * Model loader + registry
+	 *
+	 * @staticvar array $registry
+	 * @return \EcoModelRegistry
+	 */
+	final public static function model()
+	{
+		static $registry;
+
+		if(!$registry)
+		{
+			require_once PATH_COM . 'model.php';
+
+			if(!class_exists('\EcoModelRegistry'))
+			{
+				throw new \Exception('Model load failed, \'\EcoModelRegistry\' class not found ('
+					. __METHOD__ . ')');
+			}
+
+			// parse class annotations
+			preg_match_all('#@property\s([^\s]+)\s\$([\w]+)#', // match '@property <class> $<name>'
+				(new \ReflectionClass('\EcoModelRegistry'))->getDocComment(), $m);
+
+			if(isset($m[1]) && $m[1])
+			{
+				foreach($m[1] as $k => $v)
+				{
+					if(isset($m[2][$k])) // name
+					{
+						$registry[trim($m[2][$k])] = trim($v);
+					}
+				}
+			}
+
+			unset($m);
+
+			if($registry) // initialize
+			{
+				\EcoModelRegistry::getInstance()->__init($registry);
+			}
+		}
+
+		return \EcoModelRegistry::getInstance();
 	}
 
 	/**
@@ -361,7 +424,7 @@ class System
 	}
 
 	/**
-	* Redirect helper
+	* Redirect method
 	*
 	* @param string $location
 	* @param boolean $use_301
@@ -377,7 +440,7 @@ class System
 	}
 
 	/**
-	 * Request helper
+	 * Request object getter
 	 *
 	 * @return \Eco\Factory\Request
 	 */
@@ -432,7 +495,7 @@ class System
 	}
 
 	/**
-	 * Session helper
+	 * Session object getter
 	 *
 	 * @return \Eco\Factory\Session
 	 */
@@ -465,7 +528,7 @@ class System
 	}
 
 	/**
-	 * Validate helper
+	 * Validate object getter
 	 *
 	 * @return \Eco\Factory\Validate
 	 */

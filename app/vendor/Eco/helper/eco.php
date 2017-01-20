@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2016 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -13,6 +13,17 @@ use Eco\System;
 /**
  * Core helper functions
  */
+
+/**
+ * Database object getter
+ *
+ * @param mixed $connection_id
+ * @return \Eco\Factory\Database
+ */
+function db($connection_id = null)
+{
+	return System::db($connection_id);
+}
 
 /**
  * Error handler (ex: 403 Forbidden, 404 Not Found, 500 Internal Server Error)
@@ -36,6 +47,16 @@ function error($message, $code = null, $category = null, $http_response_code = t
 function logger()
 {
 	return System::log();
+}
+
+/**
+ * Model object getter
+ *
+ * @return \EcoModelRegistry
+ */
+function model()
+{
+	return System::model();
 }
 
 /**

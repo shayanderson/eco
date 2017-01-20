@@ -15,7 +15,7 @@ define('PATH_VENDOR', PATH_APP . 'vendor' . DIRECTORY_SEPARATOR);
 require_once PATH_VENDOR . 'Eco/System.php';
 
 // application bootstrap
-require_once PATH_COM . 'app.bootstrap.php';
+require_once PATH_COM . 'bootstrap.php';
 
 try
 {

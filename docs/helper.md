@@ -1,18 +1,20 @@
 ## Helper Functions
 Eco offers a collection of helper functions that can be used to quickly access widely used methods and other functionality. The available helper functions are divided into files that can be included as desired:
-- [**core**](#core-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/eco.php'`
-- [**alias**](#alias-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/alias.php'`
-- [**factory**](#factory-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/factory.php'`
-- [**flash**](#flash-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/flash.php'`
-- [**redirect**](#redirect-helper-function) - `PATH_LIB . 'vendor/Eco/helper/redirect.php'`
-- [**request**](#request-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/request.php'`
-- [**view**](#view-helper-functions) - `PATH_LIB . 'vendor/Eco/helper/view.php'`
+- [**core**](#core-helper-functions) - `PATH_VENDOR . 'Eco/helper/eco.php'`
+- [**alias**](#alias-helper-functions) - `PATH_VENDOR . 'Eco/helper/alias.php'`
+- [**factory**](#factory-helper-functions) - `PATH_VENDOR . 'Eco/helper/factory.php'`
+- [**flash**](#flash-helper-functions) - `PATH_VENDOR . 'Eco/helper/flash.php'`
+- [**redirect**](#redirect-helper-function) - `PATH_VENDOR . 'Eco/helper/redirect.php'`
+- [**request**](#request-helper-functions) - `PATH_VENDOR . 'Eco/helper/request.php'`
+- [**view**](#view-helper-functions) - `PATH_VENDOR . 'Eco/helper/view.php'`
 
 
 ### Core Helper Functions
 The core helper functions are mostly used to quickly access Eco methods (shorthand) and include several other useful functions:
+- `db($connection_id = null)` - `eco::db()` alias
 - `error($message, $code, $category, $http_response_code)` - `eco::error()` alias
 - `logger()` - `eco::log()` alias
+- `model()` - `eco::model()` alias
 - `pa($v)` - HTML or CLI friendly printer for all PHP types
 - `session_exists()` - determine if a PHP session exists
 - `stop()` - `eco::stop()` alias
