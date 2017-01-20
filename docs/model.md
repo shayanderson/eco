@@ -57,14 +57,14 @@ $row = model()->doc->get(5);
 These are the main model methods and can be overridden
 
 
-##### Count
+#### Count
 ```php
 // returns int
 $count = model()->model_name->count();
 ```
 
 
-##### Delete Single Row
+#### Delete Single Row
 Delete row by primary key ID value
 ```php
 // returns int
@@ -72,7 +72,7 @@ $affected = model()->model_name->delete(5);
 ```
 
 
-##### Get Row
+#### Get Row
 Get single row by primary key ID value
 ```php
 // returns stdClass (or null on no row)
@@ -80,14 +80,14 @@ $row = model()->model_name->get(5);
 ```
 
 
-##### Get All Rows
+#### Get All Rows
 ```php
 // returns array of stdClass objects (or empty array on no rows)
 $rows = model()->model_name->getAll();
 ```
 
 
-##### Check if Row Exists
+#### Check if Row Exists
 Check if row exists by primary key ID value
 ```php
 // returns boolean
@@ -95,13 +95,13 @@ $row = model()->model_name->has(5);
 ```
 
 
-##### Get Model Name
+#### Get Model Name
 ```php
 $name = model()->model_name->name();
 ```
 
 
-##### Get Single Column Value
+#### Get Single Column Value
 Get single column value for primary key ID value
 ```php
 $col1 = model()->model_name->value(5, 'col1');
@@ -112,7 +112,7 @@ $col1 = model()->model_name->value(5, 'col1');
 These are the methods that can only be used from inside a model classes and cannot not be  overridden - this keeps all advanced model logic *inside* the model classes
 
 
-##### Advanced Delete
+#### Advanced Delete
 The `_delete()` method is more advanced than the `delete()` method, example:
 ```php
 class ModelName extends \Eco\Model
@@ -126,7 +126,7 @@ class ModelName extends \Eco\Model
 ```
 
 
-##### Insert
+#### Insert
 Insert a row
 ```php
 class ModelName extends \Eco\Model
@@ -152,11 +152,11 @@ class ModelName extends \Eco\Model
 ```
 
 
-##### Replace
+#### Replace
 Replace method `_replace()` is used the same way as the `_insert()` method
 
 
-##### Update
+#### Update
 ```php
 class ModelName extends \Eco\Model
 {
@@ -174,7 +174,7 @@ class ModelName extends \Eco\Model
 ```
 
 
-##### Truncate
+#### Truncate
 ```php
 class ModelName extends \Eco\Model
 {

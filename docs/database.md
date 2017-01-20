@@ -254,14 +254,14 @@ catch(\PDOException $ex)
 ### Other Methods
 The following methods are also available
 
-##### Close Connection
+#### Close Connection
 ```php
 // force close the database connection
 db()->close();
 ```
 > **Note:** the database connection will close automatically - the `close()` method only needs to be called when forcing a connection close.
 
-##### Get Columns
+#### Get Columns
 Get table column names:
 ```php
 // returns array of column names like:
@@ -269,7 +269,7 @@ Get table column names:
 $columns = db()->getColumns('table');
 ```
 
-##### Get Tables
+#### Get Tables
 Get database table names:
 ```php
 // returns array of database table names like:
@@ -277,7 +277,7 @@ Get database table names:
 $tables = db()->getTables();
 ```
 
-##### Truncate Table
+#### Truncate Table
 A table can be truncated using:
 ```php
 db()->truncate('table');
