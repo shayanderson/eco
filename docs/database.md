@@ -146,6 +146,7 @@ $row = new stdClass;
 $row->x = 1;
 $row->y = 2;
 $affected = db()->replace('table', $row);
+```
 
 
 ### Execute a Query
