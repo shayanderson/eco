@@ -79,8 +79,8 @@ The `get()` method returns a single row as a `stdClass` object, example:
 // SELECT * FROM table LIMIT 1
 $row = db()->get('table');
 
-// SELECT * FROM table WHERE id = 1 AND is_active = 1 LIMIT 1
-$row = db()->get('table WHERE id = ? AND is_active = ?', 1, 1);
+// SELECT * FROM table WHERE x = 1 AND y = 2 LIMIT 1
+$row = db()->get('table WHERE x = ? AND y = ?', 1, 2);
 ```
 > The `get()` method will return `null` if there are no results
 
