@@ -8,8 +8,8 @@
  * @link <https://github.com/shayanderson/eco>
  */
 
-use Eco\Factory\Keep;
 use Eco\System;
+use Eco\System\Keep;
 
 /**
  * Eco core method alias helper functions
@@ -20,7 +20,7 @@ use Eco\System;
  *
  * @param string $title
  * @param string $url
- * @return \Eco\Factory\Breadcrumb
+ * @return \Eco\System\Breadcrumb
  */
 function breadcrumb($title = null, $url = null)
 {
@@ -52,7 +52,7 @@ function conf($file_path = null, $store = true)
 /**
  * Data filter helper
  *
- * @return \Eco\Factory\Filter
+ * @return \Eco\System\Filter
  */
 function filter()
 {
@@ -64,7 +64,7 @@ function filter()
  *
  * @param string $key
  * @param mixed $value
- * @return \Eco\Factory\Session\Flash
+ * @return \Eco\System\Session\Flash
  */
 function flash($key = null, $value = null)
 {
@@ -83,7 +83,7 @@ function flash($key = null, $value = null)
 /**
  * Data format helper
  *
- * @return \Eco\Factory\Format
+ * @return \Eco\System\Format
  */
 function format()
 {
@@ -95,7 +95,7 @@ function format()
  *
  * @param string $key
  * @param mixed $value
- * @return \Eco\Factory\Keep
+ * @return \Eco\System\Keep
  */
 function keep($key = null, $value = null)
 {
@@ -126,7 +126,7 @@ function param($id, callable $callback)
 /**
  * Request helper
  *
- * @return \Eco\Factory\Request
+ * @return \Eco\System\Request
  */
 function request()
 {
@@ -138,7 +138,7 @@ function request()
  *
  * @param string $key
  * @param mixed $value
- * @return \Eco\Factory\Session
+ * @return \Eco\System\Session
  */
 function session($key = null, $value = null)
 {
@@ -157,7 +157,7 @@ function session($key = null, $value = null)
 /**
  * Validate helper
  *
- * @return \Eco\Factory\Validate
+ * @return \Eco\System\Validate
  */
 function validate()
 {

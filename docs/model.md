@@ -11,6 +11,7 @@ The `Model` class can be used to simplify model classes and database calls.
   - [Check if Row Exists](#check-if-row-exists)
   - [Get Model Name](#get-model-name)
   - [Get Single Column Value](#get-single-column-value)
+  - [Execute a Query](#execute-a-query)
 - [Protected Methods](#protected-methods)
   - [Advanced Delete](#advanced-delete)
   - [Insert](#insert)
@@ -27,7 +28,7 @@ First, model classes need to be "registered" in the *model registry* in the `app
  * @property App\Model\Document\Entity $doc_entity
  * @property App\Model\User $user
  */
-class EcoModelRegistry extends \Eco\Factory\ModelRegistry {}
+class EcoModelRegistry extends \Eco\System\ModelRegistry {}
 ```
 Now each of these registered model classes can be accessed using the `eco::model()` method or the helper function `model()` (used in all the examples below).
 
@@ -65,7 +66,7 @@ $count = model()->model_name->count();
 
 
 #### Delete Single Row
-Delete row by primary key ID value
+Delete row by primary key value
 ```php
 // returns int
 $affected = model()->model_name->delete(5);
@@ -73,7 +74,7 @@ $affected = model()->model_name->delete(5);
 
 
 #### Get Row
-Get single row by primary key ID value
+Get single row by primary key value
 ```php
 // returns stdClass (or null on no row)
 $row = model()->model_name->get(5);
@@ -88,7 +89,7 @@ $rows = model()->model_name->getAll();
 
 
 #### Check if Row Exists
-Check if row exists by primary key ID value
+Check if row exists by primary key value
 ```php
 // returns boolean
 $row = model()->model_name->has(5);
@@ -102,9 +103,18 @@ $name = model()->model_name->name();
 
 
 #### Get Single Column Value
-Get single column value for primary key ID value
+Get single column value for primary key value
 ```php
 $col1 = model()->model_name->value(5, 'col1');
+```
+
+#### Execute a Query
+Any query can be executed:
+```php
+// SELECT a.col, b.col2 FROM table a
+//    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
+$rows = model()->model_name->query('SELECT a.col, b.col2 FROM table a'
+    . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -137,7 +147,7 @@ class ModelName extends \Eco\Model
         $affected = $this->_insert(['x' => 1, 'y' => 2]);
 
         // return the insert ID
-        return $this->_id();
+        return $this->id();
 
         // or INSERT IGNORE
         $affected = $this->_insert(['x' => 1, 'y' => 2], true);

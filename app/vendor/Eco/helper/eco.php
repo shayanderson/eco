@@ -18,7 +18,7 @@ use Eco\System;
  * Database object getter
  *
  * @param mixed $connection_id
- * @return \Eco\Factory\Database
+ * @return \Eco\System\Database
  */
 function db($connection_id = null)
 {
@@ -42,7 +42,7 @@ function error($message, $code = null, $category = null, $http_response_code = t
 /**
  * Add log message
  *
- * @return \Eco\Factory\Log
+ * @return \Eco\System\Log
  */
 function logger()
 {
@@ -101,7 +101,7 @@ function stop()
  *
  * @param mixed $template
  * @param mixed $view_params (array for params: ['var1' => x, ...])
- * @return \Eco\Factory\View
+ * @return \Eco\System\View
  */
 function view($template = null, $view_params = null)
 {

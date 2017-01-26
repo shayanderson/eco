@@ -7,9 +7,9 @@
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
-namespace Eco\Factory\Session;
+namespace Eco\System\Session;
 
-use Eco\Factory\Session;
+use Eco\System\Session;
 
 /**
  * Session flash helper
@@ -21,7 +21,7 @@ class Flash extends \Eco\Factory
 	/**
 	 * Session object
 	 *
-	 * @var \Eco\Factory\Session
+	 * @var \Eco\System\Session
 	 */
 	private $__session;
 

@@ -9,7 +9,7 @@
  */
 namespace Eco;
 
-use Eco\Factory\Database;
+use Eco\System\Database;
 
 /**
  * Model
@@ -76,7 +76,7 @@ abstract class Model
 	/**
 	 * Database getter
 	 *
-	 * @return \Eco\Factory\Database
+	 * @return \Eco\System\Database
 	 */
 	private function __db()
 	{
@@ -93,17 +93,8 @@ abstract class Model
 	final protected function _delete($sql = null, $params = null)
 	{
 		return call_user_func_array([$this->__db(), 'delete'],
-			['n' => static::NAME] + func_get_args());
-	}
-
-	/**
-	 * Insert ID getter
-	 *
-	 * @return mixed (int|string)
-	 */
-	final protected function _id()
-	{
-		return $this->__db()->id();
+			['n' => static::NAME . ( $sql !== null ? ' ' . $sql : null )]
+				+ array_slice(func_get_args(), 1));
 	}
 
 	/**
@@ -148,7 +139,7 @@ abstract class Model
 	 */
 	final protected function _update($sql, array $params)
 	{
-		return $this->__db()->update(static::NAME, $sql, $params);
+		return $this->__db()->update(static::NAME . ' ' . $sql, $params);
 	}
 
 	/**
@@ -169,7 +160,7 @@ abstract class Model
 	 */
 	public function delete($id)
 	{
-		return $this->__db()->delete(static::NAME, 'WHERE ' . $this->__pk . ' = ?', (int)$id);
+		return $this->__db()->delete(static::NAME . ' WHERE ' . $this->__pk . ' = ?', (int)$id);
 	}
 
 	/**
@@ -205,6 +196,16 @@ abstract class Model
 	}
 
 	/**
+	 * Insert ID getter
+	 *
+	 * @return mixed (int|string)
+	 */
+	final public function id()
+	{
+		return $this->__db()->id();
+	}
+
+	/**
 	 * Name getter
 	 *
 	 * @return string
@@ -212,6 +213,18 @@ abstract class Model
 	final public function name()
 	{
 		return static::NAME;
+	}
+
+	/**
+	 * Execute query
+	 *
+	 * @param string $query
+	 * @param mixed $params
+	 * @return mixed
+	 */
+	public function query($query, $params = null)
+	{
+		return $this->__db()->query($query, array_slice(func_get_args(), 1));
 	}
 
 	/**

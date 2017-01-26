@@ -16,6 +16,7 @@ Install example:
 - [**Hooks**](#hooks)
 - [**Configuration**](#configuration)
 - [**Core Methods**](#core-methods)
+- [**Database**](https://github.com/shayanderson/eco/blob/master/docs/database.md)
 - [**Helper Classes**](#helper-classes)  ([Cache](https://github.com/shayanderson/eco/blob/master/docs/cache.md), [Form](https://github.com/shayanderson/eco/blob/master/docs/form.md), [HTTP](https://github.com/shayanderson/eco/blob/master/docs/http.md), [Model](https://github.com/shayanderson/eco/blob/master/docs/model.md), [Table](https://github.com/shayanderson/eco/blob/master/docs/table.md))
 - [**Helper Functions**](https://github.com/shayanderson/eco/blob/master/docs/helper.md) ([core](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions), [alias](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions), [factory](https://github.com/shayanderson/eco/blob/master/docs/helper.md#factory-helper-functions), [flash](https://github.com/shayanderson/eco/blob/master/docs/helper.md#flash-helper-functions), [redirect](https://github.com/shayanderson/eco/blob/master/docs/helper.md#redirect-helper-function), [request](https://github.com/shayanderson/eco/blob/master/docs/helper.md#request-helper-functions), [view](https://github.com/shayanderson/eco/blob/master/docs/helper.md#view-helper-functions))
 - [**Extending Eco**](#extending-eco)

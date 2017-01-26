@@ -9,18 +9,18 @@
  */
 namespace Eco;
 
-use Eco\Factory\Breadcrumb;
-use Eco\Factory\Database;
-use Eco\Factory\Filter;
-use Eco\Factory\Format;
-use Eco\Factory\Keep;
-use Eco\Factory\Log;
-use Eco\Factory\Request;
-use Eco\Factory\Router;
-use Eco\Factory\Session;
-use Eco\Factory\Session\Flash;
-use Eco\Factory\Validate;
-use Eco\Factory\View;
+use Eco\System\Breadcrumb;
+use Eco\System\Database;
+use Eco\System\Filter;
+use Eco\System\Format;
+use Eco\System\Keep;
+use Eco\System\Log;
+use Eco\System\Request;
+use Eco\System\Router;
+use Eco\System\Session;
+use Eco\System\Session\Flash;
+use Eco\System\Validate;
+use Eco\System\View;
 
 /**
  * Eco core
@@ -121,7 +121,7 @@ class System
 	/**
 	 * View breadcrumb object getter
 	 *
-	 * @return \Eco\Factory\Breadcrumb
+	 * @return \Eco\System\Breadcrumb
 	 */
 	final public static function breadcrumb()
 	{
@@ -174,7 +174,7 @@ class System
 	 * Database object getter
 	 *
 	 * @param mixed $connection_id
-	 * @return \Eco\Factory\Database
+	 * @return \Eco\System\Database
 	 */
 	final public static function db($connection_id = null)
 	{
@@ -268,7 +268,7 @@ class System
 	/**
 	 * Data filter object getter
 	 *
-	 * @return \Eco\Factory\Filter
+	 * @return \Eco\System\Filter
 	 */
 	final public static function filter()
 	{
@@ -278,7 +278,7 @@ class System
 	/**
 	 * Session flash object getter
 	 *
-	 * @return \Eco\Factory\Session\Flash
+	 * @return \Eco\System\Session\Flash
 	 */
 	final public static function flash()
 	{
@@ -288,7 +288,7 @@ class System
 	/**
 	 * Data format object getter
 	 *
-	 * @return \Eco\Factory\Format
+	 * @return \Eco\System\Format
 	 */
 	final public static function format()
 	{
@@ -358,7 +358,7 @@ class System
 	/**
 	 * Log object getter
 	 *
-	 * @return \Eco\Factory\Log
+	 * @return \Eco\System\Log
 	 */
 	final public static function log()
 	{
@@ -442,7 +442,7 @@ class System
 	/**
 	 * Request object getter
 	 *
-	 * @return \Eco\Factory\Request
+	 * @return \Eco\System\Request
 	 */
 	final public static function request()
 	{
@@ -464,7 +464,7 @@ class System
 	/**
 	 * Router getter
 	 *
-	 * @return \Eco\Factory\Router
+	 * @return \Eco\System\Router
 	 */
 	final public static function router()
 	{
@@ -497,7 +497,7 @@ class System
 	/**
 	 * Session object getter
 	 *
-	 * @return \Eco\Factory\Session
+	 * @return \Eco\System\Session
 	 */
 	final public static function session()
 	{
@@ -530,7 +530,7 @@ class System
 	/**
 	 * Validate object getter
 	 *
-	 * @return \Eco\Factory\Validate
+	 * @return \Eco\System\Validate
 	 */
 	final public static function validate()
 	{
@@ -542,7 +542,7 @@ class System
 	 *
 	 * @param string $template
 	 * @param array $view_params (optional, array for params: ['var1' => x, ...])
-	 * @return \Eco\Factory\View
+	 * @return \Eco\System\View
 	 */
 	final public static function view($template = null, array $view_params = null)
 	{

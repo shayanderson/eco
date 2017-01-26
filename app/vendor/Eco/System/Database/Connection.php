@@ -7,7 +7,7 @@
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
-namespace Eco\Factory\Database;
+namespace Eco\System\Database;
 
 use Eco\System;
 
@@ -140,7 +140,8 @@ class Connection
 	 */
 	public function hasSqlLimitClause($query)
 	{
-		return stripos($query, 'LIMIT') !== false && preg_match('/LIMIT[\s]+[\d]+/', $query);
+		return stripos($query, 'LIMIT') !== false
+			&& preg_match('/LIMIT[\s]+[\d,\s]+(OFFSET[\s]+[\d]+)?;?$/i', rtrim(trim($query), ';'));
 	}
 
 	/**

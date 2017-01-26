@@ -9,7 +9,7 @@
  */
 namespace Eco;
 
-use Eco\Factory\Validate;
+use Eco\System\Validate;
 
 /**
  * HTML form

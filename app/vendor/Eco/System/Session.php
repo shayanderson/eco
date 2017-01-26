@@ -7,7 +7,7 @@
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
-namespace Eco\Factory;
+namespace Eco\System;
 
 /**
  * Session helper

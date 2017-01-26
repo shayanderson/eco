@@ -11,8 +11,8 @@ The Database class is used to execute database calls and can be accessed using `
 - [Insert](#insert)
 - [Get Last Insert ID](#get-last-insert-id)
 - [Replace](#replace)
-- [Execute a Query](#execute-a-query)
 - [Update](#update)
+- [Execute a Query](#execute-a-query)
 - [Get Single Value](#get-single-value)
 - [Call Stored Procedure](#call-stored-procedure)
 - [Pagination](#pagination)
@@ -58,7 +58,7 @@ The `count()` method returns `int`, example:
 $count = db()->count('table');
 
 // SELECT COUNT(1) FROM table WHERE x = 1 AND y = 2
-$count = db()->count('table', 'WHERE x = ? AND y = ?', 1, 2);
+$count = db()->count('table WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -69,7 +69,7 @@ The `delete()` method returns affected rows as `int`, example:
 $affected = db()->delete('table');
 
 // DELETE FROM table WHERE x = 1 AND y = 2
-$affected = db()->delete('table', 'WHERE x = ? AND y = ?', 1, 2);
+$affected = db()->delete('table WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -81,6 +81,9 @@ $row = db()->get('table');
 
 // SELECT * FROM table WHERE x = 1 AND y = 2 LIMIT 1
 $row = db()->get('table WHERE x = ? AND y = ?', 1, 2);
+
+// or full query
+$row = db()->get('SELECT col1, col2 FROM table WHERE x = ? AND y = ?', 1, 2);
 ```
 > The `get()` method will return `null` if there are no results
 
@@ -149,16 +152,6 @@ $affected = db()->replace('table', $row);
 ```
 
 
-### Execute a Query
-Any query can be executed using the `query()` method:
-```php
-// SELECT a.col, b.col2 FROM table a
-//    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
-$rows = db()->query('SELECT a.col, b.col2 FROM table a'
-    . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
-```
-
-
 ### Update
 The `update()` method returns affected rows as `int`, example:
 ```php
@@ -166,7 +159,7 @@ The `update()` method returns affected rows as `int`, example:
 db()->update('table', ['x' => 1, 'y' => 2]);
 
 // UPDATE table SET y = 2 WHERE x = 1
-db()->update('table', 'WHERE x = :x', ['y' => 2, ':x' => 1]);
+db()->update('table WHERE x = :x', ['y' => 2, ':x' => 1]);
 
 // update using object
 // UPDATE table SET x = 1, y = 2
@@ -174,6 +167,16 @@ $data = new stdClass;
 $data->x = 1;
 $data->y = 2;
 db()->update('table', $data);
+```
+
+
+### Execute a Query
+Any query can be executed using the `query()` method:
+```php
+// SELECT a.col, b.col2 FROM table a
+//    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
+$rows = db()->query('SELECT a.col, b.col2 FROM table a'
+    . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -204,7 +207,7 @@ $rows = db()->callRows('sp_getQueueActive');
 
 
 ### Pagination
-The `pagination()` method returns a `Eco\Factory\Database\Pagination` object, example:
+The `pagination()` method returns a `Eco\System\Database\Pagination` object, example:
 ```php
 // SELECT a, b FROM table WHERE x = 1 AND y = 2 LIMIT <page>, <records_per_page>
 $p = db()->pagination('SELECT a, b FROM table WHERE x = ? AND y = ?', 1, 2);
@@ -253,6 +256,14 @@ catch(\PDOException $ex)
 
 ### Other Methods
 The following methods are also available
+
+#### Dynamically Create Connection
+A database connection can be dynamically created instead of using the Eco configuration settings, for example:
+```php
+db()->connectionRegister('localhost', 'database_name', 'user', 'password', 'my-db');
+// now use like:
+db('my-db')->count('table');
+```
 
 #### Close Connection
 ```php

@@ -7,11 +7,11 @@
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
-namespace Eco\Factory;
+namespace Eco\System;
 
-use Eco\Factory\Database\Connection;
-use Eco\Factory\Database\Pagination;
 use Eco\System;
+use Eco\System\Database\Connection;
+use Eco\System\Database\Pagination;
 
 /**
  * Database (MySQL/MariaDB)
@@ -67,58 +67,6 @@ class Database extends \Eco\Factory
 	}
 
 	/**
-	 * Call store procedure
-	 *
-	 * @param string $name
-	 * @param array $params
-	 * @param int $return_type
-	 * @return mixed
-	 */
-	private function __callSp($name, $params, $return_type)
-	{
-		$p_str = '';
-		if($params)
-		{
-			$p_str = rtrim(str_repeat('?,', count($params)), ',');
-		}
-
-		return $this->__getConn()->query('CALL ' . $name . '(' . $p_str . ')', $params,
-			$return_type);
-	}
-
-	/**
-	 * Connection getter
-	 *
-	 * @return \Eco\Factory\Database\Connection
-	 */
-	private function __getConn()
-	{
-		if($this->__hasConn($this->__conn_id))
-		{
-			return self::$__conns[$this->__conn_id];
-		}
-	}
-
-	/**
-	 * Connection exists flag getter
-	 *
-	 * @param mixed $connection_id
-	 * @return boolean
-	 * @throws \Exception (connection does not exist)
-	 */
-	private function __hasConn($connection_id)
-	{
-		if(!isset(self::$__conns[$connection_id]))
-		{
-			throw new \Exception(( count(self::$__conns)
-				? 'Connection with ID \'' . $connection_id . '\' does not exist'
-				: 'No database connections have been registered' ) . ' (' . __METHOD__ . ')');
-		}
-
-		return true;
-	}
-
-	/**
 	 * Create
 	 *
 	 * @param string $table
@@ -162,6 +110,58 @@ class Database extends \Eco\Factory
 			. ( $is_ignore ? ' IGNORE' : null ) ) . ' INTO ' . $table . '('
 			. implode(', ', array_keys($data)) . ') VALUES(' . implode(', ', $values) . ')',
 			$params, Connection::QUERY_RETURN_TYPE_AFFECTED);
+	}
+
+	/**
+	 * Call store procedure
+	 *
+	 * @param string $name
+	 * @param array $params
+	 * @param int $return_type
+	 * @return mixed
+	 */
+	private function __callSp($name, $params, $return_type)
+	{
+		$p_str = '';
+		if($params)
+		{
+			$p_str = rtrim(str_repeat('?,', count($params)), ',');
+		}
+
+		return $this->__getConn()->query('CALL ' . $name . '(' . $p_str . ')', $params,
+			$return_type);
+	}
+
+	/**
+	 * Connection getter
+	 *
+	 * @return \Eco\System\Database\Connection
+	 */
+	private function __getConn()
+	{
+		if($this->__hasConn($this->__conn_id))
+		{
+			return self::$__conns[$this->__conn_id];
+		}
+	}
+
+	/**
+	 * Connection exists flag getter
+	 *
+	 * @param mixed $connection_id
+	 * @return boolean
+	 * @throws \Exception (connection does not exist)
+	 */
+	private function __hasConn($connection_id)
+	{
+		if(!isset(self::$__conns[$connection_id]))
+		{
+			throw new \Exception(( count(self::$__conns)
+				? 'Connection with ID \'' . $connection_id . '\' does not exist'
+				: 'No database connections have been registered' ) . ' (' . __METHOD__ . ')');
+		}
+
+		return true;
 	}
 
 	/**
@@ -337,15 +337,13 @@ class Database extends \Eco\Factory
 	 * Count getter
 	 *
 	 * @param string $table
-	 * @param string $sql
 	 * @param mixed $params
 	 * @return int
 	 */
-	public function count($table, $sql = null, $params = null)
+	public function count($table, $params = null)
 	{
-		$r = $this->__getConn()->query('SELECT COUNT(1) AS c FROM ' . $table .
-			$this->__prepSql($sql), $this->__prepParams(2, func_get_args()),
-			Connection::QUERY_RETURN_TYPE_ROWS);
+		$r = $this->__getConn()->query('SELECT COUNT(1) AS c FROM ' . $this->__prepSql($table),
+			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
 
 		$r = (array)$r[0];
 		return (int)$r['c'];
@@ -355,56 +353,40 @@ class Database extends \Eco\Factory
 	 * Delete
 	 *
 	 * @param string $table
-	 * @param string $sql
 	 * @param mixed $params
 	 * @return int (affected)
 	 */
-	public function delete($table, $sql = null, $params = null)
+	public function delete($table, $params = null)
 	{
-		return $this->__getConn()->query('DELETE FROM ' . $table . $this->__prepSql($sql),
-			$this->__prepParams(2, func_get_args()), Connection::QUERY_RETURN_TYPE_AFFECTED);
+		return $this->__getConn()->query('DELETE FROM ' . $this->__prepSql($table),
+			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_AFFECTED);
 	}
 
 	/**
 	 * Single row getter
 	 *
-	 * @param string $table_or_query
+	 * @param string $table
 	 * @param mixed $params
 	 * @return \stdClass (or null for no row)
 	 * @throws \Exception (LIMIT clause exists in query)
 	 */
-	public function get($table_or_query, $params = null)
+	public function get($table, $params = null)
 	{
-		$table_or_query = $this->__prepSql($table_or_query);
+		$table = $this->__prepSql($table);
 
-		$index = 0;
-		$q = null;
-
-		if(strpos($table_or_query, ' ') !== false) // query
+		if(!$this->__getConn()->isSelectQuery($table))
 		{
-			$index = 1;
-
-			if($this->__getConn()->isSelectQuery($table_or_query)) // SELECT
-			{
-				$q = $table_or_query;
-			}
+			$table = 'SELECT * FROM ' . $table;
 		}
 
-		if(!$q)
-		{
-			$q = 'SELECT * FROM ' . $table_or_query;
-		}
-
-		if($this->__getConn()->hasSqlLimitClause($q))
+		if($this->__getConn()->hasSqlLimitClause($table))
 		{
 			throw new \Exception('Failed to get row, LIMIT clause already exists in query'
 				. ' (' . __METHOD__ . ')');
 		}
 
-		$q .= ' LIMIT 1';
-
-		$r = $this->__getConn()->query($q, $this->__prepParams($index, func_get_args()),
-			Connection::QUERY_RETURN_TYPE_ROWS);
+		$r = $this->__getConn()->query($table . ' LIMIT 1',
+			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
 
 		return isset($r[0]) ? $r[0] : null;
 	}
@@ -474,14 +456,14 @@ class Database extends \Eco\Factory
 	/**
 	 * Row(s) exists flag getter
 	 *
-	 * @param string $table_or_query
+	 * @param string $table
 	 * @param mixed $params
 	 * @return boolean
 	 */
-	public function has($table_or_query, $params = null)
+	public function has($table, $params = null)
 	{
 		$r = $this->__getConn()->query('SELECT EXISTS(SELECT 1 FROM'
-			. $this->__prepSql($table_or_query) . ') AS h', $this->__prepParams(1, func_get_args()),
+			. $this->__prepSql($table) . ') AS h', $this->__prepParams(1, func_get_args()),
 			Connection::QUERY_RETURN_TYPE_ROWS);
 
 		$r = (array)$r[0];
@@ -519,7 +501,7 @@ class Database extends \Eco\Factory
 	 * @staticvar \stdClass $conf
 	 * @param string $query
 	 * @param mixed $params
-	 * @return \Eco\Factory\Database\Pagination
+	 * @return \Eco\System\Database\Pagination
 	 * @throws \Exception (LIMIT clause exists in query, or invalid settings)
 	 */
 	public function pagination($query, $params = null)
@@ -628,18 +610,11 @@ class Database extends \Eco\Factory
 	 * Update
 	 *
 	 * @param string $table
-	 * @param string $sql
 	 * @param array $params
 	 * @return int (affected)
 	 */
-	public function update($table, $sql, array $params = null)
+	public function update($table, array $params = null)
 	{
-		if(func_num_args() === 2) // no SQL
-		{
-			$params = $sql;
-			$sql = '';
-		}
-
 		$p = [];
 		$values = [];
 		$args = [];
@@ -666,8 +641,15 @@ class Database extends \Eco\Factory
 			}
 		}
 
+		$sql = '';
+		if(($pos = strpos($table, ' ')) !== false) // SQL
+		{
+			$sql = $this->__prepSql(substr($table, $pos, strlen($table)));
+			$table = substr($table, 0, $pos);
+		}
+
 		return $this->__getConn()->query('UPDATE ' . $table . ' SET ' . implode(', ', $values) .
-			$this->__prepSql($sql), $p, Connection::QUERY_RETURN_TYPE_AFFECTED);
+			$sql, $p, Connection::QUERY_RETURN_TYPE_AFFECTED);
 	}
 
 	/**
