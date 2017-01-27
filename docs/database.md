@@ -4,16 +4,16 @@ The Database class is used to execute database calls and can be accessed using `
 #### Database Topics
 - [Connections](#database-connections)
 - [Count Rows](#count-rows)
-- [Delete](#delete)
 - [Get Single Row](#get-single-row)
 - [Get All Rows](#get-all-rows)
 - [Check if Rows Exist](#check-if-rows-exist)
+- [Get Single Value](#get-single-value)
+- [Delete](#delete)
 - [Insert](#insert)
 - [Get Last Insert ID](#get-last-insert-id)
 - [Replace](#replace)
 - [Update](#update)
 - [Execute a Query](#execute-a-query)
-- [Get Single Value](#get-single-value)
 - [Call Stored Procedure](#call-stored-procedure)
 - [Pagination](#pagination)
 - [Transactions](#transactions)
@@ -62,17 +62,6 @@ $count = db()->count('table WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
-### Delete
-The `delete()` method returns affected rows as `int`, example:
-```php
-// DELETE FROM table
-$affected = db()->delete('table');
-
-// DELETE FROM table WHERE x = 1 AND y = 2
-$affected = db()->delete('table WHERE x = ? AND y = ?', 1, 2);
-```
-
-
 ### Get Single Row
 The `get()` method returns a single row as a `stdClass` object, example:
 ```php
@@ -93,6 +82,9 @@ The `getAll()` method returns an array of rows (as `stdClass` objects), example:
 ```php
 // SELECT * FROM table
 $rows = db()->getAll('table');
+
+// SELECT * FROM table WHERE x = 1 AND y = 2
+$rows = db()->getAll('table WHERE x = ? AND y = ?', 1, 2);
 ```
 > The `getAll()` method will return an empty `array` if there are no results
 
@@ -105,6 +97,26 @@ $has = db()->has('table');
 
 // SELECT EXISTS(SELECT 1 FROM table WHERE x = 1 AND y = 2)
 $has = db()->has('table WHERE x = ? AND y = ?', 1, 2);
+```
+
+
+### Get Single Value
+The `value()` method returns a single value as string, example:
+```php
+// SELECT a FROM table WHERE x = 1 AND y = 2
+$a = db()->value('SELECT a FROM table WHERE x = ? AND y = ?', 1, 2);
+// $a equals the value of 'table.a'
+```
+
+
+### Delete
+The `delete()` method returns affected rows as `int`, example:
+```php
+// DELETE FROM table
+$affected = db()->delete('table');
+
+// DELETE FROM table WHERE x = 1 AND y = 2
+$affected = db()->delete('table WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -177,15 +189,6 @@ Any query can be executed using the `query()` method:
 //    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
 $rows = db()->query('SELECT a.col, b.col2 FROM table a'
     . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
-```
-
-
-### Get Single Value
-The `value()` method returns a single value as string, example:
-```php
-// SELECT a FROM table WHERE x = 1 AND y = 2
-$a = db()->value('SELECT a FROM table WHERE x = ? AND y = ?', 1, 2);
-// $a equals the value of 'table.a'
 ```
 
 

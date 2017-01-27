@@ -3,21 +3,18 @@ The `Model` class can be used to simplify model classes and database calls.
 
 #### Model Topics
 - [Basic Usage](#basic-usage)
-- [Public Methods](#public-methods)
-  - [Count](#count)
-  - [Delete Single Row](#delete-single-row)
-  - [Get Row](#get-row)
-  - [Get All Rows](#get-all-rows)
-  - [Check if Row Exists](#check-if-row-exists)
-  - [Get Model Name](#get-model-name)
-  - [Get Single Column Value](#get-single-column-value)
-  - [Execute a Query](#execute-a-query)
-- [Protected Methods](#protected-methods)
-  - [Advanced Delete](#advanced-delete)
-  - [Insert](#insert)
-  - [Replace](#replace)
-  - [Update](#update)
-  - [Truncate](#truncate)
+- [Count](#count)
+- [Get Single Row](#get-row)
+- [Get All Rows](#get-all-rows)
+- [Check if Rows Exist](#check-if-rows-exist)
+- [Get Single Column Value](#get-single-column-value)
+- [Delete](#delete)
+- [Insert](#insert)
+- [Replace](#replace)
+- [Update](#update)
+- [Truncate](#truncate)
+- [Execute a Query](#execute-a-query)
+- [Get Model Name](#get-model-name)
 
 
 ### Basic Usage
@@ -40,158 +37,172 @@ class Document extends \Eco\Model
 {
     // database table name
     const NAME = 'document';
+
+    // database primary key column name
+    // only required if PK column name is not 'id'
+    // const PK = 'table_id';
+
+    // database connection ID
+    // only required if not using the default connection ID
+    // const CONNECTION_ID = 2;
+
+    public function get($id)
+    {
+        // SELECT * FROM doc WHERE id = $id
+        return $this->db->get($id);
+    }
 }
 ```
 The class constant `NAME` **must be set** with the name of the database table the model represents.
 
-Because this model extends the `Eco\Model` class basic methods can be used, for example:
+Because this model extends the `Eco\Model` class, methods can be used outside the model class, for example:
 ```php
 // SELECT COUNT(1) FROM doc
-$count = model()->doc->count();
-
-// SELECT * FROM doc WHERE id = 5
-$row = model()->doc->get(5);
+$count = model()->doc->db->count();
 ```
 
 
-### Public Methods
-These are the main model methods and can be overridden
-
-
-#### Count
+### Count
+The `count()` method returns `int`
 ```php
-// returns int
-$count = model()->model_name->count();
+// count all rows
+$count = model()->model_name->db->count();
+
+// with SQL
+$row = model()->model_name->db->count('WHERE x = ? AND y = ?', 1, 2);
+// or without WHERE keyword
+$row = model()->model_name->db->count('x = ? AND y = ?', 1, 2);
 ```
 
 
-#### Delete Single Row
-Delete row by primary key value
+### Get Single Row
+The `get()` method returns a single row as `stdClass`, or `null` on no results:
 ```php
-// returns int
-$affected = model()->model_name->delete(5);
+// get by primary key value
+$row = model()->model_name->db->get(5);
+
+// with SQL
+$row = model()->model_name->db->get('WHERE x = ? AND y = ?', 1, 2);
+// or without WHERE keyword
+$row = model()->model_name->db->get('x = ? AND y = ?', 1, 2);
+
+// with columns
+// SELECT col1, col2 FROM model_name WHERE x = 1 AND y = 2 LIMIT 1
+$row = model()->model_name->db->get('(col, col2) WHERE x = ? AND y = ?', 1, 2);
+// or without WHERE keyword
+$row = model()->model_name->db->get('(col, col2) x = ? AND y = ?', 1, 2);
 ```
 
 
-#### Get Row
-Get single row by primary key value
+### Get All Rows
+The `getAll()` method returns an `array` of `stdClass` objects (or empty `array` on no rows)
 ```php
-// returns stdClass (or null on no row)
-$row = model()->model_name->get(5);
+// get all rows
+$rows = model()->model_name->db->getAll();
+
+// with SQL
+$rows = model()->model_name->db->getAll('ORDER BY x, y');
+$rows = model()->model_name->db->getAll('WHERE x = ? AND y = ?', 1, 2);
+
+// with columns
+// SELECT col1, col2 FROM model_name WHERE x = 1 AND y = 2
+$rows = model()->model_name->db->getAll('(col, col2) WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
-#### Get All Rows
+### Check if Rows Exist
+The `has()` method returns `boolean` value
 ```php
-// returns array of stdClass objects (or empty array on no rows)
-$rows = model()->model_name->getAll();
+// check by primary key value
+$has = model()->model_name->db->has(5);
+
+// with SQL
+$has = model()->model_name->db->has('WHERE x = ? AND y = ?', 1, 2);
+// or without WHERE keyword
+$has = model()->model_name->db->has('x = ? AND y = ?', 1, 2);
 ```
 
 
-#### Check if Row Exists
-Check if row exists by primary key value
-```php
-// returns boolean
-$row = model()->model_name->has(5);
-```
-
-
-#### Get Model Name
-```php
-$name = model()->model_name->name();
-```
-
-
-#### Get Single Column Value
+### Get Single Column Value
 Get single column value for primary key value
 ```php
-$col1 = model()->model_name->value(5, 'col1');
+// with SQL
+$col1 = model()->model_name->db->value('column_name WHERE x = ? AND y = ?', 1, 2);
+// or without WHERE keyword
+$col1 = model()->model_name->db->value('column_name x = ? AND y = ?', 1, 2);
 ```
 
-#### Execute a Query
+
+### Delete
+The `delete()` method returns `int` (affected)
+```php
+// delete by primary key value
+$has = model()->model_name->db->delete(5);
+
+// with SQL
+$has = model()->model_name->db->delete('WHERE x = ? AND y = ?', 1, 2);
+// or without WHERE keyword
+$has = model()->model_name->db->delete('x = ? AND y = ?', 1, 2);
+```
+
+
+### Insert
+The `insert()` method returns `int` (affected)
+```php
+$affected = model()->model_name->db->insert(['x' => 1, 'y' => 2]);
+$insert_id = model()->model_name->db->id();
+
+// or INSERT IGNORE
+$affected = model()->model_name->db->insert(['x' => 1, 'y' => 2], true);
+
+// or use object
+$row = new stdClass;
+$row->x = 1;
+$row->y = 2;
+$affected = model()->model_name->db->insert($row);
+```
+
+
+### Replace
+Replace method `replace()` is used the same way as the `insert()` method
+
+
+### Update
+The `update()` method returns `int` (affected)
+```php
+// update all
+return model()->model_name->db->update(['x' => 1, 'y' => 2]);
+
+// update by primary key value
+return model()->model_name->db->update(5, ['x' => 1, 'y' => 2]);
+
+// update by SQL
+return model()->model_name->db->update('WHERE a = :a',
+	['x' => 1, 'y' => 2, ':a' => 1]);
+// or without WHERE keyword
+return model()->model_name->db->update('a = :a',
+	['x' => 1, 'y' => 2, ':a' => 1]);
+```
+
+
+### Truncate
+```php
+// do truncate
+model()->model_name->db->truncate();
+```
+
+
+### Execute a Query
 Any query can be executed:
 ```php
 // SELECT a.col, b.col2 FROM table a
 //    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
-$rows = model()->model_name->query('SELECT a.col, b.col2 FROM table a'
+$rows = model()->model_name->db->query('SELECT a.col, b.col2 FROM table a'
     . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
-### Protected Methods
-These are the methods that can only be used from inside a model classes and cannot not be  overridden - this keeps all advanced model logic *inside* the model classes
-
-
-#### Advanced Delete
-The `_delete()` method is more advanced than the `delete()` method, example:
+### Get Model Name
 ```php
-class ModelName extends \Eco\Model
-{
-    public function deleteActive()
-    {
-        // returns int (affected)
-        return $this->_delete('WHERE is_active = ?', 1);
-    }
-}
-```
-
-
-#### Insert
-Insert a row
-```php
-class ModelName extends \Eco\Model
-{
-    public function create()
-    {
-        // int (affected)
-        $affected = $this->_insert(['x' => 1, 'y' => 2]);
-
-        // return the insert ID
-        return $this->id();
-
-        // or INSERT IGNORE
-        $affected = $this->_insert(['x' => 1, 'y' => 2], true);
-
-        // or use object
-        $row = new stdClass;
-        $row->x = 1;
-        $row->y = 2;
-        $affected =$this->_insert($row);
-    }
-}
-```
-
-
-#### Replace
-Replace method `_replace()` is used the same way as the `_insert()` method
-
-
-#### Update
-```php
-class ModelName extends \Eco\Model
-{
-    public function create()
-    {
-        // update all
-        // returns int (affected)
-        return $this->_update(['x' => 1, 'y' => 2]);
-
-        // or with WHERE clause
-        return $this->_update('WHERE a = :a',
-            ['x' => 1, 'y' => 2, ':a' => 1]);
-    }
-}
-```
-
-
-#### Truncate
-```php
-class ModelName extends \Eco\Model
-{
-    public function truncate()
-    {
-        // do truncate
-        $this->_truncate();
-    }
-}
+$name = model()->model_name->name();
 ```

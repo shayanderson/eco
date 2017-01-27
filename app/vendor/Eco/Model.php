@@ -9,7 +9,7 @@
  */
 namespace Eco;
 
-use Eco\System\Database;
+use Eco\System\Database\Model as DatabaseModel;
 
 /**
  * Model
@@ -34,25 +34,11 @@ abstract class Model
 	const PK = null;
 
 	/**
-	 * Connection ID
+	 * Model object
 	 *
-	 * @var mixed
+	 * @var \Eco\System\Database\Model
 	 */
-	private $__conn_id;
-
-	/**
-	 * Connection ID is default flag
-	 *
-	 * @var boolean
-	 */
-	private $__is_default_conn_id;
-
-	/**
-	 * PK column name
-	 *
-	 * @var string
-	 */
-	private $__pk;
+	public $db;
 
 	/**
 	 * Init
@@ -67,142 +53,7 @@ abstract class Model
 				. __METHOD__ . ')');
 		}
 
-		$d_id = Database::getInstance()->getDefaultConnectionId();
-		$this->__conn_id = static::CONNECTION_ID ? static::CONNECTION_ID : $d_id;
-		$this->__pk = static::PK ? static::PK : 'id';
-		$this->__is_default_conn_id = $this->__conn_id == $d_id;
-	}
-
-	/**
-	 * Database getter
-	 *
-	 * @return \Eco\System\Database
-	 */
-	private function __db()
-	{
-		return System::db( $this->__is_default_conn_id ? null : $this->__conn_id );
-	}
-
-	/**
-	 * Delete
-	 *
-	 * @param string $sql
-	 * @param mixed $params
-	 * @return int (affected)
-	 */
-	final protected function _delete($sql = null, $params = null)
-	{
-		return call_user_func_array([$this->__db(), 'delete'],
-			['n' => static::NAME . ( $sql !== null ? ' ' . $sql : null )]
-				+ array_slice(func_get_args(), 1));
-	}
-
-	/**
-	 * Create
-	 *
-	 * @param mixed $data
-	 * @param boolean $ignore
-	 * @return int (affected)
-	 */
-	final protected function _insert($data, $ignore = false)
-	{
-		return $this->__db()->insert(static::NAME, $data, $ignore);
-	}
-
-	/**
-	 * Replace
-	 *
-	 * @param mixed $data
-	 * @return int (affected)
-	 */
-	final protected function _replace($data)
-	{
-		return $this->__db()->replace(static::NAME, $data);
-	}
-
-	/**
-	 * Truncate table
-	 *
-	 * @return boolean (false on error)
-	 */
-	final protected function _truncate()
-	{
-		return $this->__db()->truncate(static::NAME);
-	}
-
-	/**
-	 * Update
-	 *
-	 * @param string $sql
-	 * @param array $params
-	 * @return int (affected)
-	 */
-	final protected function _update($sql, array $params)
-	{
-		return $this->__db()->update(static::NAME . ' ' . $sql, $params);
-	}
-
-	/**
-	 * Count getter
-	 *
-	 * @return int
-	 */
-	public function count()
-	{
-		return $this->__db()->count(static::NAME);
-	}
-
-	/**
-	 * Delete by PK value
-	 *
-	 * @param int $id
-	 * @return int (affected)
-	 */
-	public function delete($id)
-	{
-		return $this->__db()->delete(static::NAME . ' WHERE ' . $this->__pk . ' = ?', (int)$id);
-	}
-
-	/**
-	 * Single record getter by PK value
-	 *
-	 * @param int $id
-	 * @return \stdClass (or null for no record)
-	 */
-	public function get($id)
-	{
-		return $this->__db()->get(static::NAME . ' WHERE ' . $this->__pk . ' = ?', (int)$id);
-	}
-
-	/**
-	 * All records getter
-	 *
-	 * @return array
-	 */
-	public function getAll()
-	{
-		return $this->__db()->getAll(static::NAME);
-	}
-
-	/**
-	 * Record exists flag getter
-	 *
-	 * @param int $id
-	 * @return boolean
-	 */
-	public function has($id)
-	{
-		return $this->__db()->has(static::NAME, 'WHERE ' . $this->__pk . ' = ?', (int)$id);
-	}
-
-	/**
-	 * Insert ID getter
-	 *
-	 * @return mixed (int|string)
-	 */
-	final public function id()
-	{
-		return $this->__db()->id();
+		$this->db = new DatabaseModel(static::NAME, static::PK, static::CONNECTION_ID);
 	}
 
 	/**
@@ -213,30 +64,5 @@ abstract class Model
 	final public function name()
 	{
 		return static::NAME;
-	}
-
-	/**
-	 * Execute query
-	 *
-	 * @param string $query
-	 * @param mixed $params
-	 * @return mixed
-	 */
-	public function query($query, $params = null)
-	{
-		return $this->__db()->query($query, array_slice(func_get_args(), 1));
-	}
-
-	/**
-	 * Single column value getter
-	 *
-	 * @param int $id
-	 * @param string $column
-	 * @return mixed
-	 */
-	public function value($id, $column)
-	{
-		return $this->__db()->value('SELECT ' . $column . ' FROM ' . static::NAME
-			. ' WHERE ' . $this->__pk . ' = ?', (int)$id);
 	}
 }

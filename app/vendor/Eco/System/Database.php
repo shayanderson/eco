@@ -399,8 +399,8 @@ class Database extends \Eco\Factory
 	 */
 	public function getAll($table)
 	{
-		return $this->__getConn()->query('SELECT * FROM ' . $table, null,
-			Connection::QUERY_RETURN_TYPE_ROWS);
+		return $this->__getConn()->query('SELECT * FROM ' . $table,
+			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
 	}
 
 	/**
