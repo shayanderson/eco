@@ -4,7 +4,7 @@ The `Model` class can be used to simplify model classes and database calls.
 #### Model Topics
 - [Basic Usage](#basic-usage)
 - [Count](#count)
-- [Get Single Row](#get-row)
+- [Get Single Row](#get-single-row)
 - [Get All Rows](#get-all-rows)
 - [Check if Rows Exist](#check-if-rows-exist)
 - [Get Single Column Value](#get-single-column-value)
