@@ -171,16 +171,16 @@ Replace method `replace()` is used the same way as the `insert()` method
 The `update()` method returns `int` (affected)
 ```php
 // update all
-return model()->model_name->db->update(['x' => 1, 'y' => 2]);
+$affected = model()->model_name->db->update(['x' => 1, 'y' => 2]);
 
 // update by primary key value
-return model()->model_name->db->update(5, ['x' => 1, 'y' => 2]);
+$affected = model()->model_name->db->update(5, ['x' => 1, 'y' => 2]);
 
 // update by SQL
-return model()->model_name->db->update('WHERE a = :a',
+$affected = model()->model_name->db->update('WHERE a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 // or without WHERE keyword
-return model()->model_name->db->update('a = :a',
+$affected = model()->model_name->db->update('a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 ```
 
