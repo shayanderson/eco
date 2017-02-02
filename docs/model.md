@@ -67,13 +67,13 @@ Because the `App\Model\Document` extends the `Eco\Model` class there are several
 $count = model()->doc->countRows();
 
 // delete row with primary key value of 5 (numeric values only)
-$affected = model()->doc->delete(5);
+$affected = model()->doc->deleteRow(5);
 
 // get row with primary key value of 5 (numeric values only)
-$row = model()->doc->get(5);
+$row = model()->doc->getRow(5);
 
 // check if row with primary key value of 5 exists (numeric values only)
-$has = model()->doc->has(5);
+$has = model()->doc->hasRow(5);
 
 // get the table name (in this case "docuemnt")
 $name = model()->doc->name();
