@@ -60,7 +60,7 @@ Now the `App\Model\Document` class can be used:
 $row = model()->doc->get(5);
 ```
 
-##### Public Methods
+#### Public Methods
 Because the `App\Model\Document` extends the `Eco\Model` class there are several public (final) methods available by default that can be called *outside* the `Document` class:
 ```php
 // get count of all rows
