@@ -35,13 +35,6 @@ class Database extends \Eco\Factory
 	private $__default_conn_id;
 
 	/**
-	 * Connections ready flag
-	 *
-	 * @var boolean
-	 */
-	private $__is_init = false;
-
-	/**
 	 * Connections
 	 *
 	 * @var array
@@ -53,14 +46,14 @@ class Database extends \Eco\Factory
 	 */
 	protected function __construct()
 	{
-		if(!$this->__is_init && isset(System::conf()->__eco__->database->connection))
+		if(isset(System::conf()->__eco__->database->connection))
 		{
 			foreach(System::conf()->__eco__->database->connection as $k => $v)
 			{
 				if(isset($v->host) && $v->host !== null) // register connection
 				{
-					$this->connectionRegister($v->host, $v->database, $v->user, $v->password,
-						$k == 1 ? null : $k, isset($v->log) && $v->log);
+					$this->connectionRegister($k, $v->host, $v->database, $v->user, $v->password,
+						isset($v->log) && $v->log);
 				}
 			}
 		}
@@ -273,34 +266,18 @@ class Database extends \Eco\Factory
 	/**
 	 * Register connection
 	 *
-	 * @staticvar int $next_id
+	 * @param mixed $connection_id
 	 * @param string $host
 	 * @param string $database
 	 * @param string $user
 	 * @param string $password
-	 * @param mixed $connection_id (optional)
 	 * @param boolean $query_logging
 	 * @return void
 	 * @throws \Exception (connection already exists)
 	 */
-	public function connectionRegister($host, $database, $user, $password, $connection_id = null,
+	public function connectionRegister($connection_id, $host, $database, $user, $password,
 		$query_logging = true)
 	{
-		static $next_id = 1;
-
-		if($connection_id !== null) // manual ID
-		{
-			if(is_numeric($connection_id)) // int, validate
-			{
-				$next_id = (int)$connection_id + 1;
-			}
-		}
-		else // auto ID
-		{
-			$connection_id = $next_id;
-			$next_id++;
-		}
-
 		if(isset(self::$__conns[$connection_id]))
 		{
 			throw new \Exception('Connection with ID \'' . $connection_id . '\' already exists');
@@ -493,6 +470,16 @@ class Database extends \Eco\Factory
 	public function insert($table, $data, $ignore = false)
 	{
 		return $this->__add($table, $data, false, $ignore);
+	}
+
+	/**
+	 * Query log getter
+	 *
+	 * @return array
+	 */
+	public function log()
+	{
+		return $this->__getConn()->getLog();
 	}
 
 	/**

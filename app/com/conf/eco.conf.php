@@ -50,9 +50,9 @@ return [
 					'password' => '',
 
 					/**
-					 * Enable query logging (unset or set false to disable)
+					 * Enable query logging for debugging (default: false)
 					 */
-					'log' => true
+					'log' => false
 				]
 			],
 

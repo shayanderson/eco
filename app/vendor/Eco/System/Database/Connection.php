@@ -19,6 +19,11 @@ use Eco\System;
 class Connection
 {
 	/**
+	 * Max log entries (mem safe)
+	 */
+	const QUERY_LOG_MAX_ENTRIES = 1000;
+
+	/**
 	 * Query return types
 	 */
 	const QUERY_RETURN_TYPE_AFFECTED = 1;
@@ -59,6 +64,13 @@ class Connection
 	 * @var boolean
 	 */
 	private $__is_query_logging;
+
+	/**
+	 * Query log
+	 *
+	 * @var array
+	 */
+	private $__log = [];
 
 	/**
 	 * Password
@@ -106,6 +118,29 @@ class Connection
 	}
 
 	/**
+	 * Query logger
+	 *
+	 * @param string $query
+	 * @param mixed $params
+	 * @return void
+	 */
+	private function __logQuery($query, $params = null)
+	{
+		if($this->__is_query_logging)
+		{
+			if(count($this->__log) > self::QUERY_LOG_MAX_ENTRIES)
+			{
+				array_shift($this->__log);
+			}
+
+			$this->__log[] = [
+				'query' => $query,
+				'params' => $params
+			];
+		}
+	}
+
+	/**
 	 * Close the connection
 	 *
 	 * @return void
@@ -113,6 +148,16 @@ class Connection
 	public function close()
 	{
 		$this->__pdo = null;
+	}
+
+	/**
+	 * Query log getter
+	 *
+	 * @return array
+	 */
+	public function getLog()
+	{
+		return $this->__log;
 	}
 
 	/**
@@ -166,11 +211,6 @@ class Connection
 	 */
 	public function query($query, $params = null, $return_type = null)
 	{
-		if($this->__is_query_logging)
-		{
-			System::log()->debug('Query (' . $this->__id . '): ' . $query, 'Eco', $params);
-		}
-
 		System::db()->connectionReset(); // reset to default ID
 
 		$sh = $this->getPdo()->prepare($query);
@@ -185,15 +225,19 @@ class Connection
 					$query .= ' LIMIT ' . $this->__global_limit;
 				}
 
+				$this->__logQuery($query, $params);
+
 				return $sh->fetchAll(\PDO::FETCH_CLASS);
 			}
 			else if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_AFFECTED )
 				|| preg_match('/^\s*(delete|insert|replace|update)/i', $query))
 			{
+				$this->__logQuery($query, $params);
 				return $sh->rowCount();
 			}
 			else // other
 			{
+				$this->__logQuery($query, $params);
 				return true;
 			}
 		}

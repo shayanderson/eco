@@ -27,7 +27,7 @@ First, model classes need to be "registered" in the *model registry* in the `app
  */
 class EcoModelRegistry extends \Eco\System\ModelRegistry {}
 ```
-Now each of these registered model classes can be accessed using the `eco::model()` method or the helper function `model()` (used in all the examples below).
+Now each of these registered model classes can be accessed using the `eco::model()` method or the helper function `model()` (used in examples below).
 
 Here is an example model class `App\Model\Document`:
 ```php
@@ -55,58 +55,80 @@ class Document extends \Eco\Model
 ```
 The class constant `NAME` **must be set** with the name of the database table the model represents.
 
-Because this model extends the `Eco\Model` class, methods can be used outside the model class, for example:
+Now the `App\Model\Document` class can be used:
 ```php
-// SELECT COUNT(1) FROM doc
-$count = model()->doc->db->count();
+// SELECT * FROM document WHERE id = 5
+$row = model()->doc->get(5);
 ```
+
+##### Public Methods
+Because the `App\Model\Document` extends the `Eco\Model` class there are several public (final) methods available by default that can be called *outside* the `Document` class:
+```php
+// get count of all rows
+$count = model()->doc->countRows();
+
+// delete row with primary key value of 5 (numeric values only)
+$affected = model()->doc->delete(5);
+
+// get row with primary key value of 5 (numeric values only)
+$row = model()->doc->get(5);
+
+// check if row with primary key value of 5 exists (numeric values only)
+$has = model()->doc->has(5);
+
+// get the table name (in this case "docuemnt")
+$name = model()->doc->name();
+```
+All the other methods listed below are used under the `Eco\Model` private propery `db` and cannot be used outside the model class.
 
 
 ### Count
 The `count()` method returns `int`
 ```php
 // count all rows
-$count = model()->model_name->db->count();
+$count = $this->db->count();
 
 // with SQL
-$row = model()->model_name->db->count('WHERE x = ? AND y = ?', 1, 2);
+$row = $this->db->count('WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$row = model()->model_name->db->count('x = ? AND y = ?', 1, 2);
+$row = $this->db->count('x = ? AND y = ?', 1, 2);
 ```
+> The `model()->name->countRows()` method can be used outside the model class to count all rows (see [public methods](#public-methods))
 
 
 ### Get Single Row
 The `get()` method returns a single row as `stdClass`, or `null` on no results:
 ```php
 // get by primary key value
-$row = model()->model_name->db->get(5);
+$row = $this->db->get(5);
 
 // with SQL
-$row = model()->model_name->db->get('WHERE x = ? AND y = ?', 1, 2);
+$row = $this->db->get('WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$row = model()->model_name->db->get('x = ? AND y = ?', 1, 2);
+$row = $this->db->get('x = ? AND y = ?', 1, 2);
 
 // with columns
-// SELECT col1, col2 FROM model_name WHERE x = 1 AND y = 2 LIMIT 1
-$row = model()->model_name->db->get('(col, col2) WHERE x = ? AND y = ?', 1, 2);
+// SELECT col, col2 FROM table WHERE x = 1 AND y = 2 LIMIT 1
+$row = $this->db->get('(col, col2) WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$row = model()->model_name->db->get('(col, col2) x = ? AND y = ?', 1, 2);
+$row = $this->db->get('(col, col2) x = ? AND y = ?', 1, 2);
 ```
+> The `model()->name->getRow($id)` method can be used outside the model class to get a single row by numeric primary key value (see [public methods](#public-methods))
 
 
 ### Get All Rows
 The `getAll()` method returns an `array` of `stdClass` objects (or empty `array` on no rows)
 ```php
 // get all rows
-$rows = model()->model_name->db->getAll();
+$rows = $this->db->getAll();
 
 // with SQL
-$rows = model()->model_name->db->getAll('ORDER BY x, y');
-$rows = model()->model_name->db->getAll('WHERE x = ? AND y = ?', 1, 2);
+$rows = $this->db->getAll('ORDER BY x, y');
+$rows = $this->db->getAll('WHERE x = ? AND y = ?', 1, 2);
 
 // with columns
-// SELECT col1, col2 FROM model_name WHERE x = 1 AND y = 2
-$rows = model()->model_name->db->getAll('(col, col2) WHERE x = ? AND y = ?', 1, 2);
+// SELECT col, col2 FROM table WHERE x = 1 AND y = 2
+$rows = $this->db->getAll('(col, col2) WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -114,22 +136,23 @@ $rows = model()->model_name->db->getAll('(col, col2) WHERE x = ? AND y = ?', 1, 
 The `has()` method returns `boolean` value
 ```php
 // check by primary key value
-$has = model()->model_name->db->has(5);
+$has = $this->db->has(5);
 
 // with SQL
-$has = model()->model_name->db->has('WHERE x = ? AND y = ?', 1, 2);
+$has = $this->db->has('WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$has = model()->model_name->db->has('x = ? AND y = ?', 1, 2);
+$has = $this->db->has('x = ? AND y = ?', 1, 2);
 ```
+> The `model()->name->hasRow($id)` method can be used outside the model class to check if a single row exists by numeric primary key value (see [public methods](#public-methods))
 
 
 ### Get Single Column Value
 Get single column value for primary key value
 ```php
 // with SQL
-$col1 = model()->model_name->db->value('column_name WHERE x = ? AND y = ?', 1, 2);
+$col = $this->db->value('column_name WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$col1 = model()->model_name->db->value('column_name x = ? AND y = ?', 1, 2);
+$col = $this->db->value('column_name x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -137,29 +160,30 @@ $col1 = model()->model_name->db->value('column_name x = ? AND y = ?', 1, 2);
 The `delete()` method returns `int` (affected)
 ```php
 // delete by primary key value
-$has = model()->model_name->db->delete(5);
+$has = $this->db->delete(5);
 
 // with SQL
-$has = model()->model_name->db->delete('WHERE x = ? AND y = ?', 1, 2);
+$has = $this->db->delete('WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$has = model()->model_name->db->delete('x = ? AND y = ?', 1, 2);
+$has = $this->db->delete('x = ? AND y = ?', 1, 2);
 ```
+> The `model()->name->deleteRow($id)` method can be used outside the model class to delete a single row by numeric primary key value (see [public methods](#public-methods))
 
 
 ### Insert
 The `insert()` method returns `int` (affected)
 ```php
-$affected = model()->model_name->db->insert(['x' => 1, 'y' => 2]);
-$insert_id = model()->model_name->db->id();
+$affected = $this->db->insert(['x' => 1, 'y' => 2]);
+$insert_id = $this->db->id();
 
 // or INSERT IGNORE
-$affected = model()->model_name->db->insert(['x' => 1, 'y' => 2], true);
+$affected = $this->db->insert(['x' => 1, 'y' => 2], true);
 
 // or use object
 $row = new stdClass;
 $row->x = 1;
 $row->y = 2;
-$affected = model()->model_name->db->insert($row);
+$affected = $this->db->insert($row);
 ```
 
 
@@ -171,16 +195,16 @@ Replace method `replace()` is used the same way as the `insert()` method
 The `update()` method returns `int` (affected)
 ```php
 // update all
-$affected = model()->model_name->db->update(['x' => 1, 'y' => 2]);
+$affected = $this->db->update(['x' => 1, 'y' => 2]);
 
 // update by primary key value
-$affected = model()->model_name->db->update(5, ['x' => 1, 'y' => 2]);
+$affected = $this->db->update(5, ['x' => 1, 'y' => 2]);
 
 // update by SQL
-$affected = model()->model_name->db->update('WHERE a = :a',
+$affected = $this->db->update('WHERE a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 // or without WHERE keyword
-$affected = model()->model_name->db->update('a = :a',
+$affected = $this->db->update('a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 ```
 
@@ -188,7 +212,7 @@ $affected = model()->model_name->db->update('a = :a',
 ### Truncate
 ```php
 // do truncate
-model()->model_name->db->truncate();
+$this->db->truncate();
 ```
 
 
@@ -197,12 +221,6 @@ Any query can be executed:
 ```php
 // SELECT a.col, b.col2 FROM table a
 //    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
-$rows = model()->model_name->db->query('SELECT a.col, b.col2 FROM table a'
+$rows = $this->db->query('SELECT a.col, b.col2 FROM table a'
     . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
-```
-
-
-### Get Model Name
-```php
-$name = model()->model_name->name();
 ```

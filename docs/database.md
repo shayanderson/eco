@@ -1,8 +1,9 @@
 ## Database Class
-The Database class is used to execute database calls and can be accessed using `eco::db()` or the helper function `db()` (used in all the examples below).
+The Database class is used to execute database calls and can be accessed using `eco::db()` or the helper function `db()` (used in examples below).
 
 #### Database Topics
 - [Connections](#database-connections)
+- [Logging](#logging)
 - [Count Rows](#count-rows)
 - [Get Single Row](#get-single-row)
 - [Get All Rows](#get-all-rows)
@@ -29,7 +30,7 @@ Database connections must first be setup in the Eco configuration file `app/com/
 		'database' => 'dbname',
 		'user' => 'dbuser',
 		'password' => 'userpwd',
-		'log' => true
+		'log' => false
 ```
 This database connection ID is `1` (the array key). When using multiple connections use a different array key for each connection ID, for example:
 ```php
@@ -48,6 +49,44 @@ db()->count('table');
 When another connection is used (that is not the default connection) the connection ID must be used for each call:
 ```php
 db('remote')->count('table');
+```
+
+
+### Logging
+When query logging is enabled for a connection (see [connection settings](#database-connections)) it will retain the last 1,000 executed statements. The log can be used for debugging, for example:
+```php
+// execute queries
+$rows = db()->getAll('table LIMIT 10');
+$rows = db()->getAll('table2 WHERE x = ?', 1);
+
+// get the log
+$log = db()->log();
+/* $log contains array of log entries:
+Array
+(
+    [0] => Array
+        (
+            [query] => SELECT * FROM table LIMIT 10
+            [params] =>
+        )
+
+    [1] => Array
+        (
+            [query] => SELECT * FROM table2 WHERE x = ?
+            [params] => Array
+                (
+                    [0] => 1
+                )
+
+        )
+
+)
+*/
+```
+> Each database connection has its own separate log so the connection ID must be used when not using the default connection, example:
+```php
+$log = db()->log(); // default connection log
+$log_remote = db('remote')->log(); // connection 'remote' log
 ```
 
 
@@ -72,7 +111,7 @@ $row = db()->get('table');
 $row = db()->get('table WHERE x = ? AND y = ?', 1, 2);
 
 // or full query
-$row = db()->get('SELECT col1, col2 FROM table WHERE x = ? AND y = ?', 1, 2);
+$row = db()->get('SELECT col, col2 FROM table WHERE x = ? AND y = ?', 1, 2);
 ```
 > The `get()` method will return `null` if there are no results
 
@@ -263,9 +302,9 @@ The following methods are also available
 #### Dynamically Create Connection
 A database connection can be dynamically created instead of using the Eco configuration settings, for example:
 ```php
-db()->connectionRegister('localhost', 'database_name', 'user', 'password', 'my-db');
+db()->connectionRegister('db_id', 'localhost', 'database_name', 'user', 'password');
 // now use like:
-db('my-db')->count('table');
+db('db_id')->count('table');
 ```
 
 #### Close Connection
@@ -279,7 +318,7 @@ db()->close();
 Get table column names:
 ```php
 // returns array of column names like:
-// ['col1', col2']
+// ['col', col2']
 $columns = db()->getColumns('table');
 ```
 

@@ -38,7 +38,7 @@ abstract class Model
 	 *
 	 * @var \Eco\System\Database\Model
 	 */
-	public $db;
+	protected $db;
 
 	/**
 	 * Init
@@ -54,6 +54,58 @@ abstract class Model
 		}
 
 		$this->db = new DatabaseModel(static::NAME, static::PK, static::CONNECTION_ID);
+	}
+
+	/**
+	 * Count getter
+	 *
+	 * @return int
+	 */
+	final public function countRows()
+	{
+		return $this->db->count();
+	}
+
+	/**
+	 * Delete by PK value
+	 *
+	 * @param int $id
+	 * @return inf (affected)
+	 */
+	final public function deleteRow($id)
+	{
+		if(is_numeric($id))
+		{
+			return $this->db->delete($id);
+		}
+	}
+
+	/**
+	 * Single record getter
+	 *
+	 * @param int $id
+	 * @return \stdClass (or null for no record)
+	 */
+	final public function getRow($id)
+	{
+		if(is_numeric($id))
+		{
+			return $this->db->get($id);
+		}
+	}
+
+	/**
+	 * Record exists flag getter
+	 *
+	 * @param mixed $id
+	 * @return boolean
+	 */
+	final public function hasRow($id)
+	{
+		if(is_numeric($id))
+		{
+			return $this->db->has($id);
+		}
 	}
 
 	/**
