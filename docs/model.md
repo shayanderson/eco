@@ -47,7 +47,7 @@ class Document extends \Eco\Model
 
     public function get($id)
     {
-        // SELECT * FROM doc WHERE id = $id
+        // SELECT * FROM document WHERE id = $id
         return $this->db->get($id);
     }
 }
