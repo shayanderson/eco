@@ -75,7 +75,7 @@ $row = model()->doc->getRow(5);
 // check if row with primary key value of 5 exists (numeric values only)
 $has = model()->doc->hasRow(5);
 
-// get the table name (in this case "docuemnt")
+// get the table name (in this case "document")
 $name = model()->doc->name();
 ```
 All the other methods listed below are used under the `Eco\Model` private propery `db` and cannot be used outside the model class.
