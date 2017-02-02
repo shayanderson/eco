@@ -14,7 +14,6 @@ The `Model` class can be used to simplify model classes and database calls.
 - [Update](#update)
 - [Truncate](#truncate)
 - [Execute a Query](#execute-a-query)
-- [Get Model Name](#get-model-name)
 
 
 ### Basic Usage
