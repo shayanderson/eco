@@ -176,7 +176,7 @@ $affected = $this->db->insert(['x' => 1, 'y' => 2]);
 $insert_id = $this->db->id();
 
 // or INSERT IGNORE
-$affected = $this->db->insert(['x' => 1, 'y' => 2], true);
+$affected = $this->db->insertIgnore(['x' => 1, 'y' => 2]);
 
 // or use object
 $row = new stdClass;

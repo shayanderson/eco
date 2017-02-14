@@ -313,14 +313,15 @@ class Database extends \Eco\Factory
 	/**
 	 * Count getter
 	 *
-	 * @param string $table
+	 * @param string $table_or_sql
 	 * @param mixed $params
 	 * @return int
 	 */
-	public function count($table, $params = null)
+	public function count($table_or_sql, $params = null)
 	{
-		$r = $this->__getConn()->query('SELECT COUNT(1) AS c FROM ' . $this->__prepSql($table),
-			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
+		$r = $this->__getConn()->query('SELECT COUNT(1) AS c FROM ' .
+			$this->__prepSql($table_or_sql), $this->__prepParams(1, func_get_args()),
+			Connection::QUERY_RETURN_TYPE_ROWS);
 
 		$r = (array)$r[0];
 		return (int)$r['c'];
@@ -329,40 +330,40 @@ class Database extends \Eco\Factory
 	/**
 	 * Delete
 	 *
-	 * @param string $table
+	 * @param string $table_or_sql
 	 * @param mixed $params
 	 * @return int (affected)
 	 */
-	public function delete($table, $params = null)
+	public function delete($table_or_sql, $params = null)
 	{
-		return $this->__getConn()->query('DELETE FROM ' . $this->__prepSql($table),
+		return $this->__getConn()->query('DELETE FROM ' . $this->__prepSql($table_or_sql),
 			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_AFFECTED);
 	}
 
 	/**
 	 * Single row getter
 	 *
-	 * @param string $table
+	 * @param string $table_or_sql
 	 * @param mixed $params
 	 * @return \stdClass (or null for no row)
 	 * @throws \Exception (LIMIT clause exists in query)
 	 */
-	public function get($table, $params = null)
+	public function get($table_or_sql, $params = null)
 	{
-		$table = $this->__prepSql($table);
+		$table_or_sql = $this->__prepSql($table_or_sql);
 
-		if(!$this->__getConn()->isSelectQuery($table))
+		if(!$this->__getConn()->isSelectQuery($table_or_sql))
 		{
-			$table = 'SELECT * FROM ' . $table;
+			$table_or_sql = 'SELECT * FROM ' . $table_or_sql;
 		}
 
-		if($this->__getConn()->hasSqlLimitClause($table))
+		if($this->__getConn()->hasSqlLimitClause($table_or_sql))
 		{
 			throw new \Exception('Failed to get row, LIMIT clause already exists in query'
 				. ' (' . __METHOD__ . ')');
 		}
 
-		$r = $this->__getConn()->query($table . ' LIMIT 1',
+		$r = $this->__getConn()->query($table_or_sql . ' LIMIT 1',
 			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
 
 		return isset($r[0]) ? $r[0] : null;
@@ -371,12 +372,12 @@ class Database extends \Eco\Factory
 	/**
 	 * All rows getter
 	 *
-	 * @param string $table
+	 * @param string $table_or_sql
 	 * @return array
 	 */
-	public function getAll($table)
+	public function getAll($table_or_sql)
 	{
-		return $this->__getConn()->query('SELECT * FROM ' . $table,
+		return $this->__getConn()->query('SELECT * FROM ' . $table_or_sql,
 			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
 	}
 
@@ -433,14 +434,14 @@ class Database extends \Eco\Factory
 	/**
 	 * Row(s) exists flag getter
 	 *
-	 * @param string $table
+	 * @param string $table_or_sql
 	 * @param mixed $params
 	 * @return boolean
 	 */
-	public function has($table, $params = null)
+	public function has($table_or_sql, $params = null)
 	{
 		$r = $this->__getConn()->query('SELECT EXISTS(SELECT 1 FROM'
-			. $this->__prepSql($table) . ') AS h', $this->__prepParams(1, func_get_args()),
+			. $this->__prepSql($table_or_sql) . ') AS h', $this->__prepParams(1, func_get_args()),
 			Connection::QUERY_RETURN_TYPE_ROWS);
 
 		$r = (array)$r[0];
@@ -464,12 +465,23 @@ class Database extends \Eco\Factory
 	 *
 	 * @param string $table
 	 * @param mixed $data
-	 * @param boolean $ignore
 	 * @return int (affected)
 	 */
-	public function insert($table, $data, $ignore = false)
+	public function insert($table, $data)
 	{
-		return $this->__add($table, $data, false, $ignore);
+		return $this->__add($table, $data, false);
+	}
+
+	/**
+	 * Create with ignore
+	 *
+	 * @param string $table
+	 * @param mixed $data
+	 * @return int (affected)
+	 */
+	public function insertIgnore($table, $data)
+	{
+		return $this->__add($table, $data, false, true);
 	}
 
 	/**
@@ -550,6 +562,18 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Execute query with array of parameters
+	 *
+	 * @param string $query
+	 * @param array $params
+	 * @return mixed
+	 */
+	public function queryArrayParam($query, array $params)
+	{
+		return $this->__getConn()->query($query, $params);
+	}
+
+	/**
 	 * Replace
 	 *
 	 * @param string $table
@@ -596,11 +620,11 @@ class Database extends \Eco\Factory
 	/**
 	 * Update
 	 *
-	 * @param string $table
+	 * @param string $table_or_sql
 	 * @param array $params
 	 * @return int (affected)
 	 */
-	public function update($table, array $params = null)
+	public function update($table_or_sql, array $params = null)
 	{
 		$p = [];
 		$values = [];
@@ -629,14 +653,14 @@ class Database extends \Eco\Factory
 		}
 
 		$sql = '';
-		if(($pos = strpos($table, ' ')) !== false) // SQL
+		if(($pos = strpos($table_or_sql, ' ')) !== false) // SQL
 		{
-			$sql = $this->__prepSql(substr($table, $pos, strlen($table)));
-			$table = substr($table, 0, $pos);
+			$sql = $this->__prepSql(substr($table_or_sql, $pos, strlen($table_or_sql)));
+			$table_or_sql = substr($table_or_sql, 0, $pos);
 		}
 
-		return $this->__getConn()->query('UPDATE ' . $table . ' SET ' . implode(', ', $values) .
-			$sql, $p, Connection::QUERY_RETURN_TYPE_AFFECTED);
+		return $this->__getConn()->query('UPDATE ' . $table_or_sql . ' SET '
+			. implode(', ', $values) . $sql, $p, Connection::QUERY_RETURN_TYPE_AFFECTED);
 	}
 
 	/**

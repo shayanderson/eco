@@ -106,7 +106,7 @@ class Model
 	}
 
 	/**
-	 * Count getter
+	 * Count getter (WHERE keyword optional)
 	 *
 	 * @param mixed $sql
 	 * @return int
@@ -123,7 +123,7 @@ class Model
 	}
 
 	/**
-	 * Delete by PK value or SQL
+	 * Delete by PK value or SQL (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
 	 * @return int (affected)
@@ -141,7 +141,7 @@ class Model
 	}
 
 	/**
-	 * Single record getter
+	 * Single record getter (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
 	 * @return \stdClass (or null for no record)
@@ -193,7 +193,7 @@ class Model
 	}
 
 	/**
-	 * Record exists flag getter
+	 * Record exists flag getter (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
 	 * @return boolean
@@ -224,12 +224,22 @@ class Model
 	 * Create
 	 *
 	 * @param mixed $data
-	 * @param boolean $ignore
 	 * @return int (affected)
 	 */
-	public function insert($data, $ignore = false)
+	public function insert($data)
 	{
-		return $this->__db()->insert($this->__name, $data, $ignore);
+		return $this->__db()->insert($this->__name, $data);
+	}
+
+	/**
+	 * Create with ignore
+	 *
+	 * @param mixed $data
+	 * @return int (affected)
+	 */
+	public function insertIgnore($data)
+	{
+		return $this->__db()->insertIgnore($this->__name, $data);
 	}
 
 	/**
@@ -266,7 +276,7 @@ class Model
 	}
 
 	/**
-	 * Update
+	 * Update (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
 	 * @param array $params
@@ -285,7 +295,7 @@ class Model
 	}
 
 	/**
-	 * Single column value getter
+	 * Single column value getter (WHERE keyword optional)
 	 *
 	 * @param string $column_and_sql
 	 * @return mixed

@@ -213,31 +213,34 @@ class Connection
 	{
 		System::db()->connectionReset(); // reset to default ID
 
+		if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_ROWS )
+				|| preg_match('/^\s*(select|show|describe|optimize|pragma|repair)/i', $query))
+		{
+			$return_type = self::QUERY_RETURN_TYPE_ROWS;
+
+			if($this->__global_limit && !$this->hasSqlLimitClause($query))
+			{
+				$query .= ' LIMIT ' . $this->__global_limit;
+			}
+		}
+
+		$this->__logQuery($query, $params);
+
 		$sh = $this->getPdo()->prepare($query);
 		if($sh->execute( is_array($params) ? $params : null ))
 		{
 			// determine return type
-			if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_ROWS )
-				|| preg_match('/^\s*(select|show|describe|optimize|pragma|repair)/i', $query))
+			if($return_type === self::QUERY_RETURN_TYPE_ROWS)
 			{
-				if($this->__global_limit && !$this->hasSqlLimitClause($query))
-				{
-					$query .= ' LIMIT ' . $this->__global_limit;
-				}
-
-				$this->__logQuery($query, $params);
-
 				return $sh->fetchAll(\PDO::FETCH_CLASS);
 			}
 			else if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_AFFECTED )
 				|| preg_match('/^\s*(delete|insert|replace|update)/i', $query))
 			{
-				$this->__logQuery($query, $params);
 				return $sh->rowCount();
 			}
 			else // other
 			{
-				$this->__logQuery($query, $params);
 				return true;
 			}
 		}

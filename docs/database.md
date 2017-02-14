@@ -173,7 +173,7 @@ $row->y = 2;
 $affected = db()->insert('table', $row);
 
 // INSERT IGNORE INTO table(x, y) VALUES(1, 2)
-$affected = db()->insert('table', ['x' => 1, 'y' => 2], true);
+$affected = db()->insertIgnore('table', ['x' => 1, 'y' => 2]);
 ```
 
 
@@ -228,6 +228,11 @@ Any query can be executed using the `query()` method:
 //    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
 $rows = db()->query('SELECT a.col, b.col2 FROM table a'
     . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
+```
+> An array of params can be used instead of method params, example:
+```php
+// SELECT * FROM table WHERE x = 1 AND y = 2
+$rows = db()->queryArrayParam('SELECT * FROM table WHERE x = ? AND y = ?', [1, 2]);
 ```
 
 

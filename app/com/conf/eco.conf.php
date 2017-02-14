@@ -57,7 +57,7 @@ return [
 			],
 
 			/**
-			 * Makes fetch queries memory safe (appends LIMIT clause if does not exist)
+			 * Makes fetch queries memory safe by auto appending LIMIT clause if does not exist
 			 * use 0 (zero) for no limit (default: 10000)
 			 */
 			'global_limit' => 10000,
