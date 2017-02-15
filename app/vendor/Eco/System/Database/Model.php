@@ -141,10 +141,10 @@ class Model
 	}
 
 	/**
-	 * Single record getter (WHERE keyword optional)
+	 * Single row getter (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
-	 * @return \stdClass (or null for no record)
+	 * @return \stdClass (or null for no row)
 	 */
 	public function get($id_or_sql)
 	{
@@ -168,7 +168,7 @@ class Model
 	}
 
 	/**
-	 * All records getter
+	 * All rows getter
 	 *
 	 * @param string $sql
 	 * @return array
@@ -193,7 +193,7 @@ class Model
 	}
 
 	/**
-	 * Record exists flag getter (WHERE keyword optional)
+	 * Row exists flag getter (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
 	 * @return boolean

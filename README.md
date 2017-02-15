@@ -358,6 +358,7 @@ Helper classes can be used to simplify common application tasks:
 - [`\Eco\Cache`](https://github.com/shayanderson/eco/blob/master/docs/cache.md) - Server-side cache helper class
 - [`\Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form helper class
 - [`\Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request helper class
+- [`\Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database helper class
 - [`\Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table helper class
 
 

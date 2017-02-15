@@ -81,10 +81,10 @@ abstract class Model
 	}
 
 	/**
-	 * Single record getter
+	 * Single row getter
 	 *
 	 * @param int $id
-	 * @return \stdClass (or null for no record)
+	 * @return \stdClass (or null for no row)
 	 */
 	final public function getRow($id)
 	{
@@ -95,7 +95,17 @@ abstract class Model
 	}
 
 	/**
-	 * Record exists flag getter
+	 * All rows getter
+	 *
+	 * @return type
+	 */
+	final public function getRows()
+	{
+		return $this->db->getAll();
+	}
+
+	/**
+	 * Row exists flag getter
 	 *
 	 * @param mixed $id
 	 * @return boolean

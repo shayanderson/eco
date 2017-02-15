@@ -275,7 +275,7 @@ else
     // warn no rows
 }
 ```
-> Pagination settings can be found in the Eco configuration file `app/com/conf/eco.conf.php` under the `database` > `pagination` section
+> Pagination settings can be found in the Eco configuration file `app/com/conf/eco.conf.php` under the `database` > `pagination` section, including styles for pagination controls
 
 
 ### Transactions

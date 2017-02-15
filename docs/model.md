@@ -3,6 +3,7 @@ The `Model` class can be used to simplify model classes and database calls.
 
 #### Model Topics
 - [Basic Usage](#basic-usage)
+  - [Public Methods](#public-methods)
 - [Count](#count)
 - [Get Single Row](#get-single-row)
 - [Get All Rows](#get-all-rows)
@@ -14,6 +15,7 @@ The `Model` class can be used to simplify model classes and database calls.
 - [Update](#update)
 - [Truncate](#truncate)
 - [Execute a Query](#execute-a-query)
+
 
 
 ### Basic Usage
@@ -71,6 +73,9 @@ $affected = model()->doc->deleteRow(5);
 
 // get row with primary key value of 5 (numeric values only)
 $row = model()->doc->getRow(5);
+
+// get all rows
+$rows = model()->doc->getRows();
 
 // check if row with primary key value of 5 exists (numeric values only)
 $has = model()->doc->hasRow(5);

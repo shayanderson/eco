@@ -197,7 +197,7 @@ class Connection
 	 */
 	public function isSelectQuery($query)
 	{
-		return strcasecmp('SELECT ', substr(trim($query), 0, 7)) === 0;
+		return strcasecmp('SELECT', substr(trim($query), 0, 6)) === 0;
 	}
 
 	/**
