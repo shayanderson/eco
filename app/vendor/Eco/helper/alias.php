@@ -35,18 +35,18 @@ function breadcrumb($title = null, $url = null)
 /**
 * Configuration settings file (must return array) to object
 *
-* @param string $file_path
+* @param mixed $path_or_array (string for file path or array for settings)
 * @param boolean $store
 * @return mixed
 */
-function conf($file_path = null, $store = true)
+function conf($path_or_array = null, $store = true)
 {
 	if(!func_num_args()) // getter
 	{
 		return System::conf();
 	}
 
-	return System::conf($file_path, $store);
+	return System::conf($path_or_array, $store);
 }
 
 /**

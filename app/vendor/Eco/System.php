@@ -142,11 +142,11 @@ class System
 	/**
 	* Configuration settings file (must return array) to object
 	*
-	* @param string $file_path
+	* @param mixed $path_or_array (string for file path or array for settings)
 	* @param boolean $store
 	* @return mixed
 	*/
-	final public static function conf($file_path = null, $store = true)
+	final public static function conf($path_or_array = null, $store = true)
 	{
 		if(!func_num_args()) // getter
 		{
@@ -157,17 +157,19 @@ class System
 		{
 			if(self::$__conf !== null) // merge
 			{
-				self::$__conf = self::arrayToObject(array_merge((array)require $file_path,
-					(array)self::$__conf));
+				self::$__conf = self::arrayToObject(array_merge(is_array($path_or_array)
+					? $path_or_array : (array)require $path_or_array, (array)self::$__conf));
 			}
 			else
 			{
-				self::$__conf = self::arrayToObject(require $file_path);
+				self::$__conf = self::arrayToObject(is_array($path_or_array) ? $path_or_array
+					: require $path_or_array);
 			}
 			return;
 		}
 
-		return self::arrayToObject(require $file_path);
+		return self::arrayToObject(is_array($path_or_array) ? $path_or_array
+			: require $path_or_array);
 	}
 
 	/**
