@@ -221,6 +221,32 @@ class Model
 	}
 
 	/**
+	 * Index (pagination object) getter
+	 *
+	 * @param string $sql
+	 * @return \Eco\System\Database\Pagination
+	 */
+	public function index($sql = null)
+	{
+		if($sql === null)
+		{
+			return $this->__db()->pagination('SELECT * FROM ' . $this->__name);
+		}
+
+		$s = &$this->__getSqlColumns($sql);
+
+		if($s['cols']) // use columns
+		{
+			return call_user_func_array([$this->__db(), 'pagination'], ['n' => 'SELECT '
+				. $s['cols'] . ' FROM ' . $this->__name . ' '
+				. $s['sql']] + array_slice(func_get_args(), 1));
+		}
+
+		return call_user_func_array([$this->__db(), 'pagination'], ['n' => 'SELECT * FROM '
+			. $this->__name . ' ' . $sql] + array_slice(func_get_args(), 1));
+	}
+
+	/**
 	 * Create
 	 *
 	 * @param mixed $data

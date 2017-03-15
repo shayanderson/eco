@@ -43,15 +43,15 @@ abstract class ModelRegistry extends \Eco\Factory
 		{
 			if(!class_exists(self::$__registry[$name]))
 			{
-				throw new \Exception('Failed to find model class \'' . self::$__registry[$name]
-					. '\' (' . __METHOD__ . ')');
+				throw new \Exception(__METHOD__ . ': failed to find model class \''
+					. self::$__registry[$name] . '\'');
 			}
 
 			$model[$name] = new self::$__registry[$name];
 			return $model[$name];
 		}
 
-		throw new \Exception('Failed to find model \'' . $name . '\' (' . __METHOD__ . ')');
+		throw new \Exception(__METHOD__ . ': failed to find model \'' . $name . '\'');
 	}
 
 	/**

@@ -24,14 +24,8 @@ require_once PATH_VENDOR . 'Eco/helper/redirect.php';
 require_once PATH_VENDOR . 'Eco/helper/request.php';
 require_once PATH_VENDOR . 'Eco/helper/view.php';
 
-// set routes
-eco::route([
-	'/' => 'IndexController->home',
-	// error routes
-	eco::ERROR_FORBIDDEN => 'ErrorController->error403',
-	eco::ERROR_NOT_FOUND => 'ErrorController->error404',
-	eco::ERROR_SERVER => 'ErrorController->error500'
-]);
+// load routes
+eco::route(require PATH_COM . 'route.php');
 
 // set hook to display log
 eco::hook(eco::HOOK_AFTER, function() {

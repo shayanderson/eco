@@ -292,7 +292,8 @@ class Cache
 				}
 				else
 				{
-					throw new \Exception('Failed to open cache directory \'' . $path . '\'');
+					throw new \Exception(__METHOD__ . ': failed to open cache directory \'' .
+						$path . '\'');
 				}
 
 				if(!$is_root)
@@ -500,8 +501,8 @@ class Cache
 
 				if(!is_dir($path) && @mkdir($path) === false)
 				{
-					throw new \Exception('Failed to write cache directory \'' . $path . '\''
-						. ' (check write permissions)');
+					throw new \Exception(__METHOD__ . ': failed to write cache directory \''
+						. $path . '\' (check write permissions)');
 				}
 			}
 		}
@@ -557,8 +558,8 @@ class Cache
 
 		if($is_write === false)
 		{
-			throw new \Exception('Failed to write cache file \'' . $this->getFilePath() . '\''
-				. ' (check write permissions)');
+			throw new \Exception(__METHOD__ . ': failed to write cache file \''
+				. $this->getFilePath() . '\' (check write permissions)');
 		}
 	}
 

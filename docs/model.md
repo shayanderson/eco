@@ -13,6 +13,7 @@ The `Model` class can be used to simplify model classes and database calls.
 - [Insert](#insert)
 - [Replace](#replace)
 - [Update](#update)
+- [Index](#index) (Pagination)
 - [Truncate](#truncate)
 - [Execute a Query](#execute-a-query)
 
@@ -211,6 +212,23 @@ $affected = $this->db->update('WHERE a = :a',
 $affected = $this->db->update('a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 ```
+
+
+### Index
+The `index()` is a pagination method and returns a `Eco\System\Database\Pagination` object, example:
+```php
+// SELECT * FROM table
+$index = $this->db->index();
+
+// with sql
+$index = $this->db->index('ORDER BY x, y');
+$index = $this->db->index('WHERE x = ? AND y = ?', 1, 2);
+
+// with columns
+// SELECT col, col2 FROM table WHERE x = 1 AND y = 2
+$index = $this->db->index('(col, col2) WHERE x = ? AND y = ?', 1, 2);
+```
+> See how to use the `Pagination` object [here](https://github.com/shayanderson/eco/blob/master/docs/database.md#pagination)
 
 
 ### Truncate

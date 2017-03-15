@@ -383,8 +383,8 @@ class System
 
 			if(!class_exists('\EcoModelRegistry'))
 			{
-				throw new \Exception('Model load failed, \'\EcoModelRegistry\' class not found ('
-					. __METHOD__ . ')');
+				throw new \Exception(__METHOD__ . ': model load failed, \'\EcoModelRegistry\''
+					. ' class not found');
 			}
 
 			// parse class annotations
@@ -416,7 +416,7 @@ class System
 	/**
 	 * Map param callback
 	 *
-	 * @param string $id
+	 * @param mixed $id (array|string)
 	 * @param \callable $callback
 	 * @return void
 	 */

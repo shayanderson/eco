@@ -49,8 +49,8 @@ abstract class Model
 	{
 		if(!static::NAME)
 		{
-			throw new \Exception('Model name must be set using class constant \'NAME\' ('
-				. __METHOD__ . ')');
+			throw new \Exception(__METHOD__ . ': model name must be set using class constant'
+				. ' \'NAME\'');
 		}
 
 		$this->db = new DatabaseModel(static::NAME, static::PK, static::CONNECTION_ID);
@@ -70,7 +70,7 @@ abstract class Model
 	 * Delete by PK value
 	 *
 	 * @param int $id
-	 * @return inf (affected)
+	 * @return int (affected)
 	 */
 	final public function deleteRow($id)
 	{

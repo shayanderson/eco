@@ -590,12 +590,22 @@ class Router extends \Eco\Factory
 	/**
 	 * Map param callback
 	 *
-	 * @param string $id
+	 * @param mixed $id (array|string)
 	 * @param \callable $callback
 	 * @return void
 	 */
 	public function mapParamCallback($id, callable $callback)
 	{
+		if(is_array($id))
+		{
+			foreach($id as $v)
+			{
+				$this->mapParamCallback($v, $callback);
+			}
+
+			return;
+		}
+
 		$id = str_replace(['?', '+'], '', $id); // strip special chars
 		$this->__param_callback[$id] = $callback;
 	}

@@ -133,7 +133,7 @@ class Form
 		{
 			if(in_array($form_id, self::$__form_ids))
 			{
-				throw new \Exception('Form ID \'' . $form_id
+				throw new \Exception(__METHOD__ . ': form ID \'' . $form_id
 					. '\' already exists (must be unique)');
 			}
 
@@ -182,7 +182,7 @@ class Form
 	{
 		if($this->isField($id))
 		{
-			throw new \Exception('Field ID \'' . $id
+			throw new \Exception(__METHOD__ . ': field ID \'' . $id
 				. '\' already exists in form (field ID must be unique)');
 		}
 
@@ -270,7 +270,7 @@ class Form
 		}
 		else
 		{
-			throw new \Exception('Adding validation message \'' . $error_message
+			throw new \Exception(__METHOD__ . ': adding validation message \'' . $error_message
 				. '\' for rule that does not exist');
 		}
 	}
@@ -477,7 +477,7 @@ class Form
 	{
 		if(!$this->isField($id))
 		{
-			throw new \Exception('Field with ID \'' . $id . '\' does not exist');
+			throw new \Exception(__METHOD__ . ': field with ID \'' . $id . '\' does not exist');
 		}
 
 		$this->__id = $id; // set active ID
@@ -634,7 +634,7 @@ class Form
 		}
 		else
 		{
-			throw new \OutOfBoundsException('Field \'' . $id . '\' does not exist');
+			throw new \OutOfBoundsException(__METHOD__ . ': field \'' . $id . '\' does not exist');
 		}
 
 		return $html;
@@ -1074,7 +1074,8 @@ class Form
 
 		if($min < 1 && $max < 1)
 		{
-			throw new \Exception('Minimum length or maximum length must be greater than zero');
+			throw new \Exception(__METHOD__ . ': minimum length or maximum length must be'
+				. ' greater than zero');
 		}
 
 		$this->__addRule(self::VALIDATE_LENGTH, $error_message, ['min' => $min, 'max' => $max]);

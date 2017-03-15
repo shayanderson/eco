@@ -149,9 +149,9 @@ class Database extends \Eco\Factory
 	{
 		if(!isset(self::$__conns[$connection_id]))
 		{
-			throw new \Exception(( count(self::$__conns)
-				? 'Connection with ID \'' . $connection_id . '\' does not exist'
-				: 'No database connections have been registered' ) . ' (' . __METHOD__ . ')');
+			throw new \Exception(__METHOD__ . ': ' . ( count(self::$__conns)
+				? 'connection with ID \'' . $connection_id . '\' does not exist'
+				: 'no database connections have been registered' ));
 		}
 
 		return true;
@@ -276,11 +276,12 @@ class Database extends \Eco\Factory
 	 * @throws \Exception (connection already exists)
 	 */
 	public function connectionRegister($connection_id, $host, $database, $user, $password,
-		$query_logging = true)
+		$query_logging = false)
 	{
 		if(isset(self::$__conns[$connection_id]))
 		{
-			throw new \Exception('Connection with ID \'' . $connection_id . '\' already exists');
+			throw new \Exception(__METHOD__ . ': connection with ID \'' . $connection_id
+				. '\' already exists');
 		}
 
 		if($this->__default_conn_id === null) // set default ID
@@ -359,8 +360,8 @@ class Database extends \Eco\Factory
 
 		if($this->__getConn()->hasSqlLimitClause($table_or_sql))
 		{
-			throw new \Exception('Failed to get row, LIMIT clause already exists in query'
-				. ' (' . __METHOD__ . ')');
+			throw new \Exception(__METHOD__ . ': failed to get row, LIMIT clause already exists'
+				. ' in query');
 		}
 
 		$r = $this->__getConn()->query($table_or_sql . ' LIMIT 1',
@@ -507,7 +508,7 @@ class Database extends \Eco\Factory
 	{
 		if($this->__getConn()->hasSqlLimitClause($query))
 		{
-			throw new \Exception('Failed to apply pagination to query,'
+			throw new \Exception(__METHOD__ . ': failed to apply pagination to query,'
 				. ' LIMIT clause already exists in query');
 		}
 
@@ -536,8 +537,8 @@ class Database extends \Eco\Factory
 			}
 			else
 			{
-				throw new \Exception('Failed to initialize pagination, no page \'get_var\' has'
-					. ' been set');
+				throw new \Exception(__METHOD__ . ': failed to initialize pagination, no page'
+					. ' \'get_var\' has been set');
 			}
 		}
 
@@ -677,8 +678,8 @@ class Database extends \Eco\Factory
 
 		if($this->__getConn()->hasSqlLimitClause($query))
 		{
-			throw new \Exception('Failed to get row value, LIMIT clause already exists in query'
-				. ' (' . __METHOD__ . ')');
+			throw new \Exception(__METHOD__ . ': failed to get row value, LIMIT clause already'
+				. ' exists in query');
 		}
 
 		$query .= ' LIMIT 1';

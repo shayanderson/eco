@@ -135,6 +135,8 @@ Also, global route parameter callbacks can be set, for example:
 // now every ':id' param will use this callback
 // global param callbacks are overwritten by local ones
 eco::param('id', function($id) { return strtoupper($id); });
+// or use multiple param names:
+eco::param(['x', 'y', 'z'], function($val) { });
 ```
 
 > Route callbacks can also be used with route parameter callbacks:
