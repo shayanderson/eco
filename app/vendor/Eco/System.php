@@ -229,7 +229,7 @@ class System
 			self::$__error_last = $message;
 		}
 
-		$error_log_level = (int)self::conf()->__eco__->log->error_level;
+		$error_log_level = (int)self::conf()->_eco->log->error_level;
 		if($error_log_level < 3)
 		{
 			if($error_log_level === 2 || ( $error_log_level === 1 && $code === self::ERROR_SERVER ))
@@ -240,7 +240,7 @@ class System
 			}
 		}
 
-		$error_log_write_level = (int)self::conf()->__eco__->log->error_write_level;
+		$error_log_write_level = (int)self::conf()->_eco->log->error_write_level;
 		if($error_log_write_level < 3)
 		{
 			if($error_log_write_level === 2
@@ -480,7 +480,7 @@ class System
 	 */
 	final public static function run()
 	{
-		if(self::conf()->__eco__->request->sanitize_params)
+		if(self::conf()->_eco->request->sanitize_params)
 		{
 			// sanitize request params
 			$_GET = filter_var_array($_GET, FILTER_SANITIZE_STRING);
@@ -490,7 +490,7 @@ class System
 		self::hook(self::HOOK_BEFORE);
 
 		// format path
-		self::conf()->__eco__->path->controller = rtrim(self::conf()->__eco__->path->controller,
+		self::conf()->_eco->path->controller = rtrim(self::conf()->_eco->path->controller,
 			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		Router::getInstance()->dispatch();

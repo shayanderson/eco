@@ -144,7 +144,7 @@ class Router extends \Eco\Factory
 	 */
 	private function __classLoad($class, $type)
 	{
-		$class_path = System::conf()->__eco__->path->controller
+		$class_path = System::conf()->_eco->path->controller
 			. str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
 
 		if(class_exists($class, false)) // class is ready

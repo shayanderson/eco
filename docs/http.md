@@ -1,4 +1,6 @@
 ## HTTP Request Class
+> **Required:** this class uses and requires the [PHP cURL Library](http://php.net/manual/en/book.curl.php)
+
 The `\Eco\Http` class can be used to issue HTTP requests (GET, POST and HEAD). Here is a quick GET request example:
 ```php
 $http = new \Eco\Http('http://www.example.com');

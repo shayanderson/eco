@@ -57,7 +57,7 @@ class View extends \Eco\Factory
 	public function display($template)
 	{
 		// format template name
-		$template = rtrim(System::conf()->__eco__->path->template, DIRECTORY_SEPARATOR)
+		$template = rtrim(System::conf()->_eco->path->template, DIRECTORY_SEPARATOR)
 			. DIRECTORY_SEPARATOR . preg_replace('/[^\w\-\.\/\\\\]{1}/', '#', $template) . '.tpl';
 
 		if(!is_file($template))

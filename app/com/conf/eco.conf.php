@@ -12,7 +12,7 @@
  * Eco configuration settings
  */
 return [
-	'__eco__' => [
+	'_eco' => [
 
 		/**
 		 * Database settings

@@ -16,16 +16,16 @@ Install example:
 - [**Hooks**](#hooks)
 - [**Configuration**](#configuration)
 - [**Core Methods**](#core-methods)
-- [**Database**](https://github.com/shayanderson/eco/blob/master/docs/database.md)
-- [**Helper Classes**](#helper-classes)  ([Cache](https://github.com/shayanderson/eco/blob/master/docs/cache.md), [Form](https://github.com/shayanderson/eco/blob/master/docs/form.md), [HTTP](https://github.com/shayanderson/eco/blob/master/docs/http.md), [Model](https://github.com/shayanderson/eco/blob/master/docs/model.md), [Table](https://github.com/shayanderson/eco/blob/master/docs/table.md))
+- [**Core Classes**](#core-classes)  ([Cache](https://github.com/shayanderson/eco/blob/master/docs/cache.md), [Form](https://github.com/shayanderson/eco/blob/master/docs/form.md), [HTTP](https://github.com/shayanderson/eco/blob/master/docs/http.md), [Model](https://github.com/shayanderson/eco/blob/master/docs/model.md), [Table](https://github.com/shayanderson/eco/blob/master/docs/table.md))
 - [**Helper Functions**](https://github.com/shayanderson/eco/blob/master/docs/helper.md) ([core](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions), [alias](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions), [factory](https://github.com/shayanderson/eco/blob/master/docs/helper.md#factory-helper-functions), [flash](https://github.com/shayanderson/eco/blob/master/docs/helper.md#flash-helper-functions), [redirect](https://github.com/shayanderson/eco/blob/master/docs/helper.md#redirect-helper-function), [request](https://github.com/shayanderson/eco/blob/master/docs/helper.md#request-helper-functions), [view](https://github.com/shayanderson/eco/blob/master/docs/helper.md#view-helper-functions))
+- [**Database**](https://github.com/shayanderson/eco/blob/master/docs/database.md)
 - [**Extending Eco**](#extending-eco)
 
 ## Routing
-Basic routes can be setup in `app/com/bootstrap.php`, for example:
+Basic routes can be setup in `app/com/route.php`, for example:
 ```php
 // set routes
-eco::route([
+return [
 	// class method
 	'/' => 'IndexController->home',
 	// namespace
@@ -33,7 +33,7 @@ eco::route([
 	// callable
 	'logout' => function() { /* do something */ },
 	// more routes
-]);
+];
 ```
 The request `/` would call the method `home` in the class `IndexController` in file `app/mod/IndexController.php`.
 
@@ -320,7 +320,7 @@ return [
     'core' => [ /* more */ ]
 ];
 ```
-> Configuration settings cannot be overwritten when using multiple files, so the primary array keys must be unique even in different files. Never use the primary array key `__eco__` which is used by Eco for internal framework settings.
+> Configuration settings cannot be overwritten when using multiple files, so the primary array keys must be unique even in different files. Never use the primary array key `_eco` which is used by Eco for internal framework settings.
 
 Configuration settings can also be used separately from Eco, for example:
 ```php
@@ -360,13 +360,13 @@ Eco offers the following methods:
 - [`eco::view($template, $view_params)`](#views) - load view template file and access View class ([`view()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function available)
 
 
-## Helper Classes
-Helper classes can be used to simplify common application tasks:
-- [`\Eco\Cache`](https://github.com/shayanderson/eco/blob/master/docs/cache.md) - Server-side cache helper class
-- [`\Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form helper class
-- [`\Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request helper class
-- [`\Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database helper class
-- [`\Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table helper class
+## Core Classes
+Core classes can be used to simplify common application tasks:
+- [`\Eco\Cache`](https://github.com/shayanderson/eco/blob/master/docs/cache.md) - Server-side cache core class
+- [`\Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form core class
+- [`\Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request core class
+- [`\Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database core class
+- [`\Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table core class
 
 
 ## Helper Functions

@@ -64,7 +64,7 @@ class Log extends \Eco\Factory
 	 */
 	private function __add($message, $category, $level, $info)
 	{
-		if($level < self::LOG_NONE && $level <= System::conf()->__eco__->log->level)
+		if($level < self::LOG_NONE && $level <= System::conf()->_eco->log->level)
 		{
 			if($this->__handler !== null) // log handler
 			{

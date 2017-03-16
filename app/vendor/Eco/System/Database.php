@@ -46,9 +46,9 @@ class Database extends \Eco\Factory
 	 */
 	protected function __construct()
 	{
-		if(isset(System::conf()->__eco__->database->connection))
+		if(isset(System::conf()->_eco->database->connection))
 		{
-			foreach(System::conf()->__eco__->database->connection as $k => $v)
+			foreach(System::conf()->_eco->database->connection as $k => $v)
 			{
 				if(isset($v->host) && $v->host !== null) // register connection
 				{
@@ -290,7 +290,7 @@ class Database extends \Eco\Factory
 		}
 
 		self::$__conns[$connection_id] = new Connection($connection_id, $host, $database, $user,
-			$password, (int)System::conf()->__eco__->database->global_limit, $query_logging);
+			$password, (int)System::conf()->_eco->database->global_limit, $query_logging);
 
 		System::log()->debug('Database connection \'' . $connection_id
 			. '\' registered for host \'' . $host . '\'', 'Eco');
@@ -515,7 +515,7 @@ class Database extends \Eco\Factory
 		static $conf;
 		if(!$conf) // init conf
 		{
-			$conf = System::conf()->__eco__->database->pagination;
+			$conf = System::conf()->_eco->database->pagination;
 			$conf->rpp = isset($conf->rpp) ? (int)$conf->rpp : 30;
 		}
 
