@@ -218,7 +218,8 @@ class Connection
 		{
 			$return_type = self::QUERY_RETURN_TYPE_ROWS;
 
-			if($this->__global_limit && !$this->hasSqlLimitClause($query))
+			if($this->__global_limit && $this->isSelectQuery($query)
+				&& !$this->hasSqlLimitClause($query))
 			{
 				$query .= ' LIMIT ' . $this->__global_limit;
 			}
