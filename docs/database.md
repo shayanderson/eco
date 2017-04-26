@@ -50,6 +50,7 @@ When another connection is used (that is not the default connection) the connect
 ```php
 db('remote')->count('table');
 ```
+> The database connection object `Eco\System\Database\Connection` will automatically reconnect to the database server when a `server has gone away` error is thrown - it will only try to reconnect once per query.
 
 
 ### Logging

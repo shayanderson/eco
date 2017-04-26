@@ -206,10 +206,11 @@ class Connection
 	 * @param string $query
 	 * @param mixed $params
 	 * @param int $return_type
+	 * @param boolean $is_reconnect
 	 * @return mixed
 	 * @throws \PDOException (query fail)
 	 */
-	public function query($query, $params = null, $return_type = null)
+	public function query($query, $params = null, $return_type = null, $is_reconnect = false)
 	{
 		System::db()->connectionReset(); // reset to default ID
 
@@ -227,23 +228,37 @@ class Connection
 
 		$this->__logQuery($query, $params);
 
-		$sh = $this->getPdo()->prepare($query);
-		if($sh->execute( is_array($params) ? $params : null ))
+		try
 		{
-			// determine return type
-			if($return_type === self::QUERY_RETURN_TYPE_ROWS)
+			$sh = $this->getPdo()->prepare($query);
+			if(@$sh->execute( is_array($params) ? $params : null ))
 			{
-				return $sh->fetchAll(\PDO::FETCH_CLASS);
+				// determine return type
+				if($return_type === self::QUERY_RETURN_TYPE_ROWS)
+				{
+					return $sh->fetchAll(\PDO::FETCH_CLASS);
+				}
+				else if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_AFFECTED )
+					|| preg_match('/^\s*(delete|insert|replace|update)/i', $query))
+				{
+					return $sh->rowCount();
+				}
+				else // other
+				{
+					return true;
+				}
 			}
-			else if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_AFFECTED )
-				|| preg_match('/^\s*(delete|insert|replace|update)/i', $query))
+		}
+		catch(\PDOException $ex) // catch exception for server has gone away error
+		{
+			// auto handle server has gone away error, do not handle if multiple reconnect
+			if(strpos($ex->getMessage(), 'server has gone away') !== false && !$is_reconnect)
 			{
-				return $sh->rowCount();
+				$this->close(); // close for auto reconnect
+				return $this->query($query, $params, $return_type, true); // try again
 			}
-			else // other
-			{
-				return true;
-			}
+
+			throw $ex; // not handled
 		}
 
 		return false;
