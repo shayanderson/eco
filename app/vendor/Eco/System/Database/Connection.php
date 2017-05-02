@@ -174,6 +174,8 @@ class Connection
 				$this->__user, $this->__password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 		}
 
+		System::db()->connectionReset(); // reset to default ID
+
 		return $this->__pdo;
 	}
 
@@ -212,8 +214,6 @@ class Connection
 	 */
 	public function query($query, $params = null, $return_type = null, $is_reconnect = false)
 	{
-		System::db()->connectionReset(); // reset to default ID
-
 		if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_ROWS )
 				|| preg_match('/^\s*(select|show|describe|optimize|pragma|repair)/i', $query))
 		{
