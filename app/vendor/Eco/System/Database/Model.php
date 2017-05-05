@@ -56,6 +56,10 @@ class Model
 		{
 			$this->__conn_id = $connection_id;
 		}
+		else
+		{
+			$this->__conn_id = Database::getInstance()->getDefaultConnectionId();
+		}
 	}
 
 	/**
