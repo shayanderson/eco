@@ -75,6 +75,7 @@ $cache->encoding(true);
 ### Using Encoded Cache Key
 A cache file can be loaded using the actual encoded cache key, for example:
 ```php
+$cache = new \Eco\Cache;
 // will load the cache file:
 // '<global cache path>/a94a8fe5ccb19ba61c4c0873d391e987982fbbd3'
 $cache->key('a94a8fe5ccb19ba61c4c0873d391x187982fbbd3', true);

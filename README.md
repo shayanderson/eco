@@ -52,7 +52,7 @@ Dynamic route setters can be used for larger applications that have many routes,
 ```php
 eco::route('account*', 'AccountController::getRoutes()');
 ```
-Now all requests that being with `/account` will load the routes using the method:
+Now all requests that begin with `/account` will load the routes using the method:
 ```php
 class AccountController
 {
