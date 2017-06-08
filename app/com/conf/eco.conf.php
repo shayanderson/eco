@@ -15,6 +15,42 @@ return [
 	'_eco' => [
 
 		/**
+		 * Cache settings (global)
+		 */
+		'cache' => [
+
+			/**
+			 * Use compression, requires ZLIB functions (default: false)
+			 */
+			'compression' => false,
+
+			/**
+			 * Use encoding (default: false)
+			 */
+			'encoding' => false,
+
+			/**
+			 * Expire time string, example: '30 seconds' or 0 for no expire (default: 0)
+			 */
+			'expire' => 0,
+
+			/**
+			 * Use metadata (default: false)
+			 */
+			'metadata' => false,
+
+			/**
+			 * Cache path (default: PATH_APP . 'var' . DIRECTORY_SEPARATOR . 'cache')
+			 */
+			'path' => PATH_APP . 'var' . DIRECTORY_SEPARATOR . 'cache',
+
+			/**
+			 * Use serialization (default: true)
+			 */
+			'serialize' => true
+		],
+
+		/**
 		 * Database settings
 		 */
 		'database' => [

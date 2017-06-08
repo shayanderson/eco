@@ -135,10 +135,25 @@ class Format extends \Eco\Factory
 	}
 
 	/**
-	 * Format time
+	 * Format name key, ex: 'Test string here.' => 'test-string-here'
+	 *
+	 * @param string $value
+	 * @param string $additional_allowed_chars (ex: '\')
+	 * @return string
+	 */
+	public function nameKey($value, $additional_allowed_chars = null)
+	{
+		$value = preg_replace('@[^a-z0-9\-' . preg_quote($additional_allowed_chars) . ']@', '-',
+			strtolower(trim($value)));
+		$value = preg_replace('/\-+/', '-', $value); // '--' to '-'
+
+		return trim($value, '-');
+	}
+
+	/**
+	 * Format name key, ex: 'Test data here.' => 'test-data-here'
 	 *
 	 * @param mixed $value
-	 * @param mixed $format
 	 * @return string
 	 */
 	public function time($value, $format = null)

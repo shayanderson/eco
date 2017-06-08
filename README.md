@@ -16,9 +16,8 @@ Install example:
 - [**Hooks**](#hooks)
 - [**Configuration**](#configuration)
 - [**Core Methods**](#core-methods)
-- [**Core Classes**](#core-classes)  ([Cache](https://github.com/shayanderson/eco/blob/master/docs/cache.md), [Form](https://github.com/shayanderson/eco/blob/master/docs/form.md), [HTTP](https://github.com/shayanderson/eco/blob/master/docs/http.md), [Model](https://github.com/shayanderson/eco/blob/master/docs/model.md), [Table](https://github.com/shayanderson/eco/blob/master/docs/table.md))
+- [**Core Classes**](#core-classes)  ([Cache](https://github.com/shayanderson/eco/blob/master/docs/cache.md), [Database](https://github.com/shayanderson/eco/blob/master/docs/database.md),  [Form](https://github.com/shayanderson/eco/blob/master/docs/form.md), [HTTP](https://github.com/shayanderson/eco/blob/master/docs/http.md), [Model](https://github.com/shayanderson/eco/blob/master/docs/model.md), [Table](https://github.com/shayanderson/eco/blob/master/docs/table.md))
 - [**Helper Functions**](https://github.com/shayanderson/eco/blob/master/docs/helper.md) ([core](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions), [alias](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions), [factory](https://github.com/shayanderson/eco/blob/master/docs/helper.md#factory-helper-functions), [flash](https://github.com/shayanderson/eco/blob/master/docs/helper.md#flash-helper-functions), [redirect](https://github.com/shayanderson/eco/blob/master/docs/helper.md#redirect-helper-function), [request](https://github.com/shayanderson/eco/blob/master/docs/helper.md#request-helper-functions), [view](https://github.com/shayanderson/eco/blob/master/docs/helper.md#view-helper-functions))
-- [**Database**](https://github.com/shayanderson/eco/blob/master/docs/database.md)
 - [**Extending Eco**](#extending-eco)
 
 ## Routing
@@ -362,11 +361,12 @@ Eco offers the following methods:
 
 ## Core Classes
 Core classes can be used to simplify common application tasks:
-- [`\Eco\Cache`](https://github.com/shayanderson/eco/blob/master/docs/cache.md) - Server-side cache core class
-- [`\Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form core class
-- [`\Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request core class
-- [`\Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database core class
-- [`\Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table core class
+- [`Eco\Cache`](https://github.com/shayanderson/eco/blob/master/docs/cache.md) - Server-side cache core class
+- [`Eco\Database`](https://github.com/shayanderson/eco/blob/master/docs/database.md) - Database core class
+- [`Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form core class
+- [`Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request core class
+- [`Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database core class
+- [`Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table core class
 
 
 ## Helper Functions
@@ -374,12 +374,12 @@ Helper functions can be used to quickly access Eco core methods or other useful 
 
 
 ## Extending Eco
-Eco can be extended by extending the core `\Eco\System` class. Initially this is setup in the `app/com/bootstrap.php` file:
+Eco can be extended by extending the core `Eco\System` class. Initially this is setup in the `app/com/bootstrap.php` file:
 ```php
 // set Eco access class
 class eco extends \Eco\System {}
 ```
-The extending class can be used to add methods or override `\Eco\System` overridable methods.
+The extending class can be used to add methods or override `Eco\System` overridable methods.
 
 
 [^ Back to Top](#)

@@ -17,30 +17,6 @@ namespace Eco;
 class Cache
 {
 	/**
-	 * Global conf keys
-	 */
-	const CONF_COMPRESSION = 'compression';
-	const CONF_ENCODING = 'encoding';
-	const CONF_EXPIRE = 'expire';
-	const CONF_METADATA = 'metadata';
-	const CONF_PATH = 'path';
-	const CONF_SERIALIZE = 'serialize';
-
-	/**
-	 * Global conf
-	 *
-	 * @var array
-	 */
-	private static $__conf = [
-		self::CONF_COMPRESSION => false,
-		self::CONF_ENCODING => false,
-		self::CONF_EXPIRE => 0,
-		self::CONF_METADATA => false,
-		self::CONF_PATH => null,
-		self::CONF_SERIALIZE => true
-	];
-
-	/**
 	 * Expire time
 	 *
 	 * @var mixed
@@ -104,6 +80,13 @@ class Cache
 	private $__path;
 
 	/**
+	 * Cache path (original)
+	 *
+	 * @var string
+	 */
+	private $__path_orig;
+
+	/**
 	 * Cache relative path
 	 *
 	 * @var string
@@ -132,26 +115,38 @@ class Cache
 	 */
 	public function __construct($key = null)
 	{
-		if(!self::$__conf[self::CONF_PATH])
+		// set defaults
+		$this->compression(System::conf()->_eco->cache->compression);
+		$this->encoding(System::conf()->_eco->cache->encoding);
+		$this->expire(System::conf()->_eco->cache->expire);
+		$this->metadata(System::conf()->_eco->cache->metadata);
+		$this->__path = System::conf()->_eco->cache->path;
+		$this->serialize(System::conf()->_eco->cache->serialize);
+
+		if(!$this->__path)
 		{
 			throw new \Exception(__METHOD__ . ': global cache path is not set');
 		}
 
-		self::$__conf[self::CONF_PATH] = rtrim(self::$__conf[self::CONF_PATH],
-			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-
-		// set defaults
-		$this->compression(self::$__conf[self::CONF_COMPRESSION]);
-		$this->encoding(self::$__conf[self::CONF_ENCODING]);
-		$this->expire(self::$__conf[self::CONF_EXPIRE]);
-		$this->metadata(self::$__conf[self::CONF_METADATA]);
-		$this->__path = self::$__conf[self::CONF_PATH];
-		$this->serialize(self::$__conf[self::CONF_SERIALIZE]);
+		$this->__path = rtrim($this->__formatDir($this->__path), DIRECTORY_SEPARATOR)
+			. DIRECTORY_SEPARATOR;
+		$this->__path_orig = $this->__formatDir($this->__path);
 
 		if(func_num_args())
 		{
 			$this->key($key);
 		}
+	}
+
+	/**
+	 * Format directory
+	 *
+	 * @param string $dir
+	 * @return string
+	 */
+	private function __formatDir($dir)
+	{
+		return System::format()->nameKey($dir, '/.');
 	}
 
 	/**
@@ -194,11 +189,12 @@ class Cache
 	 * Use compression flag setter (requires ZLIB functions)
 	 *
 	 * @param boolean $use_compression
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function compression($use_compression)
 	{
 		$this->__is_compression = (bool)$use_compression;
+		return $this;
 	}
 
 	/**
@@ -226,33 +222,36 @@ class Cache
 	 * Use encoding flag setter
 	 *
 	 * @param boolean $use_encoding
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function encoding($use_encoding)
 	{
 		$this->__is_encode = (bool)$use_encoding;
+		return $this;
 	}
 
 	/**
 	 * Expire time setter
 	 *
-	 * @param mixed $time (ex: '30 seconds', or 0 for no expire)
-	 * @return void
+	 * @param mixed $time (ex: '30 seconds', or 0 or null for no expire)
+	 * @return \Eco\Cache
 	 */
 	public function expire($time)
 	{
-		$this->__expire = $time == 0 ? (int)$time : strtotime('-' . $time);
+		$this->__expire = $time == 0 || $time === null ? 0 : strtotime('-' . $time);
+		return $this;
 	}
 
 	/**
 	 * Cache file extension setter
 	 *
 	 * @param string $file_extension
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function extension($file_extension)
 	{
 		$this->__ext = $file_extension;
+		return $this;
 	}
 
 	/**
@@ -418,6 +417,16 @@ class Cache
 	}
 
 	/**
+	 * Key has been set flag getter
+	 *
+	 * @return boolean
+	 */
+	public function hasKey()
+	{
+		return $this->__key !== null && strlen($this->__key) > 0;
+	}
+
+	/**
 	 * Cache key setter
 	 *
 	 * @param mixed $key
@@ -438,46 +447,51 @@ class Cache
 	 * Use metadata flag setter
 	 *
 	 * @param boolean $use_metadata
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function metadata($use_metadata)
 	{
 		$this->__is_metadata = (bool)$use_metadata;
+		return $this;
 	}
 
 	/**
 	 * Cache relative path setter
 	 *
 	 * @param string $path
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function path($path)
 	{
-		$this->__path_relative = rtrim(ltrim($path, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR)
-			. DIRECTORY_SEPARATOR;
-		$this->__path = self::$__conf[self::CONF_PATH] . $this->__path_relative;
+		$this->__path_relative = rtrim(ltrim($this->__formatDir($path), DIRECTORY_SEPARATOR),
+			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		$this->__path = $this->__path_orig . $this->__path_relative;
+		return $this;
 	}
 
 	/**
 	 * Cache file prefix setter
 	 *
 	 * @param string $name
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function prefix($name)
 	{
-		$this->__prefix = $name;
+		$is_tail = substr($name, -1) === '-';
+		$this->__prefix = $this->__formatDir($name) . ( $is_tail ? '-' : null );
+		return $this;
 	}
 
 	/**
 	 * Use serialization flag setter
 	 *
 	 * @param boolean $use_serialization
-	 * @return void
+	 * @return \Eco\Cache
 	 */
 	public function serialize($use_serialization)
 	{
 		$this->__is_serialize = (bool)$use_serialization;
+		return $this;
 	}
 
 	/**
@@ -493,7 +507,7 @@ class Cache
 		{
 			$parts = explode(DIRECTORY_SEPARATOR, rtrim($this->__path_relative,
 				DIRECTORY_SEPARATOR));
-			$path = self::$__conf[self::CONF_PATH];
+			$path = $this->__path_orig;
 
 			foreach($parts as $v)
 			{
@@ -560,31 +574,6 @@ class Cache
 		{
 			throw new \Exception(__METHOD__ . ': failed to write cache file \''
 				. $this->getFilePath() . '\' (check write permissions)');
-		}
-	}
-
-	/**
-	 * Global config setter
-	 *
-	 * @param mixed $key (array|string)
-	 * @param mixed $value
-	 * @return void
-	 */
-	public static function setGlobalConf($key, $value = null)
-	{
-		if(is_array($key))
-		{
-			foreach($key as $k => $v)
-			{
-				self::setGlobalConf($k, $v);
-			}
-
-			return;
-		}
-
-		if(isset(self::$__conf[$key]) || array_key_exists($key, self::$__conf))
-		{
-			self::$__conf[$key] = $value;
 		}
 	}
 }

@@ -158,6 +158,22 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Initialize cache object
+	 *
+	 * @param \Eco\Cache $cache
+	 * @return void
+	 */
+	private function __initCache(\Eco\Cache &$cache, $query, $params, $key_add = null)
+	{
+		// auto set cache key
+		$key = trim($query) . ( $params ? '~' . $key_add . implode('~', $params) : null );
+		$cache->key($cache->encodeKey($key), true); // set key
+
+		// set subdir for connection ID
+		$cache->path('ecodb' . DIRECTORY_SEPARATOR . $this->__conn_id);
+	}
+
+	/**
 	 * Prepare params for query execution
 	 *
 	 * @param int $index
@@ -351,6 +367,16 @@ class Database extends \Eco\Factory
 	 */
 	public function get($table_or_sql, $params = null)
 	{
+		$cache = null;
+		$param_index = 1;
+
+		if($table_or_sql instanceof \Eco\Cache)
+		{
+			$cache = $table_or_sql;
+			$table_or_sql = $params;
+			$param_index = 2;
+		}
+
 		$table_or_sql = $this->__prepSql($table_or_sql);
 
 		if(!$this->__getConn()->isSelectQuery($table_or_sql))
@@ -364,8 +390,26 @@ class Database extends \Eco\Factory
 				. ' in query');
 		}
 
-		$r = $this->__getConn()->query($table_or_sql . ' LIMIT 1',
-			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
+		$table_or_sql .= ' LIMIT 1';
+
+		if($cache) // init cache
+		{
+			$this->__initCache($cache, $table_or_sql,
+				$this->__prepParams($param_index, func_get_args()));
+
+			if($cache->has()) // cache exists
+			{
+				return $cache->get();
+			}
+		}
+
+		$r = $this->__getConn()->query($table_or_sql,
+			$this->__prepParams($param_index, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
+
+		if($cache) // write cache
+		{
+			$cache->set(isset($r[0]) ? $r[0] : null);
+		}
 
 		return isset($r[0]) ? $r[0] : null;
 	}
@@ -378,8 +422,38 @@ class Database extends \Eco\Factory
 	 */
 	public function getAll($table_or_sql)
 	{
-		return $this->__getConn()->query('SELECT * FROM ' . $table_or_sql,
-			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS);
+		$cache = null;
+		$param_index = 1;
+
+		if($table_or_sql instanceof \Eco\Cache)
+		{
+			$cache = $table_or_sql;
+			$table_or_sql = func_get_arg(1);
+			$param_index = 2;
+
+			$this->__initCache($cache, $table_or_sql,
+				$this->__prepParams($param_index, func_get_args()));
+
+			if($cache->has())
+			{
+				return $cache->get();
+			}
+		}
+
+		if(!$cache)
+		{
+			return $this->__getConn()->query('SELECT * FROM ' . $table_or_sql,
+				$this->__prepParams($param_index, func_get_args()),
+				Connection::QUERY_RETURN_TYPE_ROWS);
+		}
+
+		// write cache
+		$r = $this->__getConn()->query('SELECT * FROM ' . $table_or_sql,
+				$this->__prepParams($param_index, func_get_args()),
+				Connection::QUERY_RETURN_TYPE_ROWS);
+		$cache->set($r);
+
+		return $r;
 	}
 
 	/**
@@ -506,6 +580,16 @@ class Database extends \Eco\Factory
 	 */
 	public function pagination($query, $params = null)
 	{
+		$cache = null;
+		$param_index = 1;
+
+		if($query instanceof \Eco\Cache)
+		{
+			$cache = $query;
+			$query = $params;
+			$param_index = 2;
+		}
+
 		if($this->__getConn()->hasSqlLimitClause($query))
 		{
 			throw new \Exception(__METHOD__ . ': failed to apply pagination to query,'
@@ -545,9 +629,30 @@ class Database extends \Eco\Factory
 		$query = $this->__prepSql($query) . ' LIMIT '
 			. (($page - 1) * $conf->rpp) . ',' . ( $conf->rpp + 1 );
 
-		return new Pagination($this->__getConn()->query($query,
-			$this->__prepParams(1, func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS), $page,
-			$conf);
+		if($cache)
+		{
+			$this->__initCache($cache, $query, $this->__prepParams($param_index, func_get_args()),
+				'pg~');
+
+			if($cache->has())
+			{
+				return $cache->get();
+			}
+		}
+
+		if(!$cache)
+		{
+			return new Pagination($this->__getConn()->query($query,
+				$this->__prepParams($param_index, func_get_args()),
+					Connection::QUERY_RETURN_TYPE_ROWS), $page, $conf);
+		}
+
+		// write cache
+		$r = new Pagination($this->__getConn()->query($query, $this->__prepParams($param_index,
+			func_get_args()), Connection::QUERY_RETURN_TYPE_ROWS), $page, $conf);
+		$cache->set($r);
+
+		return $r;
 	}
 
 	/**
@@ -559,7 +664,35 @@ class Database extends \Eco\Factory
 	 */
 	public function query($query, $params = null)
 	{
-		return $this->__getConn()->query($query, $this->__prepParams(1, func_get_args()));
+		$cache = null;
+		$param_index = 1;
+
+		if($query instanceof \Eco\Cache)
+		{
+			$cache = $query;
+			$query = $params;
+			$param_index = 2;
+
+			$this->__initCache($cache, $query, $this->__prepParams($param_index, func_get_args()));
+
+			if($cache->has())
+			{
+				return $cache->get();
+			}
+		}
+
+		if(!$cache)
+		{
+			return $this->__getConn()->query($query, $this->__prepParams($param_index,
+				func_get_args()));
+		}
+
+		// write cache
+		$r = $this->__getConn()->query($query, $this->__prepParams($param_index,
+				func_get_args()));
+		$cache->set($r);
+
+		return $r;
 	}
 
 	/**
@@ -569,9 +702,34 @@ class Database extends \Eco\Factory
 	 * @param array $params
 	 * @return mixed
 	 */
-	public function queryArrayParam($query, array $params)
+	public function queryArrayParam($query, $params)
 	{
-		return $this->__getConn()->query($query, $params);
+		$cache = null;
+
+		if($query instanceof \Eco\Cache)
+		{
+			$cache = $query;
+			$query = $params;
+			$params = func_get_arg(2);
+
+			$this->__initCache($cache, $query, $params);
+
+			if($cache->has())
+			{
+				return $cache->get();
+			}
+		}
+
+		if(!$cache)
+		{
+			return $this->__getConn()->query($query, $params);
+		}
+
+		// write cache
+		$r = $this->__getConn()->query($query, $params);
+		$cache->set($r);
+
+		return $r;
 	}
 
 	/**

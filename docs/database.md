@@ -18,6 +18,7 @@ The Database class is used to execute database calls and can be accessed using `
 - [Call Stored Procedure](#call-stored-procedure) - [`call()`](#call-stored-procedure)
 - [Pagination](#pagination) - [`pagination()`](#pagination)
 - [Transactions](#transactions)
+- [Caching](#caching)
 - [Other Methods](#other-methods)
 
 
@@ -114,7 +115,14 @@ $row = db()->get('table WHERE x = ? AND y = ?', 1, 2);
 // or full query
 $row = db()->get('SELECT col, col2 FROM table WHERE x = ? AND y = ?', 1, 2);
 ```
-> The `get()` method will return `null` if there are no results
+The `get()` method will return `null` if there are no results
+
+> Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+```php
+$row = db()->get(new \Eco\Cache, 'table WHERE x = ?', 1);
+// or set custom cache property, like expire:
+$row = db()->get((new \Eco\Cache)->expire('10 seconds'), 'table WHERE x = ?', 1);
+```
 
 
 ### Get All Rows
@@ -126,7 +134,14 @@ $rows = db()->getAll('table');
 // SELECT * FROM table WHERE x = 1 AND y = 2
 $rows = db()->getAll('table WHERE x = ? AND y = ?', 1, 2);
 ```
-> The `getAll()` method will return an empty `array` if there are no results
+The `getAll()` method will return an empty `array` if there are no results
+
+> Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+```php
+$rows = db()->getAll(new \Eco\Cache, 'table WHERE x = ?', 1);
+// or set custom cache property, like expire:
+$rows = db()->getAll((new \Eco\Cache)->expire('10 seconds'), 'table WHERE x = ?', 1);
+```
 
 
 ### Check if Rows Exist
@@ -230,10 +245,17 @@ Any query can be executed using the `query()` method:
 $rows = db()->query('SELECT a.col, b.col2 FROM table a'
     . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
 ```
-> An array of params can be used instead of method params, example:
+An array of params can be used instead of method params, example:
 ```php
 // SELECT * FROM table WHERE x = 1 AND y = 2
 $rows = db()->queryArrayParam('SELECT * FROM table WHERE x = ? AND y = ?', [1, 2]);
+```
+
+> Caching can be used with both these methods by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+```php
+$rows = db()->query(new \Eco\Cache, 'SELECT a FROM table WHERE x = ?', 1);
+// or set custom cache property, like expire:
+$rows = db()->query((new \Eco\Cache)->expire('10 seconds'), 'SELECT a FROM table WHERE x = ?', 1);
 ```
 
 
@@ -276,7 +298,14 @@ else
     // warn no rows
 }
 ```
-> Pagination settings can be found in the Eco configuration file `app/com/conf/eco.conf.php` under the `database` > `pagination` section, including styles for pagination controls
+Pagination settings can be found in the Eco configuration file `app/com/conf/eco.conf.php` under the `database` > `pagination` section, including styles for pagination controls.
+
+> Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+```php
+$p = db()->pagination(new \Eco\Cache, 'SELECT a FROM table WHERE x = ?', 1);
+// or set custom cache property, like expire:
+$p = db()->pagination((new \Eco\Cache)->expire('10 seconds'), 'SELECT a FROM table WHERE x = ?', 1);
+```
 
 
 ### Transactions
@@ -300,6 +329,15 @@ catch(\PDOException $ex)
     // warn client
 }
 ```
+
+
+### Caching
+Caching can be used with these methods:
+- [`get()`](#get-single-row)
+- [`getAll()`](#get-all-rows)
+- [`query()`](#execute-a-query)
+- [`queryArrayParam()`](#execute-a-query)
+- [`pagination()`](#pagination)
 
 
 ### Other Methods
