@@ -9,7 +9,8 @@ class IndexController
 	 */
 	public function home()
 	{
-		view()->set('status', 'ready');
-		view('home');
+		view('home', [
+			'status' => 'ready'
+		]);
 	}
 }

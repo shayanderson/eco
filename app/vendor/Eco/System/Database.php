@@ -165,9 +165,11 @@ class Database extends \Eco\Factory
 	 */
 	private function __initCache(\Eco\Cache &$cache, $query, $params, $key_add = null)
 	{
-		// auto set cache key
-		$key = trim($query) . ( $params ? '~' . $key_add . implode('~', $params) : null );
-		$cache->key($cache->encodeKey($key), true); // set key
+		if(!$cache->hasKey()) // auto set cache key
+		{
+			$key = trim($query) . ( $params ? '~' . $key_add . implode('~', $params) : null );
+			$cache->key($cache->encodeKey($key), true); // set key
+		}
 
 		// set subdir for connection ID
 		$cache->path('ecodb' . DIRECTORY_SEPARATOR . $this->__conn_id);
@@ -397,6 +399,11 @@ class Database extends \Eco\Factory
 			$this->__initCache($cache, $table_or_sql,
 				$this->__prepParams($param_index, func_get_args()));
 
+			if(isset($cache->db_query)) // stop
+			{
+				return $cache;
+			}
+
 			if($cache->has()) // cache exists
 			{
 				return $cache->get();
@@ -433,6 +440,11 @@ class Database extends \Eco\Factory
 
 			$this->__initCache($cache, $table_or_sql,
 				$this->__prepParams($param_index, func_get_args()));
+
+			if(isset($cache->db_query)) // stop
+			{
+				return $cache;
+			}
 
 			if($cache->has())
 			{
@@ -634,6 +646,11 @@ class Database extends \Eco\Factory
 			$this->__initCache($cache, $query, $this->__prepParams($param_index, func_get_args()),
 				'pg~');
 
+			if(isset($cache->db_query)) // stop
+			{
+				return $cache;
+			}
+
 			if($cache->has())
 			{
 				return $cache->get();
@@ -675,6 +692,11 @@ class Database extends \Eco\Factory
 
 			$this->__initCache($cache, $query, $this->__prepParams($param_index, func_get_args()));
 
+			if(isset($cache->db_query)) // stop
+			{
+				return $cache;
+			}
+
 			if($cache->has())
 			{
 				return $cache->get();
@@ -713,6 +735,11 @@ class Database extends \Eco\Factory
 			$params = func_get_arg(2);
 
 			$this->__initCache($cache, $query, $params);
+
+			if(isset($cache->db_query)) // stop
+			{
+				return $cache;
+			}
 
 			if($cache->has())
 			{

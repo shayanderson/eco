@@ -8,22 +8,18 @@ The `\Eco\Cache` class can be used for server-side caching, for example:
 $cache = new \Eco\Cache('article-14');
 
 // check if cache exists
-if(!$cache->has())
+if($cache->has()) // cache exists
 {
-    // cache does not exists
-    $data = 'the cache value';
-
-    // write cache
-    $cache->set($data);
-}
-else
-{
-    // cache exists
     $data = $cache->get();
 }
+else // cache does not exists
+{
+    $data = 'the cache value';
 
-// output
-echo $data;
+    $cache->set($data); // write cache
+}
+
+echo $data; // output
 ```
 All cache data is serialized by default so different PHP types can be cached, for example:
 ```php

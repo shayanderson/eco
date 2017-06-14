@@ -339,6 +339,28 @@ Caching can be used with these methods:
 - [`queryArrayParam()`](#execute-a-query)
 - [`pagination()`](#pagination)
 
+Custom cache keys can be used, for example:
+```php
+$row = db()->get(new \Eco\Cache('table-1'), 'table WHERE x = ?', 1);
+```
+
+> It is possible to control a database cache without executing the cache read/write. For example, if you want to delete the cache without executing read/write it can be accomplished using:
+```php
+$cache = new \Eco\Cache;
+// set property db_query to stop read/write
+$cache->db_query = false;
+
+// no read/write is executed in call (no DB load)
+// will not return row(s):
+db()->get($cache, 'table WHERE x = ?', 1);
+
+// delete the cache with zero load on DB
+$cache->delete();
+// or get cache info with zero DB load
+$key = $cache->getKey();
+$path = $cache->getFilePath();
+```
+
 
 ### Other Methods
 The following methods are also available
