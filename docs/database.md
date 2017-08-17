@@ -298,6 +298,13 @@ else
     // warn no rows
 }
 ```
+
+An array of params can be used instead of method params, example:
+```php
+// SELECT a, b FROM table WHERE x = 1 AND y = 2 LIMIT <page>, <records_per_page>
+$p = db()->paginationArrayParam('SELECT a, b FROM table WHERE x = ? AND y = ?', [1, 2]);
+```
+
 Pagination settings can be found in the Eco configuration file `app/com/conf/eco.conf.php` under the `database` > `pagination` section, including styles for pagination controls.
 
 > Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:

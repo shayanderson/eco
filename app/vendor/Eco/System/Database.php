@@ -673,6 +673,35 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Execute query with pagination with array of parameters
+	 *
+	 * @param string $query
+	 * @param mixed $params
+	 * @return \Eco\System\Database\Pagination
+	 * @throws \Exception (LIMIT clause exists in query, or invalid settings)
+	 */
+	public function paginationArrayParam($query, $params = null)
+	{
+		$p = [];
+
+		foreach(func_get_args() as $v)
+		{
+			if(is_array($v))
+			{
+				foreach($v as $vv)
+				{
+					$p[] = $vv;
+				}
+				continue;
+			}
+
+			$p[] = $v;
+		}
+
+		return call_user_func_array([$this, 'pagination'], $p);
+	}
+
+	/**
 	 * Execute query
 	 *
 	 * @param string $query
