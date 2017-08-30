@@ -146,7 +146,7 @@ class Cache
 	 */
 	private function __formatDir($dir)
 	{
-		return System::format()->nameKey($dir, '/.');
+		return System::format()->nameKey($dir, '/._');
 	}
 
 	/**

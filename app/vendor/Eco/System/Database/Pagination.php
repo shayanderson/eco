@@ -54,11 +54,25 @@ class Pagination
 	public $has = false;
 
 	/**
+	 * Next page number
+	 *
+	 * @var int
+	 */
+	public $next;
+
+	/**
 	 * Current page number
 	 *
 	 * @var int
 	 */
 	public $page;
+
+	/**
+	 * Prev page
+	 *
+	 * @var int
+	 */
+	public $prev;
 
 	/**
 	 * Rows
@@ -103,6 +117,9 @@ class Pagination
 				$this->__prev = $this->page - 1;
 			}
 		}
+
+		$this->next = $this->__next;
+		$this->prev = $this->__prev;
 
 		$this->__page = $this->page;
 	}
