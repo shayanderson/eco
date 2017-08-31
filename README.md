@@ -365,7 +365,7 @@ Core classes can be used to simplify common application tasks:
 - [`Eco\Database`](https://github.com/shayanderson/eco/blob/master/docs/database.md) - Database core class
 - [`Eco\Form`](https://github.com/shayanderson/eco/blob/master/docs/form.md) - HTML form core class
 - [`Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request core class
-- [`Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database core class
+- [`Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database model core class
 - [`Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table core class
 
 
