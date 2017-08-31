@@ -281,6 +281,11 @@ class Router extends \Eco\Factory
 
 						if(method_exists($action[0], $action[1])) // verify method
 						{
+							if($route_id === '')
+							{
+								System::log()->debug('Mapped route detected for \'/\'', 'Eco');
+							}
+
 							System::hook(System::HOOK_MIDDLE);
 							$this->__routeCallback($route_id);
 							System::log()->debug('Calling route action \'' . $action[0] . '->'
@@ -304,6 +309,11 @@ class Router extends \Eco\Factory
 			}
 			else if(is_callable($action)) // func
 			{
+				if($route_id === '')
+				{
+					System::log()->debug('Mapped route detected for \'/\'', 'Eco');
+				}
+
 				System::hook(System::HOOK_MIDDLE);
 				$this->__routeCallback($route_id);
 				System::log()->debug('Calling route action', 'Eco');
@@ -407,7 +417,6 @@ class Router extends \Eco\Factory
 		if(isset($request[0]) && empty($request[0])) // index action
 		{
 			$route_id = '';
-			System::log()->debug('Route detected for index', 'Eco');
 		}
 		else // non-index action
 		{
@@ -499,7 +508,7 @@ class Router extends \Eco\Factory
 
 						// set route
 						$route_id = $route;
-						System::log()->debug('Mapped route detected \'' . $route_id . '\'', 'Eco');
+						System::log()->debug('Mapped route detected for \'/' . $route_id . '\'', 'Eco');
 						break 2;
 					}
 				}
@@ -513,20 +522,6 @@ class Router extends \Eco\Factory
 		{
 			$route_id = null;
 
-			if($this->__404_callback !== null)
-			{
-				System::hook(System::HOOK_MIDDLE);
-
-				$handled = call_user_func($this->__404_callback, $this->request);
-
-				System::log()->debug('404 callback called');
-
-				if($handled)
-				{
-					System::stop();
-				}
-			}
-
 			System::log()->debug('Failed to find route for request \''
 				. $this->request . '\'', 'Eco');
 		}
@@ -534,6 +529,25 @@ class Router extends \Eco\Factory
 		// call action
 		if(($route_id === null ? System::ERROR_NOT_FOUND : $this->action($route_id)) !== true)
 		{
+			if($route_id === '')
+			{
+				System::log()->debug('Failed to find route for request \'/\'', 'Eco');
+			}
+
+			if($this->__404_callback !== null) // attempt 404 callback
+			{
+				System::hook(System::HOOK_MIDDLE);
+
+				$handled = call_user_func($this->__404_callback, $this->request);
+
+				System::log()->debug('404 callback called', 'Eco');
+
+				if($handled)
+				{
+					System::stop();
+				}
+			}
+
 			System::error('Not found: \'' . $this->request . '\'', System::ERROR_NOT_FOUND, 'Eco');
 		}
 
