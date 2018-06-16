@@ -6,4 +6,4 @@
 /**
  * @property Example\Class $example
  */
-class EcoModelRegistry extends \Eco\System\ModelRegistry {}
+class EcoModelRegistry extends \Eco\System\Registry\Model {}

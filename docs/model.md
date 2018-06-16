@@ -27,7 +27,7 @@ First, model classes need to be "registered" in the *model registry* in the `app
  * @property App\Model\Document\Entity $doc_entity
  * @property App\Model\User $user
  */
-class EcoModelRegistry extends \Eco\System\ModelRegistry {}
+class EcoModelRegistry extends \Eco\System\Registry\Model {}
 ```
 Now each of these registered model classes can be accessed using the `eco::model()` method or the helper function `model()` (used in examples below).
 

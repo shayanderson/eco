@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2018 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -78,6 +78,53 @@ class System
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Registry loader
+	 *
+	 * @staticvar array $registry
+	 * @param string $class
+	 * @return \Eco\System\Registry
+	 */
+	private static function __registry($type, $class)
+	{
+		static $registry;
+
+		if(!isset($registry[$type]))
+		{
+			require_once PATH_COM . $type . '.php';
+
+			if(!class_exists($class))
+			{
+				throw new \Exception(__METHOD__ . ': ' . $type . ' load failed, \'' . $class . '\''
+					. ' class not found');
+			}
+
+			// parse class annotations
+			preg_match_all('#@property\s([^\s]+)\s\$([\w]+)#', // match '@property <class> $<name>'
+				(new \ReflectionClass($class))->getDocComment(), $m);
+
+			if(isset($m[1]) && $m[1])
+			{
+				foreach($m[1] as $k => $v)
+				{
+					if(isset($m[2][$k])) // name
+					{
+						$registry[$type][trim($m[2][$k])] = trim($v);
+					}
+				}
+			}
+
+			unset($m);
+
+			if($registry[$type]) // initialize
+			{
+				$class::getInstance()->__init($registry[$type]);
+			}
+		}
+
+		return $class::getInstance();
 	}
 
 	/**
@@ -370,47 +417,11 @@ class System
 	/**
 	 * Model loader + registry
 	 *
-	 * @staticvar array $registry
 	 * @return \EcoModelRegistry
 	 */
 	final public static function model()
 	{
-		static $registry;
-
-		if(!$registry)
-		{
-			require_once PATH_COM . 'model.php';
-
-			if(!class_exists('\EcoModelRegistry'))
-			{
-				throw new \Exception(__METHOD__ . ': model load failed, \'\EcoModelRegistry\''
-					. ' class not found');
-			}
-
-			// parse class annotations
-			preg_match_all('#@property\s([^\s]+)\s\$([\w]+)#', // match '@property <class> $<name>'
-				(new \ReflectionClass('\EcoModelRegistry'))->getDocComment(), $m);
-
-			if(isset($m[1]) && $m[1])
-			{
-				foreach($m[1] as $k => $v)
-				{
-					if(isset($m[2][$k])) // name
-					{
-						$registry[trim($m[2][$k])] = trim($v);
-					}
-				}
-			}
-
-			unset($m);
-
-			if($registry) // initialize
-			{
-				\EcoModelRegistry::getInstance()->__init($registry);
-			}
-		}
-
-		return \EcoModelRegistry::getInstance();
+		return self::__registry(\Eco\System\Registry\Model::ID, '\EcoModelRegistry');
 	}
 
 	/**
@@ -494,6 +505,16 @@ class System
 			DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		Router::getInstance()->dispatch();
+	}
+
+	/**
+	 * Service loader + registry
+	 *
+	 * @return \EcoServiceRegistry
+	 */
+	final public static function service()
+	{
+		return self::__registry(\Eco\System\Registry\Service::ID, '\EcoServiceRegistry');
 	}
 
 	/**

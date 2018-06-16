@@ -12,7 +12,7 @@ eco::autoload([
 	PATH_VENDOR
 ]);
 
-// load configuration settings
+// load Eco configuration settings
 eco::conf(PATH_CONF . 'eco.conf.php');
 
 // load helper functions (optional)

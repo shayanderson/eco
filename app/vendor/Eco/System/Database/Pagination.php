@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2018 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -219,6 +219,11 @@ class Pagination
 		{
 			$html .= str_replace('{$uri}', $this->__getUri($this->__next),
 				$this->__conf->wrapper->next);
+		}
+
+		if(!$html)
+		{
+			return '';
 		}
 
 		return isset($this->__conf->wrapper->group)

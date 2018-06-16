@@ -7,8 +7,17 @@
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
+namespace Eco\System\Registry;
 
 /**
- * Eco version
+ * Model registry
+ *
+ * @author Shay Anderson
  */
-const ECO_VERSION = '1.3.5';
+class Model extends \Eco\System\Registry
+{
+	/**
+	 * Registry ID
+	 */
+	const ID = 'model';
+}

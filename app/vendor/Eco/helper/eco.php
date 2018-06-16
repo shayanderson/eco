@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2018 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -74,6 +74,16 @@ function pa($v = null)
 	}
 	echo is_scalar($v) || $v === null ? $v . ( PHP_SAPI === 'cli' ? PHP_EOL : '<br />' )
 		: ( PHP_SAPI === 'cli' ? print_r($v, true) : '<pre>' . print_r($v, true) . '</pre>' );
+}
+
+/**
+ * Service object getter
+ *
+ * @return \EcoServiceRegistry
+ */
+function service()
+{
+	return System::service();
 }
 
 /**

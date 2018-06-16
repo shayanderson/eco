@@ -352,6 +352,7 @@ Eco offers the following methods:
 - [`eco::route($route, $action)`](#routing) - map route
 - [`eco::router()`](https://github.com/shayanderson/eco/blob/master/docs/router.md) - access core Router class
 - `eco::run()` - run the application
+- [`eco::service()`](https://github.com/shayanderson/eco/blob/master/docs/service.md) - Service class loader ([`service()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function available)
 - [`eco::session()`](https://github.com/shayanderson/eco/blob/master/docs/session.md) - access Session class ([`session()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
 - [`eco::set($key, $value)`](https://github.com/shayanderson/eco/blob/master/docs/vars.md) - set a global variable
 - `eco::stop()` - gracefully stop the application ([`stop()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function available)

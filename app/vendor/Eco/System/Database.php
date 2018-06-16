@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2018 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -837,9 +837,10 @@ class Database extends \Eco\Factory
 	 *
 	 * @param string $table_or_sql
 	 * @param array $params
+	 * @param boolean $ignore
 	 * @return int (affected)
 	 */
-	public function update($table_or_sql, array $params = null)
+	public function update($table_or_sql, array $params, $is_ignore = false)
 	{
 		$p = [];
 		$values = [];
@@ -874,8 +875,21 @@ class Database extends \Eco\Factory
 			$table_or_sql = substr($table_or_sql, 0, $pos);
 		}
 
-		return $this->__getConn()->query('UPDATE ' . $table_or_sql . ' SET '
-			. implode(', ', $values) . $sql, $p, Connection::QUERY_RETURN_TYPE_AFFECTED);
+		return $this->__getConn()->query('UPDATE ' . ( $is_ignore ? 'IGNORE ' : null )
+			. $table_or_sql . ' SET ' . implode(', ', $values) . $sql, $p,
+			Connection::QUERY_RETURN_TYPE_AFFECTED);
+	}
+
+	/**
+	 * Update with ignore
+	 *
+	 * @param string $table_or_sql
+	 * @param array $params
+	 * @return int (affected)
+	 */
+	public function updateIgnore($table_or_sql, array $params)
+	{
+		return $this->update($table_or_sql, $params, true);
 	}
 
 	/**

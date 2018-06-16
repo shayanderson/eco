@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2017 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2018 Shay Anderson <http://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -310,9 +310,10 @@ class Model
 	 *
 	 * @param mixed $id_or_sql
 	 * @param array $params
+	 * @param boolean $is_ignore
 	 * @return int (affected)
 	 */
-	public function update($id_or_sql, array $params)
+	public function update($id_or_sql, array $params, $is_ignore = false)
 	{
 		if(is_numeric($id_or_sql))
 		{
@@ -321,7 +322,19 @@ class Model
 		}
 
 		return $this->__db()->update($this->__name . ' ' . $this->__addWhereKeyword($id_or_sql),
-			$params);
+			$params, $is_ignore);
+	}
+
+	/**
+	 * Update with ignore (WHERE keyword optional)
+	 *
+	 * @param mixed $id_or_sql
+	 * @param array $params
+	 * @return int (affected)
+	 */
+	public function updateIgnore($id_or_sql, array $params)
+	{
+		return $this->update($id_or_sql, $params, true);
 	}
 
 	/**

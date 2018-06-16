@@ -16,6 +16,7 @@ The core helper functions are mostly used to quickly access Eco methods (shortha
 - `logger()` - `eco::log()` alias
 - `model()` - `eco::model()` alias
 - `pa($v)` - HTML or CLI friendly printer for all PHP types
+- `service()` - `eco::service()` alias
 - `session_exists()` - determine if a PHP session exists
 - `stop()` - `eco::stop()` alias
 - `view($template, $view_params)` - `eco::view()` alias
