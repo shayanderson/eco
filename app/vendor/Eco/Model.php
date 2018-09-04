@@ -70,7 +70,7 @@ abstract class Model
 	 * Delete by PK value
 	 *
 	 * @param int $id
-	 * @return int (affected)
+	 * @return int (affected, or null for invalid $id)
 	 */
 	final public function deleteRow($id)
 	{
@@ -78,13 +78,15 @@ abstract class Model
 		{
 			return $this->db->delete($id);
 		}
+
+		return null;
 	}
 
 	/**
 	 * Single row getter
 	 *
 	 * @param int $id
-	 * @return \stdClass (or null for no row)
+	 * @return \stdClass (or null for no row or invalid $id)
 	 */
 	final public function getRow($id)
 	{
@@ -92,6 +94,8 @@ abstract class Model
 		{
 			return $this->db->get($id);
 		}
+
+		return null;
 	}
 
 	/**
@@ -108,7 +112,7 @@ abstract class Model
 	 * Row exists flag getter
 	 *
 	 * @param mixed $id
-	 * @return boolean
+	 * @return boolean (or null for invalid $id)
 	 */
 	final public function hasRow($id)
 	{
@@ -116,6 +120,8 @@ abstract class Model
 		{
 			return $this->db->has($id);
 		}
+
+		return null;
 	}
 
 	/**

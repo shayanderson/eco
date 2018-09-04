@@ -308,33 +308,37 @@ class Model
 	/**
 	 * Update (WHERE keyword optional)
 	 *
-	 * @param mixed $id_or_sql
+	 * @param mixed $id_sql_params
 	 * @param array $params
 	 * @param boolean $is_ignore
 	 * @return int (affected)
 	 */
-	public function update($id_or_sql, array $params, $is_ignore = false)
+	public function update($id_sql_params, $params = null, $is_ignore = false)
 	{
-		if(is_numeric($id_or_sql))
+		if(is_numeric($id_sql_params))
 		{
 			return $this->__db()->update($this->__name . ' WHERE ' . $this->__pk . ' = :pkid',
-				$params + [':pkid' => (int)$id_or_sql]);
+				$params + [':pkid' => (int)$id_sql_params], $is_ignore);
+		}
+		else if(is_array($id_sql_params))
+		{
+			return $this->__db()->update($this->__name, $id_sql_params, $is_ignore);
 		}
 
-		return $this->__db()->update($this->__name . ' ' . $this->__addWhereKeyword($id_or_sql),
+		return $this->__db()->update($this->__name . ' ' . $this->__addWhereKeyword($id_sql_params),
 			$params, $is_ignore);
 	}
 
 	/**
 	 * Update with ignore (WHERE keyword optional)
 	 *
-	 * @param mixed $id_or_sql
+	 * @param mixed $id_sql_params
 	 * @param array $params
 	 * @return int (affected)
 	 */
-	public function updateIgnore($id_or_sql, array $params)
+	public function updateIgnore($id_sql_params, $params = null)
 	{
-		return $this->update($id_or_sql, $params, true);
+		return $this->update($id_sql_params, $params, true);
 	}
 
 	/**

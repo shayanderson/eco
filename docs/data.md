@@ -23,6 +23,7 @@ The Format class formats data. The format methods are:
 - `currency($value, $format)` - default format set by `eco::format()->default_format_currency`
 - `date($value, $format)` - default format set by `eco::format()->default_format_date`
 - `dateTime($value, $format)` - default format set by `eco::format()->default_format_date_time`
+- `nameKey($value, $additional_allowed_chars)`
 - `time($value, $format)` - default format set by `eco::format()->default_format_time`
 - `timeElapsed($time_elapsed, $characters)`
 
