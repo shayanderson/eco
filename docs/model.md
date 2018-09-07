@@ -212,6 +212,10 @@ $affected = $this->db->update('WHERE a = :a',
 $affected = $this->db->update('a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 ```
+> The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
+```php
+$affected = $this->db->updateIgnore(5, ['x' => 1, 'y' => 2]);
+```
 
 
 ### Index

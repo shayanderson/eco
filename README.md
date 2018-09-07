@@ -38,6 +38,15 @@ The request `/` would call the method `home` in the class `IndexController` in f
 
 The request `/login` would call the method `login` in the class `\Account\UserController` in file `app/mod/Account/UserController.php`.
 
+#### HTTP Methods
+Specific HTTP methods can be used for routes:
+```php
+eco::route('GET@api/user/:id', function($id) { /* GET method */ });
+eco::route('DELETE@api/user/:id', function($id) { /* DELETE method */ });
+eco::route('POST@api/user/:id?', function($id = null) { /* POST method */ });
+```
+> These HTTP methods are supported: `DELETE`, `GET`, `HEAD`, `PATCH`, `POST`, `PUT`
+
 #### Route Callbacks
 Route callbacks can be a callable name or callable (the first array element must be the controller/action):
 ```php

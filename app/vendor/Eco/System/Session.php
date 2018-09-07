@@ -139,7 +139,7 @@ class Session extends \Eco\Factory
 	 */
 	public function start()
 	{
-		session_cache_limiter(false);
+		@session_cache_limiter(false);
 		@session_start();
 	}
 }

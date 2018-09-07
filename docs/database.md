@@ -235,6 +235,11 @@ $data->x = 1;
 $data->y = 2;
 db()->update('table', $data);
 ```
+> The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
+```php
+// UPDATE IGNORE table SET x = 1, y = 2
+db()->updateIgnore('table', ['x' => 1, 'y' => 2]);
+```
 
 
 ### Execute a Query
@@ -378,6 +383,17 @@ A database connection can be dynamically created instead of using the Eco config
 db()->connectionRegister('db_id', 'localhost', 'database_name', 'user', 'password');
 // now use like:
 db('db_id')->count('table');
+```
+
+#### Dynamically Change Database
+The connection database can be changed dynamically, example:
+```php
+// use registered database
+$rows = db()->getAll('table');
+// change database
+db()->database('database2');
+// select using database 'database2'
+$rows2 = db()->getAll('table');
 ```
 
 #### Close Connection

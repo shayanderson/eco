@@ -27,7 +27,9 @@ function decorate($decorator, $value, callable $filter = null, $is_indexed_array
 {
 	$pattern = '/{\$([\w]+)}/i';
 
-	if(is_string($decorator) && count($value) > 0)
+	$count = count((array)$value);
+
+	if(is_string($decorator) && $count)
 	{
 		if($is_indexed_array)
 		{
@@ -44,8 +46,8 @@ function decorate($decorator, $value, callable $filter = null, $is_indexed_array
 			return $s;
 		}
 
-		if(count($value) === count($value, COUNT_RECURSIVE)
-			&& !is_object(current($value))) // one-dimensional array
+		// one-dimensional array
+		if($count === count((array)$value, COUNT_RECURSIVE) && !is_object(current($value)))
 		{
 			if(is_object($value)) // object, force array
 			{

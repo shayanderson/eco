@@ -26,6 +26,13 @@ class Router extends \Eco\Factory
 	private $__404_callback;
 
 	/**
+	 * HTTP methods
+	 *
+	 * @var array
+	 */
+	private static $__http_method = ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT'];
+
+	/**
 	 * Params
 	 *
 	 * @var array
@@ -423,94 +430,129 @@ class Router extends \Eco\Factory
 			$is_route_loader = false;
 
 			// routing
-			while(list($route, $v) = each($this->__route))
+			while(true)
 			{
-				$mapped = explode('/', $route);
-				$count_mapped = count($mapped);
-				$i = 0;
-				$param_wc_id = null;
+				$rewind = false;
 
-				foreach($mapped as $k => $part)
+				foreach($this->__route as $route => $v)
 				{
-					$i++;
+					$mapped = explode('/', $route);
+					$count_mapped = count($mapped);
+					$i = 0;
+					$param_wc_id = null;
 
-					if(!empty($part) && $part[0] === ':') // param(s)
+					foreach($mapped as $k => $part)
 					{
-						$regex = null;
-						if(($p = strpos($part, '@')) !== false) // param regex: ':param@regex'
+						// match: '<http-method>@root-route-part'
+						if(!$k && ($pos = strpos($part, '@')) !== false)
 						{
-							$regex = substr($part, $p + 1);
-							$part = substr($part, 0, $p);
-						}
+							$method = substr($part, 0, $pos);
+							// strip method from route part
+							$part = substr($part, $pos + 1, strlen($part));
 
-						if(($p = strrpos($part, ':')) > 0) // param callback ':param:callback'
-						{
-							$cb = substr($part, $p + 1, strlen($part));
-							$part = substr($part, 0, $p);
-							$this->mapParamCallback(substr($part, 1), $cb);
-						}
-
-						if(isset($request[$k]) && strlen($request[$k]) > 0) // valid param
-						{
-							if($regex && substr($part, -1) !== '+' // do not test wildcard params
-								&& !preg_match('#^' . $regex . '$#', $request[$k]))
+							if($method)
 							{
-								continue 2; // regex failed
-							}
-
-							if(substr($part, -1) === '+') // wildcard params
-							{
-								$param_wc_id = substr(rtrim($part, '+'), 1);
-
-								foreach(array_slice($request, $k) as $p) // add wildcard params
+								if(!in_array($method, self::$__http_method)) // invalid method
 								{
-									if($regex && !preg_match('#^' . $regex . '$#', $p))
-									{
-										continue 3; // regex failed on wildcard param
-									}
+									System::error('Invalid HTTP method \'' . $method
+										. '\' in route \'' . $route . '\'', System::ERROR_SERVER,
+										'Eco');
+								}
 
-									$this->__param[$param_wc_id][] = $this->__paramCallback(
-										$param_wc_id, urldecode($p));
+								// does not match request method
+								if(strcmp($method, $_SERVER['REQUEST_METHOD']) !== 0)
+								{
+									continue 2;
 								}
 							}
-							else // param or optional param
+						}
+
+						$i++;
+
+						if(!empty($part) && $part[0] === ':') // param(s)
+						{
+							$regex = null;
+							if(($p = strpos($part, '@')) !== false) // param regex: ':param@regex'
 							{
-								$part_k = substr(rtrim($part, '?'), 1);
-								$this->__param[$part_k] = $this->__paramCallback($part_k,
-									urldecode($request[$k]));
+								$regex = substr($part, $p + 1);
+								$part = substr($part, 0, $p);
+							}
+
+							if(($p = strrpos($part, ':')) > 0) // param callback ':param:callback'
+							{
+								$cb = substr($part, $p + 1, strlen($part));
+								$part = substr($part, 0, $p);
+								$this->mapParamCallback(substr($part, 1), $cb);
+							}
+
+							if(isset($request[$k]) && strlen($request[$k]) > 0) // valid param
+							{
+								if($regex && substr($part, -1) !== '+' // do not test wildcard params
+									&& !preg_match('#^' . $regex . '$#', $request[$k]))
+								{
+									continue 2; // regex failed
+								}
+
+								if(substr($part, -1) === '+') // wildcard params
+								{
+									$param_wc_id = substr(rtrim($part, '+'), 1);
+
+									foreach(array_slice($request, $k) as $p) // add wildcard params
+									{
+										if($regex && !preg_match('#^' . $regex . '$#', $p))
+										{
+											continue 3; // regex failed on wildcard param
+										}
+
+										$this->__param[$param_wc_id][] = $this->__paramCallback(
+											$param_wc_id, urldecode($p));
+									}
+								}
+								else // param or optional param
+								{
+									$part_k = substr(rtrim($part, '?'), 1);
+									$this->__param[$part_k] = $this->__paramCallback($part_k,
+										urldecode($request[$k]));
+								}
+							}
+							else if(substr($part, -1) !== '?') // check for optional param
+							{
+								continue 2; // required param missing
 							}
 						}
-						else if(substr($part, -1) !== '?') // check for optional param
+						else if(!isset($request[$k]) || $part !== $request[$k]) // parts do not match
 						{
-							continue 2; // required param missing
-						}
-					}
-					else if(!isset($request[$k]) || $part !== $request[$k]) // parts do not match
-					{
-						// check for class route loader
-						if(!$is_route_loader && isset($request[$k]) && substr($part, -1) === '*'
-							&& substr($part, 0, -1) == $request[$k])
-						{
-							$this->__classRouteLoader($v); // invoke class route loader
-							$is_route_loader = true;
-							reset($this->__route);
-						}
-						continue 2;
-					}
-
-					if($i === $count_mapped || $param_wc_id !== null) // end of mapped route
-					{
-						// look forward check if request continues
-						if($param_wc_id === null && count($request) > $count_mapped)
-						{
-							continue 2; // count mismatch
+							// check for class route loader
+							if(!$is_route_loader && isset($request[$k]) && substr($part, -1) === '*'
+								&& substr($part, 0, -1) == $request[$k])
+							{
+								$this->__classRouteLoader($v); // invoke class route loader
+								$is_route_loader = true;
+								$rewind = true; // reset parent foreach
+								break 2;
+							}
+							continue 2;
 						}
 
-						// set route
-						$route_id = $route;
-						System::log()->debug('Mapped route detected for \'/' . $route_id . '\'', 'Eco');
-						break 2;
+						if($i === $count_mapped || $param_wc_id !== null) // end of mapped route
+						{
+							// look forward check if request continues
+							if($param_wc_id === null && count($request) > $count_mapped)
+							{
+								continue 2; // count mismatch
+							}
+
+							// set route
+							$route_id = $route;
+							System::log()->debug('Mapped route detected for \'/' . $route_id . '\'', 'Eco');
+							break 2;
+						}
 					}
+				}
+
+				if(!$rewind)
+				{
+					break;
 				}
 			}
 		}

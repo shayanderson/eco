@@ -1,7 +1,7 @@
 ## HTTP Request Class
 > **Required:** this class uses and requires the [PHP cURL Library](http://php.net/manual/en/book.curl.php)
 
-The `\Eco\Http` class can be used to issue HTTP requests (GET, POST and HEAD). Here is a quick GET request example:
+The `\Eco\Http` class can be used to issue HTTP requests (`GET`, `POST`, `DELETE`, `HEAD`, `PATCH`, `PUT`). Here is a quick GET request example:
 ```php
 $http = new \Eco\Http('http://www.example.com');
 $response = $http->get();
@@ -33,8 +33,7 @@ $response = $http->get();
 POST request:
 ```php
 $http = new \Eco\Http('http://www.example.com');
-$http->param('id', 14);
-$response = $http->post();
+$response = $http->post(['id' => 14]);
 ```
 HEAD request:
 ```php
@@ -58,12 +57,15 @@ The `\Eco\Http` class properties are used a configuration settings for the reque
 - `$verify_peer` - verify peers certificate
 
 ### Class Methods
-- `get($params)` - send GET request
+- `delete(array $params = null)` - send DELETE request
+- `get(array $params = null)` - send GET request
 - `getError()` - last error message getter
 - `getErrorNumber()` - last error number getter
 - `getResponseCode()` - HTTP response code getter
 - `getUrl()` - request URL getter
-- `head($params)` - send HEAD request
+- `head(array $params = null)` - send HEAD request
 - `isError()` - check if connection error occurred
-- `param($id, $value)` - request param setter
-- `post($params)` - send POST request
+- `param(string $id, mixed $value)` - request param setter
+- `patch(array $params = null)` - send PATCH request
+- `post(array $params = null)` - send POST request
+- `put(array $params = null)` - send PUT request

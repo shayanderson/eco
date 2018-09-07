@@ -151,6 +151,17 @@ class Connection
 	}
 
 	/**
+	 * Change database
+	 *
+	 * @param string $name
+	 * @return void
+	 */
+	public function database($name)
+	{
+		$this->getPdo()->exec("USE {$name};");
+	}
+
+	/**
 	 * Query log getter
 	 *
 	 * @return array

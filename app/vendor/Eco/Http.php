@@ -19,9 +19,12 @@ class Http
 	/**
 	 * Request types
 	 */
-	const TYPE_GET = 1;
-	const TYPE_HEAD = 2;
-	const TYPE_POST = 3;
+	const TYPE_DELETE = 1;
+	const TYPE_GET = 2;
+	const TYPE_HEAD = 3;
+	const TYPE_PATCH = 4;
+	const TYPE_POST = 5;
+	const TYPE_PUT = 6;
 
 	/**
 	 * Last error message
@@ -232,16 +235,30 @@ class Http
 			curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
 		}
 
-		// head
-		if($type === self::TYPE_HEAD)
+		if($type === self::TYPE_POST) // post
+		{
+			curl_setopt($ch, CURLOPT_POST, true);
+		}
+		else if($type === self::TYPE_DELETE) // delete
+		{
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+		}
+		else if($type === self::TYPE_HEAD) // head
 		{
 			curl_setopt($ch, CURLOPT_NOBODY, true);
 		}
-
-		// post
-		if($type === self::TYPE_POST && count($params))
+		else if($type === self::TYPE_PATCH) // patch
 		{
-			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+		}
+		else if($type === self::TYPE_PUT)
+		{
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		}
+
+		if(count($params) && ( $type === self::TYPE_POST || $type === self::TYPE_DELETE
+			|| $type === self::TYPE_PATCH || $type === self::TYPE_PUT ))
+		{
 			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
 		}
 
@@ -264,6 +281,17 @@ class Http
 		curl_close($ch);
 
 		return $response;
+	}
+
+	/**
+	 * DELETE request
+	 *
+	 * @param array $params
+	 * @return mixed (string or false on error)
+	 */
+	public function delete(array $params = null)
+	{
+		return $this->__fetch(self::TYPE_DELETE, $params);
 	}
 
 	/**
@@ -351,6 +379,17 @@ class Http
 	}
 
 	/**
+	 * PATCH request
+	 *
+	 * @param array $params
+	 * @return mixed (string or false on error)
+	 */
+	public function patch(array $params = null)
+	{
+		return $this->__fetch(self::TYPE_PATCH, $params);
+	}
+
+	/**
 	 * POST request
 	 *
 	 * @param array $params
@@ -359,5 +398,16 @@ class Http
 	public function post(array $params = null)
 	{
 		return $this->__fetch(self::TYPE_POST, $params);
+	}
+
+	/**
+	 * PUT request
+	 *
+	 * @param array $params
+	 * @return mixed (string or false on error)
+	 */
+	public function put(array $params = null)
+	{
+		return $this->__fetch(self::TYPE_PUT, $params);
 	}
 }

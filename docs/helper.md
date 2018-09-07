@@ -179,6 +179,8 @@ The `redirect($location, $use_301)` function is a `eco::redirect()` alias.
 The request helper functions are:
 - `get($key)` - `eco::request()->get()` alias
 - `get_has($key)` - `eco::request()->get_has()` alias
+- `input($key)` - `eco::request()->input()` alias
+- `input_has($key)` - `eco::request()->input_has()` alias
 - `post($key)` - `eco::request()->post()` alias
 - `post_has($key)` - `eco::request()->post_has()` alias
 

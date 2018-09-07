@@ -17,6 +17,34 @@ namespace Eco\System;
 class Request extends \Eco\Factory
 {
 	/**
+	 * Input var getter or check if exists
+	 *
+	 * @staticvar array $vars
+	 * @staticvar boolean $is_init
+	 * @param string $key
+	 * @param bool $is_has
+	 * @return mixed
+	 */
+	private static function __input($key, $is_has = false)
+	{
+		static $vars = [];
+		static $is_init = false;
+
+		if(!$is_init)
+		{
+			parse_str(file_get_contents('php://input'), $vars);
+			$is_init = true;
+		}
+
+		if($is_has)
+		{
+			return isset($vars[$key]);
+		}
+
+		return isset($vars[$key]) ? $vars[$key] : null;
+	}
+
+	/**
 	 * Request cookie value getters
 	 *
 	 * @param string $key
@@ -128,6 +156,28 @@ class Request extends \Eco\Factory
 		}
 
 		return ($pos = strpos($uri, '?')) !== false ? substr($uri, 0, $pos) : $uri;
+	}
+
+	/**
+	 * Request input variable value getter
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function input($key)
+	{
+		return self::__input($key);
+	}
+
+	/**
+	 * Request input variable exists flag getter
+	 *
+	 * @param string $key
+	 * @return boolean
+	 */
+	public function input_has($key)
+	{
+		return self::__input($key, true);
 	}
 
 	/**

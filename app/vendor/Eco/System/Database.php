@@ -347,6 +347,17 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Change database
+	 *
+	 * @param string $name
+	 * @return void
+	 */
+	public function database($name)
+	{
+		$this->__getConn()->database($name);
+	}
+
+	/**
 	 * Delete
 	 *
 	 * @param string $table_or_sql
