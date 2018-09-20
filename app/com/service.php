@@ -4,6 +4,6 @@
  */
 
 /**
- * @property Example\Class $example
+ * @property \Example\Class $example
  */
 class EcoServiceRegistry extends \Eco\System\Registry\Service {}

@@ -168,10 +168,6 @@ class Http
 		{
 			$params += $this->__param;
 		}
-		else
-		{
-			$params = $this->__param;
-		}
 
 		// get
 		if($type === self::TYPE_GET && $params)
@@ -256,10 +252,15 @@ class Http
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 		}
 
-		if(count($params) && ( $type === self::TYPE_POST || $type === self::TYPE_DELETE
+		if($params && ( $type === self::TYPE_POST || $type === self::TYPE_DELETE
 			|| $type === self::TYPE_PATCH || $type === self::TYPE_PUT ))
 		{
-			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+			if(is_array($params) || is_object($params))
+			{
+				$params = http_build_query($params);
+			}
+
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 		}
 
 		if($this->headers && is_array($this->headers))
@@ -286,10 +287,10 @@ class Http
 	/**
 	 * DELETE request
 	 *
-	 * @param array $params
+	 * @param mixed $params
 	 * @return mixed (string or false on error)
 	 */
-	public function delete(array $params = null)
+	public function delete($params = null)
 	{
 		return $this->__fetch(self::TYPE_DELETE, $params);
 	}
@@ -348,12 +349,11 @@ class Http
 	/**
 	 * HEAD request
 	 *
-	 * @param array $params
 	 * @return boolean (true or false on error)
 	 */
-	public function head(array $params = null)
+	public function head()
 	{
-		return $this->__fetch(self::TYPE_HEAD, $params) !== false;
+		return $this->__fetch(self::TYPE_HEAD, null) !== false;
 	}
 
 	/**
@@ -381,10 +381,10 @@ class Http
 	/**
 	 * PATCH request
 	 *
-	 * @param array $params
+	 * @param mixed $params
 	 * @return mixed (string or false on error)
 	 */
-	public function patch(array $params = null)
+	public function patch($params = null)
 	{
 		return $this->__fetch(self::TYPE_PATCH, $params);
 	}
@@ -392,10 +392,10 @@ class Http
 	/**
 	 * POST request
 	 *
-	 * @param array $params
+	 * @param mixed $params
 	 * @return mixed (string or false on error)
 	 */
-	public function post(array $params = null)
+	public function post($params = null)
 	{
 		return $this->__fetch(self::TYPE_POST, $params);
 	}
@@ -403,10 +403,10 @@ class Http
 	/**
 	 * PUT request
 	 *
-	 * @param array $params
+	 * @param mixed $params
 	 * @return mixed (string or false on error)
 	 */
-	public function put(array $params = null)
+	public function put($params = null)
 	{
 		return $this->__fetch(self::TYPE_PUT, $params);
 	}

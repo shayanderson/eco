@@ -82,6 +82,13 @@ class Router extends \Eco\Factory
 	public $request;
 
 	/**
+	 * Request method
+	 *
+	 * @var string
+	 */
+	public $request_method;
+
+	/**
 	 * Route
 	 *
 	 * @var string
@@ -417,6 +424,11 @@ class Router extends \Eco\Factory
 	 */
 	public function dispatch()
 	{
+		$this->request_method = !$this->isCli() ? $_SERVER['REQUEST_METHOD'] : null;
+		if($this->request_method)
+		{
+			System::log()->debug('Request method \'' . $this->request_method . '\'', 'Eco');
+		}
 		$request = $this->__request;
 		$route_id = null;
 
@@ -452,6 +464,25 @@ class Router extends \Eco\Factory
 
 							if($method)
 							{
+								if(strpos($method, '|') !== false) // multiple HTTP methods
+								{
+									$is_method = false;
+									foreach(explode('|', $method) as $v)
+									{
+										if(strcmp($v, $this->request_method) === 0) // same method
+										{
+											$method = $v;
+											$is_method = true;
+											break;
+										}
+									}
+
+									if(!$is_method) // multiple methods do not match request method
+									{
+										continue 2;
+									}
+								}
+
 								if(!in_array($method, self::$__http_method)) // invalid method
 								{
 									System::error('Invalid HTTP method \'' . $method
@@ -459,8 +490,9 @@ class Router extends \Eco\Factory
 										'Eco');
 								}
 
-								// does not match request method
-								if(strcmp($method, $_SERVER['REQUEST_METHOD']) !== 0)
+								// CLI (do not allow) or does not match request method
+								if($this->isCli()
+									|| strcmp($method, $this->request_method) !== 0)
 								{
 									continue 2;
 								}

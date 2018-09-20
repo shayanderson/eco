@@ -17,6 +17,7 @@ Install example:
 - [**Configuration**](#configuration)
 - [**Core Methods**](#core-methods)
 - [**Core Classes**](#core-classes)  ([Cache](https://github.com/shayanderson/eco/blob/master/docs/cache.md), [Database](https://github.com/shayanderson/eco/blob/master/docs/database.md),  [Form](https://github.com/shayanderson/eco/blob/master/docs/form.md), [HTTP](https://github.com/shayanderson/eco/blob/master/docs/http.md), [Model](https://github.com/shayanderson/eco/blob/master/docs/model.md), [Table](https://github.com/shayanderson/eco/blob/master/docs/table.md))
+- [**Helper Classes**](#helper-classes) ([Benchmark](https://github.com/shayanderson/eco/blob/master/docs/benchmark.md), [Breadcrumb](https://github.com/shayanderson/eco/blob/master/docs/breadcrumb.md), [Filter](https://github.com/shayanderson/eco/blob/master/docs/data.md#filter-class), [Flash](https://github.com/shayanderson/eco/blob/master/docs/session.md#flash-class), [Format](https://github.com/shayanderson/eco/blob/master/docs/data.md#format-class), [Request](https://github.com/shayanderson/eco/blob/master/docs/request.md), [ResponseCode](https://github.com/shayanderson/eco/blob/master/docs/response_code.md), [Service](https://github.com/shayanderson/eco/blob/master/docs/service.md), [Session](https://github.com/shayanderson/eco/blob/master/docs/session.md), [Validate](https://github.com/shayanderson/eco/blob/master/docs/data.md#validate-class))
 - [**Helper Functions**](https://github.com/shayanderson/eco/blob/master/docs/helper.md) ([core](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions), [alias](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions), [factory](https://github.com/shayanderson/eco/blob/master/docs/helper.md#factory-helper-functions), [flash](https://github.com/shayanderson/eco/blob/master/docs/helper.md#flash-helper-functions), [redirect](https://github.com/shayanderson/eco/blob/master/docs/helper.md#redirect-helper-function), [request](https://github.com/shayanderson/eco/blob/master/docs/helper.md#request-helper-functions), [view](https://github.com/shayanderson/eco/blob/master/docs/helper.md#view-helper-functions))
 - [**Extending Eco**](#extending-eco)
 
@@ -44,6 +45,8 @@ Specific HTTP methods can be used for routes:
 eco::route('GET@api/user/:id', function($id) { /* GET method */ });
 eco::route('DELETE@api/user/:id', function($id) { /* DELETE method */ });
 eco::route('POST@api/user/:id?', function($id = null) { /* POST method */ });
+// or handle multiple HTTP methods
+eco::route('POST|PUT@api/user/:id?', function($id = null) { /* POST or PUT method */ });
 ```
 > These HTTP methods are supported: `DELETE`, `GET`, `HEAD`, `PATCH`, `POST`, `PUT`
 
@@ -276,9 +279,10 @@ error('Failed to load user', null, 'account');
 // to not send HTTP code use:
 error('Page not found', 404, 'category' false);
 ```
-The error message sent to the `eco::error()` function can be accessed using:
+The last error message (and error category) sent to the `eco::error()` function can be accessed using:
 ```php
 $error_message = eco::errorGetLast();
+$error_category = eco::errorGetLastCategory();
 ```
 > A [404 callback](https://github.com/shayanderson/eco/blob/master/docs/router.md#router-methods) can be used to handle the 404 before an error is called
 
@@ -357,7 +361,7 @@ Eco offers the following methods:
 - [`eco::model()`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Model class loader ([`model()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function available)
 - [`eco::param($id, $callback)`](#route-parameter-callbacks) - map route parameter callback ([`param()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
 - [`eco::redirect($location, $use_301)`](https://github.com/shayanderson/eco/blob/master/docs/redirect.md) - redirect method (overridable) ([`redirect()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#redirect-helper-function) helper function available)
-- [`eco::request()`](https://github.com/shayanderson/eco/blob/master/docs/request.md) - access Request class ([`request`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function available)
+- [`eco::request()`](https://github.com/shayanderson/eco/blob/master/docs/request.md) - access Request class ([`request()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#request-helper-functions) helper function available)
 - [`eco::route($route, $action)`](#routing) - map route
 - [`eco::router()`](https://github.com/shayanderson/eco/blob/master/docs/router.md) - access core Router class
 - `eco::run()` - run the application
@@ -377,6 +381,20 @@ Core classes can be used to simplify common application tasks:
 - [`Eco\Http`](https://github.com/shayanderson/eco/blob/master/docs/http.md) - HTTP request core class
 - [`Eco\Model`](https://github.com/shayanderson/eco/blob/master/docs/model.md) - Database model core class
 - [`Eco\Table`](https://github.com/shayanderson/eco/blob/master/docs/table.md) - HTML table core class
+
+
+## Helper Classes
+These helper classes are available:
+- [`Eco\Benchmark`](https://github.com/shayanderson/eco/blob/master/docs/benchmark.md) - benchmarking helper
+- [`Eco\System\Breadcrumb`](https://github.com/shayanderson/eco/blob/master/docs/breadcrumb.md) - access with `eco::breadcrumb()` or [`breadcrumb()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function
+- [`Eco\System\Filter`](https://github.com/shayanderson/eco/blob/master/docs/data.md#filter-class) - access with `eco::filter()` or [`filter()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function
+- [`Eco\System\Session\Flash`](https://github.com/shayanderson/eco/blob/master/docs/session.md#flash-class) - access with `eco::flash()` or [`flash()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function
+- [`Eco\System\Format`](https://github.com/shayanderson/eco/blob/master/docs/data.md#format-class) - access with `eco::format()` or [`format()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function
+- [`Eco\System\Request`](https://github.com/shayanderson/eco/blob/master/docs/request.md) - access with `eco::request()` or [`request()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#request-helper-functions) helper function
+- [`Eco\Http\ResponseCode`](https://github.com/shayanderson/eco/blob/master/docs/response_code.md) - custom HTTP response status codes
+- [`Eco\System\Registry\Service`](https://github.com/shayanderson/eco/blob/master/docs/service.md) - access with `eco::service()` or [`service()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#core-helper-functions) helper function
+- [`Eco\System\Session`](https://github.com/shayanderson/eco/blob/master/docs/session.md) - access with `eco::session()` or [`session()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function
+- [`Eco\System\Validate`](https://github.com/shayanderson/eco/blob/master/docs/data.md#validate-class) - acccess with `eco::validate()` or [`validate()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function
 
 
 ## Helper Functions

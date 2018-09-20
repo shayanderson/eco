@@ -69,9 +69,6 @@ Because the `App\Model\Document` extends the `Eco\Model` class there are several
 // get count of all rows
 $count = model()->doc->countRows();
 
-// delete row with primary key value of 5 (numeric values only)
-$affected = model()->doc->deleteRow(5);
-
 // get row with primary key value of 5 (numeric values only)
 $row = model()->doc->getRow(5);
 
@@ -113,10 +110,10 @@ $row = $this->db->get('WHERE x = ? AND y = ?', 1, 2);
 $row = $this->db->get('x = ? AND y = ?', 1, 2);
 
 // with columns
-// SELECT col, col2 FROM table WHERE x = 1 AND y = 2 LIMIT 1
-$row = $this->db->get('(col, col2) WHERE x = ? AND y = ?', 1, 2);
+// SELECT col, col2 AS c2 FROM table WHERE x = 1 AND y = 2 LIMIT 1
+$row = $this->db->get('(col, col2 AS c2) WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
-$row = $this->db->get('(col, col2) x = ? AND y = ?', 1, 2);
+$row = $this->db->get('(col, col2 AS c2) x = ? AND y = ?', 1, 2);
 ```
 > The `model()->name->getRow($id)` method can be used outside the model class to get a single row by numeric primary key value (see [public methods](#public-methods))
 
@@ -132,8 +129,8 @@ $rows = $this->db->getAll('ORDER BY x, y');
 $rows = $this->db->getAll('WHERE x = ? AND y = ?', 1, 2);
 
 // with columns
-// SELECT col, col2 FROM table WHERE x = 1 AND y = 2
-$rows = $this->db->getAll('(col, col2) WHERE x = ? AND y = ?', 1, 2);
+// SELECT col, col2 AS c2 FROM table WHERE x = 1 AND y = 2
+$rows = $this->db->getAll('(col, col2 AS c2) WHERE x = ? AND y = ?', 1, 2);
 ```
 
 
@@ -172,7 +169,6 @@ $has = $this->db->delete('WHERE x = ? AND y = ?', 1, 2);
 // or without WHERE keyword
 $has = $this->db->delete('x = ? AND y = ?', 1, 2);
 ```
-> The `model()->name->deleteRow($id)` method can be used outside the model class to delete a single row by numeric primary key value (see [public methods](#public-methods))
 
 
 ### Insert
@@ -212,7 +208,7 @@ $affected = $this->db->update('WHERE a = :a',
 $affected = $this->db->update('a = :a',
 	['x' => 1, 'y' => 2, ':a' => 1]);
 ```
-> The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
+The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
 ```php
 $affected = $this->db->updateIgnore(5, ['x' => 1, 'y' => 2]);
 ```

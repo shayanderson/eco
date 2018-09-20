@@ -57,7 +57,7 @@ The `\Eco\Http` class properties are used a configuration settings for the reque
 - `$verify_peer` - verify peers certificate
 
 ### Class Methods
-- `delete(array $params = null)` - send DELETE request
+- `delete($params = null)` - send DELETE request
 - `get(array $params = null)` - send GET request
 - `getError()` - last error message getter
 - `getErrorNumber()` - last error number getter
@@ -66,6 +66,6 @@ The `\Eco\Http` class properties are used a configuration settings for the reque
 - `head(array $params = null)` - send HEAD request
 - `isError()` - check if connection error occurred
 - `param(string $id, mixed $value)` - request param setter
-- `patch(array $params = null)` - send PATCH request
-- `post(array $params = null)` - send POST request
-- `put(array $params = null)` - send PUT request
+- `patch($params = null)` - send PATCH request
+- `post($params = null)` - send POST request
+- `put($params = null)` - send PUT request

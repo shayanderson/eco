@@ -26,8 +26,7 @@ use Eco\System;
 function decorate($decorator, $value, callable $filter = null, $is_indexed_array = false)
 {
 	$pattern = '/{\$([\w]+)}/i';
-
-	$count = count((array)$value);
+	$count = is_scalar($value) ? 0 : count((array)$value);
 
 	if(is_string($decorator) && $count)
 	{
@@ -85,6 +84,14 @@ function decorate($decorator, $value, callable $filter = null, $is_indexed_array
 
 			foreach($value as $v)
 			{
+				foreach($v as $k => $vv)
+				{
+					if(is_array($vv))
+					{
+						unset($v[$k]); // depth not allowed
+					}
+				}
+
 				$str .= call_user_func_array(__FUNCTION__, [$decorator, $v, $filter]);
 			}
 

@@ -12,6 +12,9 @@ eco::autoload([
 	PATH_VENDOR
 ]);
 
+// benchmark start point
+\Eco\Benchmark::start();
+
 // load Eco configuration settings
 eco::conf(PATH_CONF . 'eco.conf.php');
 
@@ -29,5 +32,6 @@ eco::route(require PATH_COM . 'route.php');
 
 // set hook to display log
 eco::hook(eco::HOOK_AFTER, function() {
-	echo '<pre>' . print_r(eco::log()->get(), true) . '</pre>';
+	echo '<pre>' . print_r(array_merge(eco::log()->get(), \Eco\Benchmark::getPoints(true)), true)
+		. '</pre>';
 });

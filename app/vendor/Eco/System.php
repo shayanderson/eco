@@ -58,6 +58,13 @@ class System
 	private static $__error_last;
 
 	/**
+	 * Last error category
+	 *
+	 * @var string
+	 */
+	private static $__error_last_category;
+
+	/**
 	 * Hooks
 	 *
 	 * @var array
@@ -275,6 +282,10 @@ class System
 		{
 			self::$__error_last = $message;
 		}
+		if($category)
+		{
+			self::$__error_last_category = $category;
+		}
 
 		$error_log_level = (int)self::conf()->_eco->log->error_level;
 		if($error_log_level < 3)
@@ -312,6 +323,16 @@ class System
 	final public static function errorGetLast()
 	{
 		return self::$__error_last;
+	}
+
+	/**
+	 * Last error category getter
+	 *
+	 * @return string
+	 */
+	final public static function errorGetLastCategory()
+	{
+		return self::$__error_last_category;
 	}
 
 	/**

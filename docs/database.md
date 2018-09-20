@@ -235,7 +235,7 @@ $data->x = 1;
 $data->y = 2;
 db()->update('table', $data);
 ```
-> The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
+The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
 ```php
 // UPDATE IGNORE table SET x = 1, y = 2
 db()->updateIgnore('table', ['x' => 1, 'y' => 2]);

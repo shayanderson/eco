@@ -67,22 +67,6 @@ abstract class Model
 	}
 
 	/**
-	 * Delete by PK value
-	 *
-	 * @param int $id
-	 * @return int (affected, or null for invalid $id)
-	 */
-	final public function deleteRow($id)
-	{
-		if(is_numeric($id))
-		{
-			return $this->db->delete($id);
-		}
-
-		return null;
-	}
-
-	/**
 	 * Single row getter
 	 *
 	 * @param int $id
