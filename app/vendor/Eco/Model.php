@@ -54,6 +54,11 @@ abstract class Model
 		}
 
 		$this->db = new DatabaseModel(static::NAME, static::PK, static::CONNECTION_ID);
+
+		if(method_exists($this, '__init')) // child construct method
+		{
+			$this->__init();
+		}
 	}
 
 	/**
