@@ -94,6 +94,7 @@ class Database extends \Eco\Factory
 			}
 			else // named param
 			{
+				$k = str_replace('`', '', $k); // strip '`' from column names like `col`
 				$params[$k] = $v;
 				$values[] = ':' . $k;
 			}
@@ -871,10 +872,11 @@ class Database extends \Eco\Factory
 			}
 			else
 			{
-				$p[$k] = $v;
+				// strip '`' from column names like `col`
+				$p[str_replace('`', '', $k)] = $v;
 				if(!$is_arg)
 				{
-					$values[] = $k . ' = :' . $k;
+					$values[] = $k . ' = :' . str_replace('`', '', $k);
 				}
 			}
 		}
