@@ -655,6 +655,16 @@ class Router extends \Eco\Factory
 	}
 
 	/**
+	 * Routes getter
+	 *
+	 * @return array
+	 */
+	public function getRoutes()
+	{
+		return $this->__route;
+	}
+
+	/**
 	 * Param exists flag getter
 	 *
 	 * @param string $id
