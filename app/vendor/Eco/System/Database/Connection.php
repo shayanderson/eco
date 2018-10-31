@@ -221,6 +221,7 @@ class Connection
 	 * @param int $return_type
 	 * @param boolean $is_reconnect
 	 * @return mixed
+	 * @throws \Exception (invalid param type)
 	 * @throws \PDOException (query fail)
 	 */
 	public function query($query, $params = null, $return_type = null, $is_reconnect = false)
@@ -238,6 +239,17 @@ class Connection
 		}
 
 		$this->__logQuery($query, $params);
+		if(is_array($params))
+		{
+			foreach($params as $v)
+			{
+				if(!is_scalar($v) && $v !== null) // only allow scalar params
+				{
+					throw new \Exception(__METHOD__ . ': invalid param type \'' . gettype($v)
+						. '\' for query \'' . trim(substr($query, 0, 1000)) . '\'');
+				}
+			}
+		}
 
 		try
 		{
