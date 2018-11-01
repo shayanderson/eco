@@ -210,6 +210,16 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Database bulk methods
+	 *
+	 * @return \Eco\System\Database\Bulk
+	 */
+	public function bulk()
+	{
+		return new Database\Bulk($this->__getConn());
+	}
+
+	/**
 	 * Call store procedure
 	 *
 	 * @param string $name
@@ -856,7 +866,6 @@ class Database extends \Eco\Factory
 	{
 		$p = [];
 		$values = [];
-		$args = [];
 
 		foreach($params as $k => $v)
 		{

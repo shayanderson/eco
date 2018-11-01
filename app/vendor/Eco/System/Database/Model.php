@@ -310,7 +310,7 @@ class Model
 	 *
 	 * @param mixed $id_sql_params
 	 * @param array $params
-	 * @param boolean $is_ignore
+	 * @param bool $is_ignore
 	 * @return int (affected)
 	 */
 	public function update($id_sql_params, $params = null, $is_ignore = false)

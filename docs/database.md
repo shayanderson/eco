@@ -19,6 +19,7 @@ The Database class is used to execute database calls and can be accessed using `
 - [Pagination](#pagination) - [`pagination()`](#pagination)
 - [Transactions](#transactions)
 - [Caching](#caching)
+- [Bulk Methods](https://github.com/shayanderson/eco/blob/master/docs/database-bulk.md)
 - [Other Methods](#other-methods)
 
 
@@ -227,13 +228,6 @@ db()->update('table', ['x' => 1, 'y' => 2]);
 
 // UPDATE table SET y = 2 WHERE x = 1
 db()->update('table WHERE x = :x', ['y' => 2, ':x' => 1]);
-
-// update using object
-// UPDATE table SET x = 1, y = 2
-$data = new stdClass;
-$data->x = 1;
-$data->y = 2;
-db()->update('table', $data);
 ```
 The `updateIgnore()` method can be used for `UPDATE IGNORE` statements, example:
 ```php
