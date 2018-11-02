@@ -42,9 +42,20 @@ $response = $http->head();
 // for head request the response is either true or false (error)
 ```
 
+#### cURL Callback
+A callback can be used to modify the curl request, example:
+```php
+$http = new \Eco\Http('http://www.example.com', function(&$ch){
+   curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+});
+```
+
 ### Class Properties
 The `\Eco\Http` class properties are used a configuration settings for the request. The class properties are:
 - `$cert_file_path` - certificate file path (used with verify peer)
+- `$cookie` - cookie contents
+- `$cookie_file_path` - cookie file path
+- `$cookie_jar_path` - cookie jar path
 - `$force_tls_v1_2` - force TLS v1.2 connection
 - `$headers` - add headers like `['Accept-Language: en-US', 'Accept-Encoding: gzip, deflate']`
 - `$headers_get` - include headers in response

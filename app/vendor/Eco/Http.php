@@ -27,6 +27,13 @@ class Http
 	const TYPE_PUT = 6;
 
 	/**
+	 * cURL callback
+	 *
+	 * @var callable
+	 */
+	private $__curl_callback;
+
+	/**
 	 * Last error message
 	 *
 	 * @var string
@@ -74,6 +81,27 @@ class Http
 	 * @var string
 	 */
 	public $cert_file_path;
+
+	/**
+	 * Cookie contents
+	 *
+	 * @var string
+	 */
+	public $cookie;
+
+	/**
+	 * Cookie file path
+	 *
+	 * @var string
+	 */
+	public $cookie_file_path;
+
+	/**
+	 * Cookie jar path
+	 *
+	 * @var string
+	 */
+	public $cookie_jar_path;
 
 	/**
 	 * Force TLS v1.2 connection
@@ -149,10 +177,12 @@ class Http
 	 * Init
 	 *
 	 * @param string $url
+	 * @param callable|null $curl_callback
 	 */
-	public function __construct($url)
+	public function __construct($url, $curl_callback = null)
 	{
 		$this->__url = $url;
+		$this->__curl_callback = $curl_callback;
 	}
 
 	/**
@@ -216,6 +246,21 @@ class Http
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		}
 
+		if($this->cookie)
+		{
+			curl_setopt($ch, CURLOPT_COOKIE, $this->cookie);
+		}
+
+		if($this->cookie_file_path)
+		{
+			curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookie_file_path);
+		}
+
+		if($this->cookie_jar_path)
+		{
+			curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie_jar_path);
+		}
+
 		if($this->proxy)
 		{
 			curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
@@ -266,6 +311,12 @@ class Http
 		if($this->headers && is_array($this->headers))
 		{
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+		}
+
+		if($this->__curl_callback)
+		{
+			$f = $this->__curl_callback;
+			$f($ch);
 		}
 
 		$response = curl_exec($ch);

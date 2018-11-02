@@ -11,4 +11,4 @@
 /**
  * Eco version
  */
-const ECO_VERSION = '1.5.4';
+const ECO_VERSION = '1.5.5';
