@@ -122,4 +122,14 @@ abstract class Model
 	{
 		return static::NAME;
 	}
+
+	/**
+	 * Name with database name getter
+	 *
+	 * @return string
+	 */
+	final public function nameAndDatabase()
+	{
+		return $this->db->getDatabaseName() . '.' . static::NAME;
+	}
 }

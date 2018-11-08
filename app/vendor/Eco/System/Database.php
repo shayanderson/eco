@@ -512,6 +512,16 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Database name getter
+	 *
+	 * @return string
+	 */
+	public function getDatabaseName()
+	{
+		return $this->__getConn()->getDatabaseName();
+	}
+
+	/**
 	 * Default connection ID getter
 	 *
 	 * @return mixed

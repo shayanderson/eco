@@ -162,6 +162,16 @@ class Connection
 	}
 
 	/**
+	 * Database name getter
+	 *
+	 * @return string
+	 */
+	public function getDatabaseName()
+	{
+		return $this->__database;
+	}
+
+	/**
 	 * Query log getter
 	 *
 	 * @return array

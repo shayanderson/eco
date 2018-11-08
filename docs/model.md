@@ -241,8 +241,23 @@ $this->db->truncate();
 ### Execute a Query
 Any query can be executed:
 ```php
-// SELECT a.col, b.col2 FROM table a
-//    JOIN table2 b ON b.id = a.b_id WHERE x = 1 AND y = 2
-$rows = $this->db->query('SELECT a.col, b.col2 FROM table a'
-    . ' JOIN table2 b ON b.id = a.b_id WHERE x = ? AND y = ?', 1, 2);
+// SELECT a.col, b.col2
+// FROM table a
+// JOIN table2 b ON b.id = a.b_id
+// WHERE a.x = 1 AND b.y = 2
+$rows = $this->db->query('SELECT a.col, b.col2'
+    . ' FROM ' . self::NAME . ' a'
+    . ' JOIN ' . model()->table2->name() . ' b ON b.id = a.b_id'
+    . ' WHERE a.x = ? AND b.y = ?', 1, 2);
+```
+Or cross-database query example:
+```php
+// SELECT a.col, b.col2
+// FROM table a
+// JOIN database_name.table2 b ON b.id = a.b_id
+// WHERE a.x = 1 AND b.y = 2
+$rows = $this->db->query('SELECT a.col, b.col2'
+    . ' FROM ' . self::NAME . ' a'
+    . ' JOIN ' . model()->table2->nameAndDatabase() . ' b ON b.id = a.b_id'
+    . ' WHERE a.x = ? AND b.y = ?', 1, 2);
 ```
