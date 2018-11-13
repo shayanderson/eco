@@ -518,7 +518,7 @@ class Database extends \Eco\Factory
 	 */
 	public function getDatabaseName()
 	{
-		return $this->__getConn()->getDatabaseName();
+		return Connection::getDatabaseName($this->__conn_id);
 	}
 
 	/**

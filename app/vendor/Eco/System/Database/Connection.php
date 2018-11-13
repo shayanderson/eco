@@ -38,6 +38,13 @@ class Connection
 	private $__database;
 
 	/**
+	 * Database names
+	 *
+	 * @var array
+	 */
+	private static $__databases = [];
+
+	/**
 	 * Global limit
 	 *
 	 * @var int
@@ -115,6 +122,7 @@ class Connection
 		$this->__password = $password;
 		$this->__global_limit = $global_limit;
 		$this->__is_query_logging = $is_query_logging;
+		self::$__databases[$this->__id] = $this->__database;
 	}
 
 	/**
@@ -164,11 +172,17 @@ class Connection
 	/**
 	 * Database name getter
 	 *
+	 * @param mixed $id
 	 * @return string
 	 */
-	public function getDatabaseName()
+	public static function getDatabaseName($id)
 	{
-		return $this->__database;
+		if(!isset(self::$__databases[$id]))
+		{
+			throw new \Exception(__METHOD__ . ': invalid database connection ID \'' . $id . '\'');
+		}
+
+		return self::$__databases[$id];
 	}
 
 	/**

@@ -9,6 +9,7 @@
  */
 namespace Eco;
 
+use Eco\System\Database\Connection as DatabaseConnection;
 use Eco\System\Database\Model as DatabaseModel;
 
 /**
@@ -130,6 +131,6 @@ abstract class Model
 	 */
 	final public function nameAndDatabase()
 	{
-		return $this->db->getDatabaseName() . '.' . static::NAME;
+		return DatabaseConnection::getDatabaseName(static::CONNECTION_ID) . '.' . static::NAME;
 	}
 }

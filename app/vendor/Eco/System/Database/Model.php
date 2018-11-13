@@ -197,16 +197,6 @@ class Model
 	}
 
 	/**
-	 * Database name getter
-	 *
-	 * @return string
-	 */
-	public function getDatabaseName()
-	{
-		return $this->__db()->getDatabaseName();
-	}
-
-	/**
 	 * Row exists flag getter (WHERE keyword optional)
 	 *
 	 * @param mixed $id_or_sql
