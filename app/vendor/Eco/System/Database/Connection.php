@@ -45,6 +45,13 @@ class Connection
 	private static $__databases = [];
 
 	/**
+	 * Default ID
+	 *
+	 * @var mixed
+	 */
+	private static $__default_id;
+
+	/**
 	 * Global limit
 	 *
 	 * @var int
@@ -113,7 +120,7 @@ class Connection
 	 * @param boolean $is_query_logging
 	 */
 	public function __construct($id, $host, $database, $user, $password, $global_limit,
-		$is_query_logging)
+		$is_query_logging, $default_id)
 	{
 		$this->__id = $id;
 		$this->__host = $host;
@@ -123,6 +130,10 @@ class Connection
 		$this->__global_limit = $global_limit;
 		$this->__is_query_logging = $is_query_logging;
 		self::$__databases[$this->__id] = $this->__database;
+		if(!self::$__default_id)
+		{
+			self::$__default_id = $default_id;
+		}
 	}
 
 	/**
@@ -177,6 +188,11 @@ class Connection
 	 */
 	public static function getDatabaseName($id)
 	{
+		if($id === null)
+		{
+			$id = self::$__default_id;
+		}
+
 		if(!isset(self::$__databases[$id]))
 		{
 			throw new \Exception(__METHOD__ . ': invalid database connection ID \'' . $id . '\'');

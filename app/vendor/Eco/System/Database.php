@@ -319,7 +319,8 @@ class Database extends \Eco\Factory
 		}
 
 		self::$__conns[$connection_id] = new Connection($connection_id, $host, $database, $user,
-			$password, (int)System::conf()->_eco->database->global_limit, $query_logging);
+			$password, (int)System::conf()->_eco->database->global_limit, $query_logging,
+			$this->__default_conn_id);
 
 		System::log()->debug('Database connection \'' . $connection_id
 			. '\' registered for host \'' . $host . '\'', 'Eco');
