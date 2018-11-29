@@ -117,7 +117,6 @@ class Form
 	 *
 	 * @param array $data ($_GET|$_POST array)
 	 * @param string $form_id (optional, when using form listener for multiple forms in scope)
-	 * @throws \Exception (when form ID has already has been used by another form object in scope)
 	 */
 	public function __construct(array &$data, $form_id = null)
 	{
@@ -133,8 +132,8 @@ class Form
 		{
 			if(in_array($form_id, self::$__form_ids))
 			{
-				throw new \Exception(__METHOD__ . ': form ID \'' . $form_id
-					. '\' already exists (must be unique)');
+				System::error(__METHOD__ . ': form ID \'' . $form_id
+					. '\' already exists (must be unique)', null, 'Eco');
 			}
 
 			self::$__form_ids[] = $form_id;
@@ -176,14 +175,13 @@ class Form
 	 * @param mixed $default_value
 	 * @param mixed $options
 	 * @return void
-	 * @throws \Exception (when field ID already exists)
 	 */
 	private function __addField($type, $id, $default_value = null, $options = null)
 	{
 		if($this->isField($id))
 		{
-			throw new \Exception(__METHOD__ . ': field ID \'' . $id
-				. '\' already exists in form (field ID must be unique)');
+			System::error(__METHOD__ . ': field ID \'' . $id
+				. '\' already exists in form (field ID must be unique)', null, 'Eco');
 		}
 
 		$this->__fields[$id] = ['type' => $type];
@@ -270,8 +268,8 @@ class Form
 		}
 		else
 		{
-			throw new \Exception(__METHOD__ . ': adding validation message \'' . $error_message
-				. '\' for rule that does not exist');
+			System::error(__METHOD__ . ': adding validation message \'' . $error_message
+				. '\' for rule that does not exist', null, 'Eco');
 		}
 	}
 
@@ -471,13 +469,13 @@ class Form
 	 *
 	 * @param string $id
 	 * @return \Eco\Form
-	 * @throws \Exception (when field does not exist)
 	 */
 	public function field($id)
 	{
 		if(!$this->isField($id))
 		{
-			throw new \Exception(__METHOD__ . ': field with ID \'' . $id . '\' does not exist');
+			System::error(__METHOD__ . ': field with ID \'' . $id . '\' does not exist', null,
+				'Eco');
 		}
 
 		$this->__id = $id; // set active ID
@@ -505,7 +503,6 @@ class Form
 	 * @param boolean $use_global_decorators (true applies global decorators)
 	 * @param mixed $options_decorator (string when setting, or null)
 	 * @return string
-	 * @throws \OutOfBoundsException (when field does not exist)
 	 */
 	public function get($id, $attributes = null, $use_global_decorators = true,
 		$options_decorator = null)
@@ -634,7 +631,7 @@ class Form
 		}
 		else
 		{
-			throw new \OutOfBoundsException(__METHOD__ . ': field \'' . $id . '\' does not exist');
+			System::error(__METHOD__ . ': field \'' . $id . '\' does not exist', null, 'Eco');
 		}
 
 		return $html;
@@ -1065,7 +1062,6 @@ class Form
 	 * @param int $max
 	 * @param string $error_message (optional)
 	 * @return \Eco\Form
-	 * @throws \Exception (when min + max params are zero)
 	 */
 	public function &validateLength($min = 0, $max = 0, $error_message = '')
 	{
@@ -1074,8 +1070,8 @@ class Form
 
 		if($min < 1 && $max < 1)
 		{
-			throw new \Exception(__METHOD__ . ': minimum length or maximum length must be'
-				. ' greater than zero');
+			System::error(__METHOD__ . ': minimum length or maximum length must be'
+				. ' greater than zero', null, 'Eco');
 		}
 
 		$this->__addRule(self::VALIDATE_LENGTH, $error_message, ['min' => $min, 'max' => $max]);

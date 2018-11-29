@@ -9,6 +9,8 @@
  */
 namespace Eco\System;
 
+use Eco\System;
+
 /**
  * Registry
  *
@@ -33,7 +35,6 @@ class Registry extends \Eco\Factory
 	 *
 	 * @param string $name
 	 * @return mixed
-	 * @throws \Exception (class or object does not exist)
 	 */
 	public function __get($name)
 	{
@@ -48,8 +49,8 @@ class Registry extends \Eco\Factory
 		{
 			if(!class_exists(self::$__registry[static::ID][$name]))
 			{
-				throw new \Exception(__METHOD__ . ': failed to find ' . static::ID . ' class \''
-					. self::$__registry[static::ID][$name] . '\'');
+				System::error(__METHOD__ . ': failed to find ' . static::ID . ' class \''
+					. self::$__registry[static::ID][$name] . '\'', null, 'Eco');
 			}
 
 			$class = self::$__registry[static::ID][$name];
@@ -59,7 +60,8 @@ class Registry extends \Eco\Factory
 			return $reg[static::ID][$name];
 		}
 
-		throw new \Exception(__METHOD__ . ': failed to find ' . static::ID . ' \'' . $name . '\'');
+		System::error(__METHOD__ . ': failed to find ' . static::ID . ' \'' . $name . '\'', null,
+			'Eco');
 	}
 
 	/**

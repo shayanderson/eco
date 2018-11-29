@@ -134,13 +134,12 @@ class Benchmark
 	 *
 	 * @param bool $self_methods (include self::start() + self::stop() methods)
 	 * @return array (empty on no stop)
-	 * @throws \Exception (no start and/or stop points exist)
 	 */
 	public static function getPoints($self_methods = false)
 	{
 		if(!self::$start_time)
 		{
-			throw new \Exception(__METHOD__ . ': start() methods were never called');
+			System::error(__METHOD__ . ': start() methods were never called', null, 'Eco');
 		}
 
 		if(!self::$stop_time)
@@ -197,18 +196,17 @@ class Benchmark
 	 * @param string $id
 	 * @param mixed $data (optional)
 	 * @return void
-	 * @throws \Exception (no start point or point already exists)
 	 */
 	public static function point($id, $data = null)
 	{
 		if(!self::$start_time)
 		{
-			throw new \Exception(__METHOD__ . ': ' . __CLASS__ . '::start() was never called');
+			System::error(__METHOD__ . ': ' . __CLASS__ . '::start() was never called', null, 'Eco');
 		}
 
 		if(self::hasPoint($id))
 		{
-			throw new \Exception(__METHOD__ . ': point ID \'' . $id . '\' already exists');
+			System::error(__METHOD__ . ': point ID \'' . $id . '\' already exists', null, 'Eco');
 		}
 
 		$p = [
@@ -250,14 +248,13 @@ class Benchmark
 	 * Stop point
 	 *
 	 * @return void
-	 * @throws \Exception (stop already called)
 	 */
 	public static function stop()
 	{
 		if(self::$stop_time)
 		{
-			throw new \Exception(__METHOD__ . ': ' . __CLASS__ . '::stop() was already called,'
-				. ' use the reset() method');
+			System::error(__METHOD__ . ': ' . __CLASS__ . '::stop() was already called,'
+				. ' use the reset() method', null, 'Eco');
 		}
 
 		self::$stop_time = microtime(true);

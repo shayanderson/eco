@@ -159,6 +159,11 @@ return [
 		'log' => [
 
 			/**
+			 * Default log category for database object (default: 'Eco\Database')
+			 */
+			'category_database' => 'Eco\Database',
+
+			/**
 			 * Sets what errors are logged (default: 2)
 			 *	1 - only server errors are logged (500 errors)
 			 *	2 - all errors are logged (403, 404, 500)
@@ -182,7 +187,12 @@ return [
 			 *	4 - debug (all messages)
 			 *	5 - none (no messages)
 			 */
-			'level' => 4
+			'level' => 4,
+
+			/**
+			 * Use error prefix in log 'Error (<code>): <message>' (default: true)
+			 */
+			'prefix_error' => true,
 		],
 
 		/**

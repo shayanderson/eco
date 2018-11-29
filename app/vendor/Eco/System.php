@@ -104,8 +104,8 @@ class System
 
 			if(!class_exists($class))
 			{
-				throw new \Exception(__METHOD__ . ': ' . $type . ' load failed, \'' . $class . '\''
-					. ' class not found');
+				self::error(__METHOD__ . ': ' . $type . ' load failed, \'' . $class . '\''
+					. ' class not found', null, 'Eco');
 			}
 
 			// parse class annotations
@@ -293,8 +293,9 @@ class System
 			if($error_log_level === 2 || ( $error_log_level === 1 && $code === self::ERROR_SERVER ))
 			{
 				// log error
-				self::log()->error('Error (' . $code . ')' . ( $message !== null
-					? ': ' . $message : '' ), $category);
+				self::log()->error(( self::conf()->_eco->log->prefix_error
+					? 'Error (' . $code . ')' . ( $message !== null ? ': ' : null ) : null )
+					. $message, $category);
 			}
 		}
 

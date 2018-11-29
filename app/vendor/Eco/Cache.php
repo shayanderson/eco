@@ -111,7 +111,6 @@ class Cache
 	 * Init
 	 *
 	 * @param string $key (optional)
-	 * @throws \Exception (invalid cache path)
 	 */
 	public function __construct($key = null)
 	{
@@ -125,7 +124,7 @@ class Cache
 
 		if(!$this->__path)
 		{
-			throw new \Exception(__METHOD__ . ': global cache path is not set');
+			System::error(__METHOD__ . ': global cache path is not set', null, 'Eco');
 		}
 
 		$this->__path = rtrim($this->__formatDir($this->__path), DIRECTORY_SEPARATOR)
@@ -291,8 +290,8 @@ class Cache
 				}
 				else
 				{
-					throw new \Exception(__METHOD__ . ': failed to open cache directory \'' .
-						$path . '\'');
+					System::error(__METHOD__ . ': failed to open cache directory \'' . $path . '\'',
+						null, 'Eco');
 				}
 
 				if(!$is_root)
@@ -344,13 +343,12 @@ class Cache
 	 * Cache key getter
 	 *
 	 * @return string
-	 * @throws \Exception (cache key not set)
 	 */
 	public function getKey()
 	{
 		if(!strlen($this->__key))
 		{
-			throw new \Exception(__METHOD__ . ': cache key has not been set');
+			System::error(__METHOD__ . ': cache key has not been set', null, 'Eco');
 		}
 
 		return $this->__prefix
@@ -499,7 +497,6 @@ class Cache
 	 *
 	 * @param mixed $value
 	 * @return void
-	 * @throws \Exception (write failed)
 	 */
 	public function set($value)
 	{
@@ -515,8 +512,8 @@ class Cache
 
 				if(!is_dir($path) && @mkdir($path) === false)
 				{
-					throw new \Exception(__METHOD__ . ': failed to write cache directory \''
-						. $path . '\' (check write permissions)');
+					System::error(__METHOD__ . ': failed to write cache directory \''
+						. $path . '\' (check write permissions)', null, 'Eco');
 				}
 			}
 		}
@@ -572,8 +569,8 @@ class Cache
 
 		if($is_write === false)
 		{
-			throw new \Exception(__METHOD__ . ': failed to write cache file \''
-				. $this->getFilePath() . '\' (check write permissions)');
+			System::error(__METHOD__ . ': failed to write cache file \''
+				. $this->getFilePath() . '\' (check write permissions)', null, 'Eco');
 		}
 	}
 }

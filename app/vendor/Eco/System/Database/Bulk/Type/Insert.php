@@ -9,6 +9,7 @@
  */
 namespace Eco\System\Database\Bulk\Type;
 
+use Eco\System;
 use Eco\System\Database\Connection;
 
 /**
@@ -89,7 +90,6 @@ class Insert extends \Eco\System\Database\Bulk\Type
 	 *
 	 * @param array|object $data
 	 * @return void
-	 * @throws \Exception
 	 */
 	public function add($data)
 	{
@@ -111,15 +111,15 @@ class Insert extends \Eco\System\Database\Bulk\Type
 
 		if(count($this->columns) != count($data))
 		{
-			throw new \Exception(__METHOD__ . ': column count (' . count($this->columns)
-				. ') does not match data count (' . count($data) . ')');
+			System::error(__METHOD__ . ': column count (' . count($this->columns)
+				. ') does not match data count (' . count($data) . ')', null, 'Eco');
 		}
 
 		foreach($this->columns as $col) // ensure required columns exist
 		{
 			if(!in_array($col, $cols))
 			{
-				throw new \Exception(__METHOD__ . ': missing column in data \'' . $col . '\'');
+				System::error(__METHOD__ . ': missing column in data \'' . $col . '\'', null, 'Eco');
 			}
 		}
 

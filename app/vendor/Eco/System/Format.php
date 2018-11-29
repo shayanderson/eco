@@ -71,11 +71,11 @@ class Format extends \Eco\Factory
 	 * Format byte (ex: 2000 => '1.95 kb')
 	 *
 	 * @param float $value
-	 * @param array $characters (ex: [' b', ' kb', ' mb', ' gb', ' tb', ' pb'])
+	 * @param array $characters (ex: [' B', ' KB', ' MB', ' GB', ' TB', ' PB'])
 	 * @return string (or false on invalid value)
 	 */
 	public function byte($value,
-		array $characters = [' b', ' kb', ' mb', ' gb', ' tb', ' pb'])
+		array $characters = [' B', ' KB', ' MB', ' GB', ' TB', ' PB'])
 	{
 		$value = (float)$value;
 

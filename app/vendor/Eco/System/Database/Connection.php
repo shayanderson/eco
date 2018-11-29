@@ -38,20 +38,6 @@ class Connection
 	private $__database;
 
 	/**
-	 * Database names
-	 *
-	 * @var array
-	 */
-	private static $__databases = [];
-
-	/**
-	 * Default ID
-	 *
-	 * @var mixed
-	 */
-	private static $__default_id;
-
-	/**
 	 * Global limit
 	 *
 	 * @var int
@@ -120,7 +106,7 @@ class Connection
 	 * @param boolean $is_query_logging
 	 */
 	public function __construct($id, $host, $database, $user, $password, $global_limit,
-		$is_query_logging, $default_id)
+		$is_query_logging)
 	{
 		$this->__id = $id;
 		$this->__host = $host;
@@ -129,11 +115,6 @@ class Connection
 		$this->__password = $password;
 		$this->__global_limit = $global_limit;
 		$this->__is_query_logging = $is_query_logging;
-		self::$__databases[$this->__id] = $this->__database;
-		if(!self::$__default_id)
-		{
-			self::$__default_id = $default_id;
-		}
 	}
 
 	/**
@@ -181,27 +162,6 @@ class Connection
 	}
 
 	/**
-	 * Database name getter
-	 *
-	 * @param mixed $id
-	 * @return string
-	 */
-	public static function getDatabaseName($id)
-	{
-		if($id === null)
-		{
-			$id = self::$__default_id;
-		}
-
-		if(!isset(self::$__databases[$id]))
-		{
-			throw new \Exception(__METHOD__ . ': invalid database connection ID \'' . $id . '\'');
-		}
-
-		return self::$__databases[$id];
-	}
-
-	/**
 	 * Query log getter
 	 *
 	 * @return array
@@ -215,14 +175,20 @@ class Connection
 	 * PDO getter
 	 *
 	 * @return \PDO
-	 * @throws \PDOException (connection fail)
 	 */
 	public function getPdo()
 	{
 		if($this->__pdo === null)
 		{
-			$this->__pdo = new \PDO("mysql:host={$this->__host};dbname={$this->__database}",
-				$this->__user, $this->__password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+			try
+			{
+				$this->__pdo = new \PDO("mysql:host={$this->__host};dbname={$this->__database}",
+					$this->__user, $this->__password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+			}
+			catch(\PDOException $ex)
+			{
+				System::error($ex->getMessage(), null, System::conf()->_eco->log->category_database);
+			}
 		}
 
 		System::db()->connectionReset(); // reset to default ID
@@ -261,8 +227,6 @@ class Connection
 	 * @param int $return_type
 	 * @param boolean $is_reconnect
 	 * @return mixed
-	 * @throws \Exception (invalid param type)
-	 * @throws \PDOException (query fail)
 	 */
 	public function query($query, $params = null, $return_type = null, $is_reconnect = false)
 	{
@@ -285,8 +249,9 @@ class Connection
 			{
 				if(!is_scalar($v) && $v !== null) // only allow scalar params
 				{
-					throw new \Exception(__METHOD__ . ': invalid param type \'' . gettype($v)
-						. '\' for query \'' . trim(substr($query, 0, 1000)) . '\'');
+					System::error(__METHOD__ . ': invalid param type \'' . gettype($v)
+						. '\' for query \'' . trim(substr($query, 0, 1000)) . '\'',
+						System::ERROR_SERVER, 'Eco');
 				}
 			}
 		}
@@ -321,7 +286,7 @@ class Connection
 				return $this->query($query, $params, $return_type, true); // try again
 			}
 
-			throw $ex; // not handled
+			System::error($ex->getMessage(), null, System::conf()->_eco->log->category_database);
 		}
 
 		return false;

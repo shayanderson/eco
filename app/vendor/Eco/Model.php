@@ -9,7 +9,6 @@
  */
 namespace Eco;
 
-use Eco\System\Database\Connection as DatabaseConnection;
 use Eco\System\Database\Model as DatabaseModel;
 
 /**
@@ -43,15 +42,13 @@ abstract class Model
 
 	/**
 	 * Init
-	 *
-	 * @throws \Exception (no model name)
 	 */
 	final public function __construct()
 	{
 		if(!static::NAME)
 		{
-			throw new \Exception(__METHOD__ . ': model name must be set using class constant'
-				. ' \'NAME\'');
+			System::error(__METHOD__ . ': model name must be set using class constant \'NAME\'',
+				'Eco');
 		}
 
 		$this->db = new DatabaseModel(static::NAME, static::PK, static::CONNECTION_ID);
@@ -122,15 +119,5 @@ abstract class Model
 	final public function name()
 	{
 		return static::NAME;
-	}
-
-	/**
-	 * Name with database name getter
-	 *
-	 * @return string
-	 */
-	final public function nameAndDatabase()
-	{
-		return DatabaseConnection::getDatabaseName(static::CONNECTION_ID) . '.' . static::NAME;
 	}
 }

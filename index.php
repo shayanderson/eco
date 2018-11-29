@@ -22,6 +22,11 @@ try
 	// run application
 	eco::run();
 }
+catch(Throwable $th)
+{
+	// handle application error
+	eco::error('Error occurred: ' . $th->getMessage());
+}
 catch(Exception $ex)
 {
 	// handle application exception

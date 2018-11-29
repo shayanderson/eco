@@ -144,15 +144,15 @@ class Database extends \Eco\Factory
 	 *
 	 * @param mixed $connection_id
 	 * @return boolean
-	 * @throws \Exception (connection does not exist)
 	 */
 	private function __hasConn($connection_id)
 	{
 		if(!isset(self::$__conns[$connection_id]))
 		{
-			throw new \Exception(__METHOD__ . ': ' . ( count(self::$__conns)
+			System::error(__METHOD__ . ': ' . ( count(self::$__conns)
 				? 'connection with ID \'' . $connection_id . '\' does not exist'
-				: 'no database connections have been registered' ));
+				: 'no database connections have been registered' ), null,
+				System::conf()->_eco->log->category_database);
 		}
 
 		return true;
@@ -302,15 +302,14 @@ class Database extends \Eco\Factory
 	 * @param string $password
 	 * @param boolean $query_logging
 	 * @return void
-	 * @throws \Exception (connection already exists)
 	 */
 	public function connectionRegister($connection_id, $host, $database, $user, $password,
 		$query_logging = false)
 	{
 		if(isset(self::$__conns[$connection_id]))
 		{
-			throw new \Exception(__METHOD__ . ': connection with ID \'' . $connection_id
-				. '\' already exists');
+			System::error(__METHOD__ . ': connection with ID \'' . $connection_id
+				. '\' already exists', null, System::conf()->_eco->log->category_database);
 		}
 
 		if($this->__default_conn_id === null) // set default ID
@@ -319,8 +318,7 @@ class Database extends \Eco\Factory
 		}
 
 		self::$__conns[$connection_id] = new Connection($connection_id, $host, $database, $user,
-			$password, (int)System::conf()->_eco->database->global_limit, $query_logging,
-			$this->__default_conn_id);
+			$password, (int)System::conf()->_eco->database->global_limit, $query_logging);
 
 		System::log()->debug('Database connection \'' . $connection_id
 			. '\' registered for host \'' . $host . '\'', 'Eco');
@@ -388,7 +386,6 @@ class Database extends \Eco\Factory
 	 * @param string $table_or_sql
 	 * @param mixed $params
 	 * @return \stdClass (or null for no row)
-	 * @throws \Exception (LIMIT clause exists in query)
 	 */
 	public function get($table_or_sql, $params = null)
 	{
@@ -411,8 +408,8 @@ class Database extends \Eco\Factory
 
 		if($this->__getConn()->hasSqlLimitClause($table_or_sql))
 		{
-			throw new \Exception(__METHOD__ . ': failed to get row, LIMIT clause already exists'
-				. ' in query');
+			System::error(__METHOD__ . ': failed to get row, LIMIT clause already exists'
+				. ' in query', null, System::conf()->_eco->log->category_database);
 		}
 
 		$table_or_sql .= ' LIMIT 1';
@@ -510,16 +507,6 @@ class Database extends \Eco\Factory
 		}
 
 		return $c;
-	}
-
-	/**
-	 * Database name getter
-	 *
-	 * @return string
-	 */
-	public function getDatabaseName()
-	{
-		return Connection::getDatabaseName($this->__conn_id);
 	}
 
 	/**
@@ -621,7 +608,6 @@ class Database extends \Eco\Factory
 	 * @param string $query
 	 * @param mixed $params
 	 * @return \Eco\System\Database\Pagination
-	 * @throws \Exception (LIMIT clause exists in query, or invalid settings)
 	 */
 	public function pagination($query, $params = null)
 	{
@@ -637,8 +623,9 @@ class Database extends \Eco\Factory
 
 		if($this->__getConn()->hasSqlLimitClause($query))
 		{
-			throw new \Exception(__METHOD__ . ': failed to apply pagination to query,'
-				. ' LIMIT clause already exists in query');
+			System::error(__METHOD__ . ': failed to apply pagination to query,'
+				. ' LIMIT clause already exists in query', null,
+				System::conf()->_eco->log->category_database);
 		}
 
 		static $conf;
@@ -666,8 +653,9 @@ class Database extends \Eco\Factory
 			}
 			else
 			{
-				throw new \Exception(__METHOD__ . ': failed to initialize pagination, no page'
-					. ' \'get_var\' has been set');
+				System::error(__METHOD__ . ': failed to initialize pagination, no page'
+					. ' \'get_var\' has been set', null,
+					System::conf()->_eco->log->category_database);
 			}
 		}
 
@@ -711,7 +699,6 @@ class Database extends \Eco\Factory
 	 * @param string $query
 	 * @param mixed $params
 	 * @return \Eco\System\Database\Pagination
-	 * @throws \Exception (LIMIT clause exists in query, or invalid settings)
 	 */
 	public function paginationArrayParam($query, $params = null)
 	{
@@ -931,7 +918,6 @@ class Database extends \Eco\Factory
 	 * @param string $query
 	 * @param mixed $params
 	 * @return mixed
-	 * @throws \Exception (LIMIT clause exists in query)
 	 */
 	public function value($query, $params = null)
 	{
@@ -939,8 +925,8 @@ class Database extends \Eco\Factory
 
 		if($this->__getConn()->hasSqlLimitClause($query))
 		{
-			throw new \Exception(__METHOD__ . ': failed to get row value, LIMIT clause already'
-				. ' exists in query');
+			System::error(__METHOD__ . ': failed to get row value, LIMIT clause already'
+				. ' exists in query', null, System::conf()->_eco->log->category_database);
 		}
 
 		$query .= ' LIMIT 1';
