@@ -192,7 +192,7 @@ return [
 			/**
 			 * Use error prefix in log 'Error (<code>): <message>' (default: true)
 			 */
-			'prefix_error' => true,
+			'prefix_error' => true
 		],
 
 		/**

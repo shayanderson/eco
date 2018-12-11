@@ -200,6 +200,11 @@ $affected = $this->db->update(['x' => 1, 'y' => 2]);
 
 // update by primary key value
 $affected = $this->db->update(5, ['x' => 1, 'y' => 2]);
+// or update by primary key value and use object
+$row = new stdClass;
+$row->x = 1;
+$row->y = 2;
+$affected = $this->db->update(5, $row);
 
 // update by SQL
 $affected = $this->db->update('WHERE a = :a',

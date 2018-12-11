@@ -309,12 +309,22 @@ class Model
 	 * Update (WHERE keyword optional)
 	 *
 	 * @param mixed $id_sql_params
-	 * @param array $params
+	 * @param mixed $params
 	 * @param bool $is_ignore
 	 * @return int (affected)
 	 */
 	public function update($id_sql_params, $params = null, $is_ignore = false)
 	{
+		if(is_object($params)) // object
+		{
+			$arr = [];
+			foreach(get_object_vars($params) as $k => $v)
+			{
+				$arr[$k] = $v;
+			}
+			$params = &$arr;
+		}
+
 		if(is_numeric($id_sql_params))
 		{
 			return $this->__db()->update($this->__name . ' WHERE ' . $this->__pk . ' = :pkid',
@@ -333,7 +343,7 @@ class Model
 	 * Update with ignore (WHERE keyword optional)
 	 *
 	 * @param mixed $id_sql_params
-	 * @param array $params
+	 * @param mixed $params
 	 * @return int (affected)
 	 */
 	public function updateIgnore($id_sql_params, $params = null)

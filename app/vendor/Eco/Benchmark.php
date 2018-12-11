@@ -67,7 +67,7 @@ class Benchmark
 	 */
 	protected static function formatMemory($value)
 	{
-		static $s = ['b', 'kb', 'mb', 'gb', 'tb'];
+		static $s = ['B', 'KB', 'MB', 'GB', 'TB'];
 		$value = (float)$value;
 		return $value ? round($value / pow(1024, ( $k = floor(log($value, 1024)) )), 2) . ' '
 			. $s[$k] : 0;
