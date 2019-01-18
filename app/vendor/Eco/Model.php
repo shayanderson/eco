@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2018 Shay Anderson <http://www.shayanderson.com>
+ * @copyright 2015-2019 Shay Anderson <https://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -48,7 +48,7 @@ abstract class Model
 		if(!static::NAME)
 		{
 			System::error(__METHOD__ . ': model name must be set using class constant \'NAME\'',
-				'Eco');
+				null, 'Eco');
 		}
 
 		$this->db = new DatabaseModel(static::NAME, static::PK, static::CONNECTION_ID);
