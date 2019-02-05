@@ -62,6 +62,13 @@ class Http
 	private $__param = [];
 
 	/**
+	 * Port
+	 *
+	 * @var int
+	 */
+	private $__port;
+
+	/**
 	 * HTTP response code
 	 *
 	 * @var int
@@ -177,11 +184,13 @@ class Http
 	 * Init
 	 *
 	 * @param string $url
+	 * @param int|null $port
 	 * @param callable|null $curl_callback
 	 */
-	public function __construct($url, $curl_callback = null)
+	public function __construct($url, $port = null, $curl_callback = null)
 	{
 		$this->__url = $url;
+		$this->__port = $port;
 		$this->__curl_callback = $curl_callback;
 	}
 
@@ -213,6 +222,11 @@ class Http
 		}
 
 		$ch = curl_init($this->__url);
+
+		if((int)$this->__port)
+		{
+			curl_setopt($ch, CURLOPT_PORT, (int)$this->__port);
+		}
 
 		// global
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
@@ -405,6 +419,37 @@ class Http
 	public function head()
 	{
 		return $this->__fetch(self::TYPE_HEAD, null) !== false;
+	}
+
+	/**
+	 * Convert headers string to array
+	 *
+	 * @param string $response_headers
+	 * @return array
+	 */
+	public function headersStringToArray($response_headers)
+	{
+		$a = [];
+
+		$response_headers = substr($response_headers, 0, strpos($response_headers, "\r\n\r\n"));
+
+		foreach(explode("\r\n", $response_headers) as $k => $v)
+		{
+			if(!$k)
+			{
+				$a['status_line'] = $v;
+			}
+			else
+			{
+				$v = explode(':', $v);
+				if(isset($v[0], $v[1]))
+				{
+					$a[$v[0]] = $v[1];
+				}
+			}
+		}
+
+		return $a;
 	}
 
 	/**
