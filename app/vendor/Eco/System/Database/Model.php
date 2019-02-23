@@ -110,9 +110,9 @@ class Model
 	}
 
 	/**
-	 * Count getter (WHERE keyword optional)
+	 * Count getter
 	 *
-	 * @param mixed $sql
+	 * @param mixed $sql (Ex: "x = ?" or "WHERE x = ?")
 	 * @return int
 	 */
 	public function count($sql = null)
@@ -127,9 +127,9 @@ class Model
 	}
 
 	/**
-	 * Delete by PK value or SQL (WHERE keyword optional)
+	 * Delete by PK value or SQL
 	 *
-	 * @param mixed $id_or_sql
+	 * @param mixed $id_or_sql (Ex: "x = ?" or "WHERE x = ?")
 	 * @return int (affected)
 	 */
 	public function delete($id_or_sql)
@@ -145,9 +145,10 @@ class Model
 	}
 
 	/**
-	 * Single row getter (WHERE keyword optional)
+	 * Single row getter
 	 *
-	 * @param mixed $id_or_sql
+	 * @param mixed $id_or_sql (Ex: "x = ?" or "WHERE x = ?" or "(col,col2) x = ?"
+	 *		or "(col,col2) WHERE x = ?")
 	 * @return \stdClass (or null for no row)
 	 */
 	public function get($id_or_sql)
@@ -174,7 +175,7 @@ class Model
 	/**
 	 * All rows getter
 	 *
-	 * @param string $sql
+	 * @param string $sql (Ex: "ORDER BY x" or "WHERE x = ?" or "(col,col2) WHERE x = ?")
 	 * @return array
 	 */
 	public function getAll($sql = null)
@@ -197,9 +198,9 @@ class Model
 	}
 
 	/**
-	 * Row exists flag getter (WHERE keyword optional)
+	 * Row exists flag getter
 	 *
-	 * @param mixed $id_or_sql
+	 * @param mixed $id_or_sql (Ex: "x = ?" or "WHERE x = ?")
 	 * @return boolean
 	 */
 	public function has($id_or_sql)
@@ -227,7 +228,7 @@ class Model
 	/**
 	 * Index (pagination object) getter
 	 *
-	 * @param string $sql
+	 * @param string $sql (Ex: "ORDER BY x" or "WHERE x = ?" or "(col,col2) WHERE x = ?")
 	 * @return \Eco\System\Database\Pagination
 	 */
 	public function index($sql = null)
@@ -262,6 +263,17 @@ class Model
 	}
 
 	/**
+	 * Create and return insert ID
+	 *
+	 * @param mixed $data
+	 * @return mixed (int|string|null)
+	 */
+	public function insertId($data)
+	{
+		return $this->__db()->insertId($this->__name, $data);
+	}
+
+	/**
 	 * Create with ignore
 	 *
 	 * @param mixed $data
@@ -270,6 +282,17 @@ class Model
 	public function insertIgnore($data)
 	{
 		return $this->__db()->insertIgnore($this->__name, $data);
+	}
+
+	/**
+	 * Create with ignore and return insert ID
+	 *
+	 * @param mixed $data
+	 * @return mixed (int|string|null)
+	 */
+	public function insertIgnoreId($data)
+	{
+		return $this->__db()->insertIgnoreId($this->__name, $data);
 	}
 
 	/**
@@ -306,9 +329,9 @@ class Model
 	}
 
 	/**
-	 * Update (WHERE keyword optional)
+	 * Update
 	 *
-	 * @param mixed $id_sql_params
+	 * @param mixed $id_sql_params (Ex: "x = :x" or "WHERE x = :x")
 	 * @param mixed $params
 	 * @param bool $is_ignore
 	 * @return int (affected)
@@ -340,9 +363,9 @@ class Model
 	}
 
 	/**
-	 * Update with ignore (WHERE keyword optional)
+	 * Update with ignore
 	 *
-	 * @param mixed $id_sql_params
+	 * @param mixed $id_sql_params (Ex: "x = :x" or "WHERE x = :x")
 	 * @param mixed $params
 	 * @return int (affected)
 	 */
@@ -352,9 +375,9 @@ class Model
 	}
 
 	/**
-	 * Single column value getter (WHERE keyword optional)
+	 * Single column value getter
 	 *
-	 * @param string $column_and_sql
+	 * @param string $column_and_sql (Ex: "col x = ?" or "col WHERE x = ?")
 	 * @return mixed
 	 */
 	public function value($column_and_sql)

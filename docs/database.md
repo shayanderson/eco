@@ -86,7 +86,7 @@ Array
 )
 */
 ```
-> Each database connection has its own separate log so the connection ID must be used when not using the default connection, example:
+Each database connection has its own separate log so the connection ID must be used when not using the default connection, example:
 ```php
 $log = db()->log(); // default connection log
 $log_remote = db('remote')->log(); // connection 'remote' log
@@ -116,9 +116,9 @@ $row = db()->get('table WHERE x = ? AND y = ?', 1, 2);
 // or full query
 $row = db()->get('SELECT col, col2 FROM table WHERE x = ? AND y = ?', 1, 2);
 ```
-The `get()` method will return `null` if there are no results
+The `get()` method will return `null` if there are no results.
 
-> Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
 ```php
 $row = db()->get(new \Eco\Cache, 'table WHERE x = ?', 1);
 // or set custom cache property, like expire:
@@ -137,7 +137,7 @@ $rows = db()->getAll('table WHERE x = ? AND y = ?', 1, 2);
 ```
 The `getAll()` method will return an empty `array` if there are no results
 
-> Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
 ```php
 $rows = db()->getAll(new \Eco\Cache, 'table WHERE x = ?', 1);
 // or set custom cache property, like expire:
@@ -202,6 +202,9 @@ $affected = db()->insert('table', ['x' => 1, 'y' => 2]);
 
 // get insert ID
 $id = db()->id();
+
+// or use single method
+$id = db()->insertId('table', ['x' => 1, 'y' => 2]);
 ```
 
 
@@ -250,7 +253,7 @@ An array of params can be used instead of method params, example:
 $rows = db()->queryArrayParam('SELECT * FROM table WHERE x = ? AND y = ?', [1, 2]);
 ```
 
-> Caching can be used with both these methods by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+Caching can be used with both these methods by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
 ```php
 $rows = db()->query(new \Eco\Cache, 'SELECT a FROM table WHERE x = ?', 1);
 // or set custom cache property, like expire:
@@ -306,7 +309,7 @@ $p = db()->paginationArrayParam('SELECT a, b FROM table WHERE x = ? AND y = ?', 
 
 Pagination settings can be found in the Eco configuration file `app/com/conf/eco.conf.php` under the `database` > `pagination` section, including styles for pagination controls.
 
-> Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
+Caching can be used with this method by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
 ```php
 $p = db()->pagination(new \Eco\Cache, 'SELECT a FROM table WHERE x = ?', 1);
 // or set custom cache property, like expire:
@@ -350,7 +353,7 @@ Custom cache keys can be used, for example:
 $row = db()->get(new \Eco\Cache('table-1'), 'table WHERE x = ?', 1);
 ```
 
-> It is possible to control a database cache without executing the cache read/write. For example, if you want to delete the cache without executing read/write it can be accomplished using:
+It is possible to control a database cache without executing the cache read/write. For example, if you want to delete the cache without executing read/write it can be accomplished using:
 ```php
 $cache = new \Eco\Cache;
 // set property db_query to stop read/write

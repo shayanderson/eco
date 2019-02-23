@@ -28,6 +28,13 @@ class Database extends \Eco\Factory
 	private $__conn_id;
 
 	/**
+	 * Connection ID lock
+	 *
+	 * @var bool
+	 */
+	private $__conn_id_lock = false;
+
+	/**
 	 * Default connection ID
 	 *
 	 * @var mixed
@@ -336,13 +343,16 @@ class Database extends \Eco\Factory
 	 */
 	public function connectionReset()
 	{
-		$this->connection($this->__default_conn_id);
+		if(!$this->__conn_id_lock)
+		{
+			$this->connection($this->__default_conn_id);
+		}
 	}
 
 	/**
 	 * Count getter
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = ?")
 	 * @param mixed $params
 	 * @return int
 	 */
@@ -370,7 +380,7 @@ class Database extends \Eco\Factory
 	/**
 	 * Delete
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = ?")
 	 * @param mixed $params
 	 * @return int (affected)
 	 */
@@ -383,7 +393,7 @@ class Database extends \Eco\Factory
 	/**
 	 * Single row getter
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = ?" or "SELECT...")
 	 * @param mixed $params
 	 * @return \stdClass (or null for no row)
 	 */
@@ -444,7 +454,7 @@ class Database extends \Eco\Factory
 	/**
 	 * All rows getter
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = ?")
 	 * @return array
 	 */
 	public function getAll($table_or_sql)
@@ -541,7 +551,7 @@ class Database extends \Eco\Factory
 	/**
 	 * Row(s) exists flag getter
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = ?")
 	 * @param mixed $params
 	 * @return boolean
 	 */
@@ -580,6 +590,26 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Create and return insert ID
+	 *
+	 * @param string $table
+	 * @param mixed $data
+	 * @return mixed (int|string)
+	 */
+	public function insertId($table, $data)
+	{
+		$id = 0;
+		$this->__conn_id_lock = true;
+		if($this->insert($table, $data))
+		{
+			$id = $this->id();
+		}
+		$this->__conn_id_lock = false;
+		$this->connectionReset();
+		return $id;
+	}
+
+	/**
 	 * Create with ignore
 	 *
 	 * @param string $table
@@ -589,6 +619,26 @@ class Database extends \Eco\Factory
 	public function insertIgnore($table, $data)
 	{
 		return $this->__add($table, $data, false, true);
+	}
+
+	/**
+	 * Create with ignore and return insert ID
+	 *
+	 * @param string $table
+	 * @param mixed $data
+	 * @return mixed (int|string)
+	 */
+	public function insertIgnoreId($table, $data)
+	{
+		$id = 0;
+		$this->__conn_id_lock = true;
+		if($this->insertIgnore($table, $data))
+		{
+			$id = $this->id();
+		}
+		$this->__conn_id_lock = false;
+		$this->connectionReset();
+		return $id;
 	}
 
 	/**
@@ -855,7 +905,7 @@ class Database extends \Eco\Factory
 	/**
 	 * Update
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = :x")
 	 * @param array $params
 	 * @param boolean $ignore
 	 * @return int (affected)
@@ -903,7 +953,7 @@ class Database extends \Eco\Factory
 	/**
 	 * Update with ignore
 	 *
-	 * @param string $table_or_sql
+	 * @param string $table_or_sql (Ex: "table" or "table WHERE x = :x")
 	 * @param array $params
 	 * @return int (affected)
 	 */
@@ -915,7 +965,7 @@ class Database extends \Eco\Factory
 	/**
 	 * Single column value getter
 	 *
-	 * @param string $query
+	 * @param string $query (Ex: "SELECT x FROM table...")
 	 * @param mixed $params
 	 * @return mixed
 	 */

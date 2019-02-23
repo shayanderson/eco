@@ -176,6 +176,8 @@ The `insert()` method returns `int` (affected)
 ```php
 $affected = $this->db->insert(['x' => 1, 'y' => 2]);
 $insert_id = $this->db->id();
+// or use single method
+$insert_id = $this->db->insertId(['x' => 1, 'y' => 2]);
 
 // or INSERT IGNORE
 $affected = $this->db->insertIgnore(['x' => 1, 'y' => 2]);
