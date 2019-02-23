@@ -30,7 +30,6 @@ string(21) "Server time: 13:44:56"
 ### Client-Server Write Example
 First, create a server route like in the example above. Next, create the server:
 ```php
-```php
 // listen on port 8081
 $server = new \Eco\Socket\Server('127.0.0.1', 8081);
 // create request service that will wait for client request data and respond
