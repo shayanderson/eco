@@ -217,6 +217,17 @@ class Database extends \Eco\Factory
 	}
 
 	/**
+	 * Convert list into question mark parameter markers
+	 *
+	 * @param array $list (ex: [a,b,c])
+	 * @return string (ex: "?,?,?")
+	 */
+	public function paramMarkerList(array $list)
+	{
+		return str_repeat('?,', count($list) - 1) . '?';
+	}
+
+	/**
 	 * Database bulk methods
 	 *
 	 * @return \Eco\System\Database\Bulk

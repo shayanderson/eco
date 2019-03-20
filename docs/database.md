@@ -252,6 +252,13 @@ An array of params can be used instead of method params, example:
 // SELECT * FROM table WHERE x = 1 AND y = 2
 $rows = db()->queryArrayParam('SELECT * FROM table WHERE x = ? AND y = ?', [1, 2]);
 ```
+The `paramMarkerList()` method can be paired with the `queryArrayParam()` method to safely bind a list of params, example:
+```php
+$list = [1, 2, 3];
+// SELECT * FROM table WHERE x IN(1, 2, 3)
+$rows = db()->queryArrayParam('SELECT * FROM table WHERE x IN('
+    . db()->paramMarkerList($list) . ')', $list);
+```
 
 Caching can be used with both these methods by using a [`Eco\Cache` object](https://github.com/shayanderson/eco/blob/master/docs/cache.md) as the first parameter, example:
 ```php

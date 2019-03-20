@@ -117,6 +117,55 @@ class Format extends \Eco\Factory
 	}
 
 	/**
+	 * Format relative date (past values)
+	 *
+	 * @param string $value
+	 * @param mixed $value_compare
+	 * @param array $format ([0:date, 1:date, 2:sprintf, 3:string, 4:sprintf, 5:sprintf, 6:string)
+	 * @return string
+	 */
+	public function dateRelative($value, $value_compare = null, $format = ['F j, Y', 'F j',
+		'%d days ago', 'Yesterday', '%d hours ago', '%d minutes ago', 'Just now'])
+	{
+		$d1 = new \DateTime($value);
+		$d2 = new \DateTime(func_num_args() === 2 ? $value_compare : 'now');
+		$diff = $d1->diff($d2); /* @var $diff \DateInterval */
+
+		$s = '';
+		switch(true)
+		{
+			case $diff->days > 365:
+				$s = $d1->format($format[0]);
+				break;
+			case $diff->days > 7:
+				$s = $d1->format($format[1]);
+				break;
+			case $diff->days > 2 || $diff->days >= 2 && $diff->h == 0 && $diff->i == 0
+				&& $diff->s == 0: // days ago
+				$s = sprintf($format[2], $diff->days);
+				break;
+			case $diff->days == 1: // yesterday
+				$s = $format[3];
+				break;
+			case $diff->days == 0 && $diff->h > 0: // hour(s)
+				if($diff->h == 1)
+				{
+					$format[4] = str_replace('hours', 'hour', $format[4]);
+				}
+				$s = sprintf($format[4], $diff->h);
+				break;
+			case $diff->days == 0 && $diff->h == 0 && $diff->i > 1: // minutes
+				$s = sprintf($format[5], $diff->i);
+				break;
+			default: // now
+				$s = $format[6];
+				break;
+		}
+
+		return $s;
+	}
+
+	/**
 	 * Format date/time
 	 *
 	 * @param mixed $value

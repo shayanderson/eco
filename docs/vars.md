@@ -14,3 +14,4 @@ if(eco::has('user')) // do something
 eco::clear('user');
 ```
 After a global variable is set it can be used anywhere in the application.
+> The [`keep()`](https://github.com/shayanderson/eco/blob/master/docs/helper.md#alias-helper-functions) helper function is available

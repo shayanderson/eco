@@ -42,12 +42,22 @@ $response = $http->head();
 // for head request the response is either true or false (error)
 ```
 
-#### cURL Callback
+### cURL Callback
 A callback can be used to modify the curl request, example:
 ```php
 $http = new \Eco\Http('http://www.example.com', function(&$ch){
    curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
 });
+```
+
+### HTTP Response Code
+The `setResponseCode()` method can be used to respond with custom HTTP response status codes. By default Eco handles `403`, `404` and `500` errors.
+
+Example usage:
+```php
+use \Eco\Http;
+// send 405 status code with response headers
+Http::setResponseCode(Http::CODE_METHOD_NOT_ALLOWED);
 ```
 
 ### Class Properties
@@ -80,3 +90,4 @@ The `\Eco\Http` class properties are used a configuration settings for the reque
 - `patch($params = null)` - send PATCH request
 - `post($params = null)` - send POST request
 - `put($params = null)` - send PUT request
+- `setResponseCode(int $response_status_code)` - HTTP response code setter
