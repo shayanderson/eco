@@ -7,6 +7,7 @@ The Request class is used to access request variables:
 - `get($key)` - GET var getter
 - `get_has($key)` - GET var exists
 - `get_request_ip_address()` - request IP address getter
+- `get_request_method()` - request method getter
 - `get_request_uri($query_string)` - request URI getter
 - `input($key)` - input var getter
 - `input_has($key)` - input var exists

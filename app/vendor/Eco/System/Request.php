@@ -141,6 +141,16 @@ class Request extends \Eco\Factory
 	}
 
 	/**
+	 * Request method getter
+	 *
+	 * @return string (ex: "PUT")
+	 */
+	public function get_request_method()
+	{
+		return $this->request_server('REQUEST_METHOD');
+	}
+
+	/**
 	 * Request URI getter
 	 *
 	 * @param boolean $query_string (include query string with URI)
