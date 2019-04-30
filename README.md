@@ -1,7 +1,7 @@
 # Eco Framework
 Eco is a PHP Framework for PHP 5.5+ (PHP compatibility: 5.5 to 7.2)
 
-Latest release [v1.6.2](https://github.com/shayanderson/eco/releases/latest)
+Latest release [v1.6.3](https://github.com/shayanderson/eco/releases/latest)
 
 Install example:
 ```

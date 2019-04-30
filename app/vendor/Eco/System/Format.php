@@ -128,7 +128,7 @@ class Format extends \Eco\Factory
 		'%d days ago', 'Yesterday', '%d hours ago', '%d minutes ago', 'Just now'])
 	{
 		$d1 = new \DateTime($value);
-		$d2 = new \DateTime(func_num_args() === 2 ? $value_compare : 'now');
+		$d2 = new \DateTime($value_compare ? $value_compare : 'now');
 		$diff = $d1->diff($d2); /* @var $diff \DateInterval */
 
 		$s = '';
