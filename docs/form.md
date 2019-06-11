@@ -98,11 +98,7 @@ Global attribute example:
 // default field class
 \Eco\Form::$attributes_field = ['class' => 'form-control'];
 ```
-> Global attributes merge with get method attributes, for example:
-```php
-// set global attribute
-\Eco\Form::$attributes_field = ['class' => 'my-class'];
-```
+
 In HTML:
 ```html+php
 <?=$form->get('username', ['maxlength' => 30])?>

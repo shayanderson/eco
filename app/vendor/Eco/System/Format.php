@@ -119,50 +119,106 @@ class Format extends \Eco\Factory
 	/**
 	 * Format relative date (past values)
 	 *
-	 * @param string $value
-	 * @param mixed $value_compare
-	 * @param array $format ([0:date, 1:date, 2:sprintf, 3:string, 4:sprintf, 5:sprintf, 6:string)
+	 * @param string $value (ex: "05/22/2019 10:55:00")
+	 * @param string $value_compare
+	 * @param mixed $timezone (optional, ex: "America/New_York")
 	 * @return string
 	 */
-	public function dateRelative($value, $value_compare = null, $format = ['F j, Y', 'F j',
-		'%d days ago', 'Yesterday', '%d hours ago', '%d minutes ago', 'Just now'])
+	public function dateRelative($value, $value_compare = 'now', $timezone = null)
 	{
-		$d1 = new \DateTime($value);
-		$d2 = new \DateTime($value_compare ? $value_compare : 'now');
-		$diff = $d1->diff($d2); /* @var $diff \DateInterval */
-
-		$s = '';
-		switch(true)
+		if($timezone)
 		{
-			case $diff->days > 365:
-				$s = $d1->format($format[0]);
-				break;
-			case $diff->days > 7:
-				$s = $d1->format($format[1]);
-				break;
-			case $diff->days > 2 || $diff->days >= 2 && $diff->h == 0 && $diff->i == 0
-				&& $diff->s == 0: // days ago
-				$s = sprintf($format[2], $diff->days);
-				break;
-			case $diff->days == 1: // yesterday
-				$s = $format[3];
-				break;
-			case $diff->days == 0 && $diff->h > 0: // hour(s)
-				if($diff->h == 1)
-				{
-					$format[4] = str_replace('hours', 'hour', $format[4]);
-				}
-				$s = sprintf($format[4], $diff->h);
-				break;
-			case $diff->days == 0 && $diff->h == 0 && $diff->i > 1: // minutes
-				$s = sprintf($format[5], $diff->i);
-				break;
-			default: // now
-				$s = $format[6];
-				break;
+			date_default_timezone_set($timezone);
 		}
 
-		return $s;
+		$d1 = new \DateTime($value);
+		$d2 = new \DateTime($value_compare);
+
+		$diff = $d2->getTimestamp() - $d1->getTimestamp();
+		if($diff < 0)
+		{
+			'';
+		}
+		$d = ($d1->diff($d2))->days;
+		$dd = ((new \DateTime($d1->format('m/d/Y')))
+			->diff(new \DateTime($d2->format('m/d/Y'))))->days;
+
+		if($dd > $d)
+		{
+			$d = $dd;
+		}
+
+		if($d == 0 || $diff < 86400)
+		{
+			switch(true)
+			{
+				case $diff < 60: // now
+					return 'Just now';
+					break;
+
+				case $diff < 120: // 1 min ago
+					return '1 minute ago';
+					break;
+
+				case $diff < 3600: // mins ago
+					return sprintf('%d minutes ago', $diff / 60);
+					break;
+
+				case $diff < 7200: // 1 hr ago
+					return '1 hour ago';
+					break;
+
+				case $diff < 86400: // hrs ago
+					return sprintf('%d hours ago', $diff / 3600);
+					break;
+			}
+		}
+
+		switch(true)
+		{
+			case $d == 1: // yesterday
+				return 'Yesterday';
+				break;
+
+			case $d < 7: // days ago
+				return sprintf('%d days ago', $d);
+				break;
+
+			case $d < 31 && $d: // weeks ago
+				$v = $d / 7;
+				if($v < 2)
+				{
+					return '1 week ago';
+				}
+				else if($v >= 4)
+				{
+					return '1 month ago';
+				}
+				return sprintf('%d weeks ago', $v);
+				break;
+
+			case $d < 365: // months ago
+				$v = $d / 30;
+				if($v < 2)
+				{
+					return '1 month ago';
+				}
+				else if($v >= 12)
+				{
+					return '1 year ago';
+				}
+				return sprintf('%d months ago', $v);
+				break;
+
+			default:
+				$v = $d / 365;
+				if($v < 2)
+				{
+					return '1 year ago';
+				}
+				return sprintf('%d years ago', $v);
+				break;
+		}
 	}
 
 	/**
