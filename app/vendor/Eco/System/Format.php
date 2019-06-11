@@ -121,16 +121,10 @@ class Format extends \Eco\Factory
 	 *
 	 * @param string $value (ex: "05/22/2019 10:55:00")
 	 * @param string $value_compare
-	 * @param mixed $timezone (optional, ex: "America/New_York")
 	 * @return string
 	 */
-	public function dateRelative($value, $value_compare = 'now', $timezone = null)
+	public function dateRelative($value, $value_compare = 'now')
 	{
-		if($timezone)
-		{
-			date_default_timezone_set($timezone);
-		}
-
 		$d1 = new \DateTime($value);
 		$d2 = new \DateTime($value_compare);
 
