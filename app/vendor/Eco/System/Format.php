@@ -269,11 +269,12 @@ class Format extends \Eco\Factory
 	 * Format time elapsed
 	 *
 	 * @param float $time_elapsed (ex: microtime(true) - $start)
-	 * @param array $characters (ex: [' years', ' weeks', ' days', ' hours', ' minutes', ' seconds'])
+	 * @param array $characters
+	 * @param bool $auto_trim_singulars
 	 * @return string (ex: '1h 35m 55s')
 	 */
-	public function timeElapsed($time_elapsed,
-		array $characters = ['y', 'w', 'd', 'h', 'm', 's'])
+	public function timeElapsed($time_elapsed, array $characters = ['%d years', '%d weeks',
+		'%d days', '%d hours', '%d minutes', '%d seconds'], $auto_trim_singulars = true)
 	{
 		$b = [
 			$characters[0] => $time_elapsed / 31556926 % 12,
@@ -289,7 +290,13 @@ class Format extends \Eco\Factory
 		{
 			if($v > 0)
 			{
-				$out[] = $v . $k;
+				if($auto_trim_singulars && $v == 1)
+				{
+					$k = rtrim($k, 's');
+				}
+
+				$out[] = sprintf($k, $v);
+				#$out[] = $v . $k;
 			}
 		}
 

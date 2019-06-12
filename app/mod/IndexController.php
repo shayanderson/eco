@@ -10,6 +10,7 @@ class IndexController
 	public function home()
 	{
 		view('home', [
+			'phpver' => phpversion(),
 			'status' => 'ready'
 		]);
 	}

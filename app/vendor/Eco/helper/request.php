@@ -33,7 +33,7 @@ function get($key)
  */
 function get_has($key)
 {
-	return System::request()->get_has($key);
+	return System::request()->getHas($key);
 }
 
 /**
@@ -55,7 +55,7 @@ function input($key)
  */
 function input_has($key)
 {
-	return System::request()->input_has($key);
+	return System::request()->inputHas($key);
 }
 
 /**
@@ -77,5 +77,5 @@ function post($key)
  */
 function post_has($key)
 {
-	return System::request()->post_has($key);
+	return System::request()->postHas($key);
 }

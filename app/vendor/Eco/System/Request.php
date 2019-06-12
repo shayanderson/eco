@@ -52,7 +52,7 @@ class Request extends \Eco\Factory
 	 */
 	public function cookie($key)
 	{
-		return $this->cookie_has($key) ? $_COOKIE[$key] : null;
+		return $this->cookieHas($key) ? $_COOKIE[$key] : null;
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Request extends \Eco\Factory
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function cookie_has($key)
+	public function cookieHas($key)
 	{
 		return isset($_COOKIE[$key]);
 	}
@@ -73,12 +73,12 @@ class Request extends \Eco\Factory
 	 * @param string $path
 	 * @return boolean (true on actual cookie send expired)
 	 */
-	public function cookie_remove($key, $path = '/')
+	public function cookieRemove($key, $path = '/')
 	{
-		if($this->cookie_has($key))
+		if($this->cookieHas($key))
 		{
 			unset($_COOKIE[$key]);
-			return $this->cookie_set($key, null, time() - 3600, $path); // expire cookie to remove
+			return $this->cookieSet($key, null, time() - 3600, $path); // expire cookie to remove
 		}
 
 		return false;
@@ -96,7 +96,7 @@ class Request extends \Eco\Factory
 	 * @param boolean $http_only (accessible only in HTTP protocol)
 	 * @return boolean (false on fail, true on send to client - unknown if client accepts cookie)
 	 */
-	public function cookie_set($name, $value, $expire = '+1 day', $path = '/', $domain = null,
+	public function cookieSet($name, $value, $expire = '+1 day', $path = '/', $domain = null,
 		$only_secure = false, $http_only = false)
 	{
 		if(headers_sent())
@@ -125,47 +125,54 @@ class Request extends \Eco\Factory
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function get_has($key)
+	public function getHas($key)
 	{
 		return isset($_GET[$key]);
 	}
 
 	/**
-	 * Request IP address getter
+	 * Header value getter
 	 *
+	 * @param string $name
 	 * @return string
 	 */
-	public function get_request_ip_address()
+	public function header($name)
 	{
-		return $this->request_server('REMOTE_ADDR');
+		return isset($this->headers()[$name]) ? $this->headers()[$name] : null;
 	}
 
 	/**
-	 * Request method getter
+	 * Headers getter
 	 *
-	 * @return string (ex: "PUT")
+	 * @staticvar type $h
+	 * @return array
 	 */
-	public function get_request_method()
+	public function headers()
 	{
-		return $this->request_server('REQUEST_METHOD');
-	}
+		static $h;
 
-	/**
-	 * Request URI getter
-	 *
-	 * @param boolean $query_string (include query string with URI)
-	 * @return string
-	 */
-	public function get_request_uri($query_string = true)
-	{
-		$uri = $this->request_server('REQUEST_URI');
-
-		if($query_string)
+		if($h === null)
 		{
-			return $uri;
+			if(!function_exists('getallheaders')) // non-Apache fix
+			{
+				function getallheaders()
+				{
+					$h = [];
+					foreach($_SERVER as $k => $v)
+					{
+						if(substr($k, 0, 5) === 'HTTP_')
+						{
+							$h[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ',
+								substr($k, 5)))))] = $v;
+						}
+					}
+					return $h;
+				}
+			}
+			$h = getallheaders();
 		}
 
-		return ($pos = strpos($uri, '?')) !== false ? substr($uri, 0, $pos) : $uri;
+		return $h;
 	}
 
 	/**
@@ -185,9 +192,19 @@ class Request extends \Eco\Factory
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function input_has($key)
+	public function inputHas($key)
 	{
 		return self::__input($key, true);
+	}
+
+	/**
+	 * Request IP address getter
+	 *
+	 * @return string
+	 */
+	public function ipAddress()
+	{
+		return $this->server('REMOTE_ADDR');
 	}
 
 	/**
@@ -195,9 +212,9 @@ class Request extends \Eco\Factory
 	 *
 	 * @return boolean
 	 */
-	public function is_request_post()
+	public function isPost()
 	{
-		return strtoupper($this->request_server('REQUEST_METHOD')) === 'POST';
+		return strtoupper($this->server('REQUEST_METHOD')) === 'POST';
 	}
 
 	/**
@@ -205,9 +222,19 @@ class Request extends \Eco\Factory
 	 *
 	 * @return boolean
 	 */
-	public function is_request_secure()
+	public function isSecure()
 	{
-		return strtoupper($this->request_server('HTTPS')) === 'ON';
+		return strtoupper($this->server('HTTPS')) === 'ON';
+	}
+
+	/**
+	 * Request method getter
+	 *
+	 * @return string (ex: "PUT")
+	 */
+	public function method()
+	{
+		return $this->server('REQUEST_METHOD');
 	}
 
 	/**
@@ -227,7 +254,7 @@ class Request extends \Eco\Factory
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function post_has($key)
+	public function postHas($key)
 	{
 		return isset($_POST[$key]);
 	}
@@ -238,7 +265,7 @@ class Request extends \Eco\Factory
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function request_server($key)
+	public function server($key)
 	{
 		return isset($_SERVER[$key]) ? $_SERVER[$key] : null;
 	}
@@ -249,8 +276,26 @@ class Request extends \Eco\Factory
 	 * @param string $key
 	 * @return boolean
 	 */
-	public function request_server_has($key)
+	public function serverHas($key)
 	{
 		return isset($_SERVER[$key]);
+	}
+
+	/**
+	 * Request URI getter
+	 *
+	 * @param boolean $query_string (include query string with URI)
+	 * @return string
+	 */
+	public function uri($query_string = true)
+	{
+		$uri = $this->server('REQUEST_URI');
+
+		if($query_string)
+		{
+			return $uri;
+		}
+
+		return ($pos = strpos($uri, '?')) !== false ? substr($uri, 0, $pos) : $uri;
 	}
 }

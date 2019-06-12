@@ -1,19 +1,21 @@
 ## Request Class
 The Request class is used to access request variables:
 - `cookie($key)` - cookie value getter
-- `cookie_has($key)` - cookie var exists
-- `cookie_remove($key, $path)` - remove cookie
-- `cookie_set($name, $value, $expire, [...])` - set cookie
+- `cookieHas($key)` - cookie var exists
+- `cookieRemove($key, $path)` - remove cookie
+- `cookieSet($name, $value, $expire, [...])` - set cookie
 - `get($key)` - GET var getter
-- `get_has($key)` - GET var exists
-- `get_request_ip_address()` - request IP address getter
-- `get_request_method()` - request method getter
-- `get_request_uri($query_string)` - request URI getter
+- `getHas($key)` - GET var exists
+- `header($name)` - header value getter
+- `headers()` - headers getter
 - `input($key)` - input var getter
-- `input_has($key)` - input var exists
-- `is_request_post()` - is POST request
-- `is_request_secure()` - is HTTPS request
+- `inputHas($key)` - input var exists
+- `ipAddress()` - request IP address getter
+- `isPost()` - is POST request
+- `isSecure()` - is HTTPS request
+- `method()` - request method getter
 - `post($key)` - POST var getter
-- `post_has($key)` - POST var exists
-- `request_server($key)` - SERVER var getter
-- `request_server_has($key)` - SERVER var exists
+- `postHas($key)` - POST var exists
+- `server($key)` - SERVER var getter
+- `serverHas($key)` - SERVER var exists
+- `uri($query_string)` - request URI getter

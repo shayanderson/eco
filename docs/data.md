@@ -26,7 +26,7 @@ The Format class formats data. The format methods are:
 - `dateTime($value, $format)` - default format set by `eco::format()->default_format_date_time`
 - `nameKey($value, $additional_allowed_chars)`
 - `time($value, $format)` - default format set by `eco::format()->default_format_time`
-- `timeElapsed($time_elapsed, $characters)`
+- `timeElapsed($time_elapsed, $characters, $auto_trim_singulars)`
 
 ### Validate Class
 The Validate class helps with data validation. The validate methods are:
