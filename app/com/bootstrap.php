@@ -21,11 +21,11 @@ eco::conf(PATH_CONF . 'eco.conf.php');
 // load helper functions (optional)
 require_once PATH_VENDOR . 'Eco/helper/eco.php';
 require_once PATH_VENDOR . 'Eco/helper/alias.php';
-require_once PATH_VENDOR . 'Eco/helper/factory.php';
+// require_once PATH_VENDOR . 'Eco/helper/factory.php';
 require_once PATH_VENDOR . 'Eco/helper/flash.php';
 require_once PATH_VENDOR . 'Eco/helper/redirect.php';
 require_once PATH_VENDOR . 'Eco/helper/request.php';
-require_once PATH_VENDOR . 'Eco/helper/view.php';
+// require_once PATH_VENDOR . 'Eco/helper/view.php';
 
 // load routes
 eco::route(require PATH_COM . 'route.php');

@@ -107,6 +107,28 @@ function stop()
 }
 
 /**
+ * Generate random token
+ *
+ * @param int $length (length returned in bytes)
+ * @return string
+ */
+function token($length = 32)
+{
+	$length = (int)$length;
+	if($length < 8)
+	{
+		$length = 8;
+	}
+
+	if(!function_exists('random_bytes'))
+	{
+		return bin2hex(openssl_random_pseudo_bytes($length));
+	}
+
+	return bin2hex(random_bytes($length));
+}
+
+/**
  * View helper function
  *
  * @param mixed $template

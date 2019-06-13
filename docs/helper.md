@@ -19,6 +19,7 @@ The core helper functions are mostly used to quickly access Eco methods (shortha
 - `service()` - `eco::service()` alias
 - `session_exists()` - determine if a PHP session exists
 - `stop()` - `eco::stop()` alias
+- `token($length)` - generate random token
 - `view($template, $view_params)` - `eco::view()` alias
 
 

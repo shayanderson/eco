@@ -134,11 +134,13 @@ class Request extends \Eco\Factory
 	 * Header value getter
 	 *
 	 * @param string $name
+	 * @param bool $auto_trim
 	 * @return string
 	 */
-	public function header($name)
+	public function header($name, $auto_trim = true)
 	{
-		return isset($this->headers()[$name]) ? $this->headers()[$name] : null;
+		return isset($this->headers()[$name])
+			? ( $auto_trim ? trim($this->headers()[$name]) : $this->headers()[$name] ) : null;
 	}
 
 	/**
