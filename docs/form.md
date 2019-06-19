@@ -315,3 +315,14 @@ Or the shorthand version:
 	if($this->form->username !== false) ...
 ```
 > Form field data can be set using the `setValue($id, $value)` method
+
+### CSRF Tokens
+CSRF tokens are used in forms when enabled in configuration settings. There is also a configuration setting to use single-use tokens. If a form token fails, the `isSubmitted()` method (and `isValid()` method) will return `false`; other than that the form submission will fail silently. You can use a token fail callback to warn the end-user, example:
+```php
+// set global callback in bootstrap
+\Eco\Form::$token_fail_callback = function(\Eco\Form $form) {
+	// $form_id = $form->getId(); // access form object example
+	// warn user
+	eco::flash()->set('error', 'CSRF token error, please refresh the page and try again');
+};
+```

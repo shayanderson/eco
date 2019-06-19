@@ -250,6 +250,18 @@ class Format extends \Eco\Factory
 	}
 
 	/**
+	 * Format password using safe one-way hashing algorithm (use with Validate::password())
+	 *
+	 * @param string $password
+	 * @param int $algorithm
+	 * @return string
+	 */
+	public function password($password, $algorithm = \PASSWORD_BCRYPT)
+	{
+		return password_hash($password, $algorithm);
+	}
+
+	/**
 	 * Format name key, ex: 'Test data here.' => 'test-data-here'
 	 *
 	 * @param mixed $value
@@ -268,22 +280,39 @@ class Format extends \Eco\Factory
 	/**
 	 * Format time elapsed
 	 *
-	 * @param float $time_elapsed (ex: microtime(true) - $start)
+	 * @param float $time_elapsed (seconds, ex: microtime(true) - $start)
 	 * @param array $characters
 	 * @param bool $auto_trim_singulars
 	 * @return string (ex: '1h 35m 55s')
 	 */
 	public function timeElapsed($time_elapsed, array $characters = ['%d years', '%d weeks',
-		'%d days', '%d hours', '%d minutes', '%d seconds'], $auto_trim_singulars = true)
+		'%d days', '%d hours', '%d minutes', '%.4f seconds', '%g seconds'],
+		$auto_trim_singulars = true)
 	{
+		$time_elapsed = (float)$time_elapsed;
+		if(!$time_elapsed)
+		{
+			return sprintf($characters[6], $time_elapsed);
+		}
+
+		$x = floor($time_elapsed);
+		$f = $time_elapsed - $x;
 		$b = [
 			$characters[0] => $time_elapsed / 31556926 % 12,
 			$characters[1] => $time_elapsed / 604800 % 52,
 			$characters[2] => $time_elapsed / 86400 % 7,
 			$characters[3] => $time_elapsed / 3600 % 24,
-			$characters[4] => $time_elapsed / 60 % 60,
-			$characters[5] => $time_elapsed % 60,
+			$characters[4] => $time_elapsed / 60 % 60
 		];
+
+		if($f)
+		{
+			$b[$characters[5]] = $time_elapsed % 60 + $f;
+		}
+		else
+		{
+			$b[$characters[6]] = $time_elapsed % 60;
+		}
 
 		$out = [];
 		foreach($b as $k => $v)
@@ -296,7 +325,6 @@ class Format extends \Eco\Factory
 				}
 
 				$out[] = sprintf($k, $v);
-				#$out[] = $v . $k;
 			}
 		}
 

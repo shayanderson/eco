@@ -25,6 +25,7 @@ The Format class formats data. The format methods are:
 - `dateRelative($value, $value_compare, $format)`
 - `dateTime($value, $format)` - default format set by `eco::format()->default_format_date_time`
 - `nameKey($value, $additional_allowed_chars)`
+- `password($password, $algorithm)`
 - `time($value, $format)` - default format set by `eco::format()->default_format_time`
 - `timeElapsed($time_elapsed, $characters, $auto_trim_singulars)`
 
@@ -37,11 +38,13 @@ The Validate class helps with data validation. The validate methods are:
 - `containsNot($value, $contain_not_value, $case_insensitive)`
 - `decimal($value)`
 - `email($value)`
+- `hash($internal_string, $input_string)`
 - `ipv4($value)`
 - `ipv6($value)`
 - `length($value, $min, $max, $exact)`
 - `match($value, $compare_value, $case_insensitive)`
 - `numeric($value)`
+- `password($password, $hash)`
 - `regexPattern($pattern)`
 - `required($value)`
 - `url($value)`

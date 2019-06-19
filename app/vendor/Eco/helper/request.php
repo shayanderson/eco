@@ -37,28 +37,6 @@ function get_has($key)
 }
 
 /**
- * Request input variable value getter
- *
- * @param string $key
- * @return mixed
- */
-function input($key)
-{
-	return System::request()->input($key);
-}
-
-/**
- * Request input variable exists flag getter
- *
- * @param string $key
- * @return boolean
- */
-function input_has($key)
-{
-	return System::request()->inputHas($key);
-}
-
-/**
  * Request POST variable value getter
  *
  * @param string $key

@@ -8,8 +8,6 @@
  * @link <https://github.com/shayanderson/eco>
  */
 
-use Eco\System;
-
 /**
  * View helper functions
  */
@@ -105,21 +103,6 @@ function decorate($decorator, $value, callable $filter = null, $is_indexed_array
 }
 
 /**
- * Prevent page cache
- *
- * @return void
- */
-function header_no_cache()
-{
-	if(!headers_sent())
-	{
-		header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-		header('Cache-Control: post-check=0, pre-check=0', false);
-		header('Pragma: no-cache');
-	}
-}
-
-/**
  * Prepare safe HTML output string
  *
  * @param string $value
@@ -128,37 +111,4 @@ function header_no_cache()
 function html($value)
 {
 	return filter_var(htmlspecialchars($value), FILTER_SANITIZE_STRING);
-}
-
-/**
- * Data (string|array) to display JSON (with header content-type) and exit application
- *
- * @param mixed $data (string|array)
- * @param mixed $value (optional, use with single key/value)
- * @return void
- */
-function json($data, $value = null)
-{
-	if(!headers_sent())
-	{
-		header('Content-Type: application/json');
-	}
-
-	if(func_num_args() === 2) // single key/value
-	{
-		$data = [$data => $value];
-	}
-
-	if(is_object($data))
-	{
-		$data = (array)$data;
-	}
-
-	if(is_array($data))
-	{
-		$data = json_encode($data);
-	}
-
-	echo $data;
-	System::stop();
 }

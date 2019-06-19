@@ -2,14 +2,11 @@
 The Request class is used to access request variables:
 - `cookie($key)` - cookie value getter
 - `cookieHas($key)` - cookie var exists
-- `cookieRemove($key, $path)` - remove cookie
-- `cookieSet($name, $value, $expire, [...])` - set cookie
 - `get($key)` - GET var getter
 - `getHas($key)` - GET var exists
 - `header($name)` - header value getter
 - `headers()` - headers getter
-- `input($key)` - input var getter
-- `inputHas($key)` - input var exists
+- `input($convert_html_entities)` - input data getter
 - `ipAddress()` - request IP address getter
 - `isPost()` - is POST request
 - `isSecure()` - is HTTPS request

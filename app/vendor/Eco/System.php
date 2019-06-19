@@ -16,6 +16,7 @@ use Eco\System\Format;
 use Eco\System\Keep;
 use Eco\System\Log;
 use Eco\System\Request;
+use Eco\System\Response;
 use Eco\System\Router;
 use Eco\System\Session;
 use Eco\System\Session\Flash;
@@ -463,22 +464,6 @@ class System
 	}
 
 	/**
-	* Redirect method
-	*
-	* @param string $location
-	* @param boolean $use_301
-	* @return void
-	*/
-	public static function redirect($location, $use_301 = false)
-	{
-		if(!headers_sent())
-		{
-			header('Location: ' . $location, true, $use_301 ? 301 : null);
-			self::stop();
-		}
-	}
-
-	/**
 	 * Request object getter
 	 *
 	 * @return \Eco\System\Request
@@ -486,6 +471,16 @@ class System
 	final public static function request()
 	{
 		return Request::getInstance();
+	}
+
+	/**
+	 * Response object getter
+	 *
+	 * @return \Eco\System\Response
+	 */
+	final public static function response()
+	{
+		return Response::getInstance();
 	}
 
 	/**

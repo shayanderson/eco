@@ -19,6 +19,11 @@ use Eco\System\Validate;
 class Form
 {
 	/**
+	 * Session key for token
+	 */
+	const SESSION_KEY_TOKEN = '__ECO__.tok';
+
+	/**
 	 * Form field types
 	 */
 	const
@@ -77,6 +82,13 @@ class Form
 	private $__id;
 
 	/**
+	 * Token fail callback used status
+	 *
+	 * @var bool
+	 */
+	private $__token_fail_callback_used = false;
+
+	/**
 	 * Global default attributes
 	 *
 	 * @var array (ex: ['class' => 'form-control'])
@@ -111,6 +123,13 @@ class Form
 	 * @var callable
 	 */
 	public static $default_value_filter;
+
+	/**
+	 * Callable used when token fail triggered, ex: callback(\Eco\Form $form)
+	 *
+	 * @var callable
+	 */
+	public static $token_fail_callback;
 
 	/**
 	 * Init
@@ -823,7 +842,38 @@ class Form
 	 */
 	public function getFormIdField()
 	{
-		return $this->__isFormId() ? '<input type="hidden" name="' . $this->__form_id . '">' : '';
+		if($this->__isFormId())
+		{
+			$h = '<input type="hidden" name="' . $this->__form_id . '">';
+
+			if(System::conf()->_eco->request->form_tokens)
+			{
+				$token = null;
+				if(System::session()->has(self::SESSION_KEY_TOKEN))
+				{
+					if(System::conf()->_eco->request->form_tokens_single_use) // re-gen
+					{
+						$token = null;
+					}
+					else
+					{
+						$token = System::session()->get(self::SESSION_KEY_TOKEN);
+					}
+				}
+
+				if(!$token) // gen
+				{
+					$token = token(32); // gen
+					System::session()->set(self::SESSION_KEY_TOKEN, $token);
+				}
+
+				$h .= '<input type="hidden" name="__tok__" value="' . $token . '">';
+			}
+
+			return $h;
+		}
+
+		return '';
 	}
 
 	/**
@@ -891,7 +941,25 @@ class Form
 	 */
 	public function isSubmitted()
 	{
-		return $this->__isFormId() ? $this->hasData($this->__form_id) : !empty($this->__data);
+		$is_sub = $this->__isFormId() ? $this->hasData($this->__form_id) : !empty($this->__data);
+
+		if($is_sub && System::conf()->_eco->request->form_tokens)
+		{
+			if(!System::session()->has(self::SESSION_KEY_TOKEN)
+				|| !System::validate()->hash(System::session()->get(self::SESSION_KEY_TOKEN),
+					@$this->__data['__tok__']))
+			{
+				$is_sub = false;
+				if(self::$token_fail_callback && !$this->__token_fail_callback_used)
+				{
+					$f = &self::$token_fail_callback;
+					$f($this);
+					$this->__token_fail_callback_used = true;
+				}
+			}
+		}
+
+		return $is_sub;
 	}
 
 	/**

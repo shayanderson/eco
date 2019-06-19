@@ -2,11 +2,11 @@
 Eco offers a collection of helper functions that can be used to quickly access widely used methods and other functionality. The available helper functions are divided into files that can be included as desired:
 - [**core**](#core-helper-functions) - `PATH_VENDOR . 'Eco/helper/eco.php'`
 - [**alias**](#alias-helper-functions) - `PATH_VENDOR . 'Eco/helper/alias.php'`
-- [**factory**](#factory-helper-functions) - `PATH_VENDOR . 'Eco/helper/factory.php'`
+- [**factory**](#factory-helper-functions) - `PATH_VENDOR . 'Eco/helper/factory.php'` *(optional, not included by default)*
 - [**flash**](#flash-helper-functions) - `PATH_VENDOR . 'Eco/helper/flash.php'`
-- [**redirect**](#redirect-helper-function) - `PATH_VENDOR . 'Eco/helper/redirect.php'`
 - [**request**](#request-helper-functions) - `PATH_VENDOR . 'Eco/helper/request.php'`
-- [**view**](#view-helper-functions) - `PATH_VENDOR . 'Eco/helper/view.php'`
+- [**response**](#response-helper-functions) - `PATH_VENDOR . 'Eco/helper/response.php'`
+- [**view**](#view-helper-functions) - `PATH_VENDOR . 'Eco/helper/view.php'` *(optional, not included by default)*
 
 
 ### Core Helper Functions
@@ -172,26 +172,23 @@ eco::flash()->template('error', [template]);
 ```
 
 
-### Redirect Helper Function
-The `redirect($location, $use_301)` function is a `eco::redirect()` alias.
-
-
 ### Request Helper Functions
 The request helper functions are:
 - `get($key)` - `eco::request()->get()` alias
 - `get_has($key)` - `eco::request()->getHas()` alias
-- `input($key)` - `eco::request()->input()` alias
-- `input_has($key)` - `eco::request()->inputHas()` alias
 - `post($key)` - `eco::request()->post()` alias
 - `post_has($key)` - `eco::request()->postHas()` alias
+
+
+### Response Helper Functions
+The response helper functions are:
+- `redirect($location, $use_301)` - `eco::response()->redirect()` alias
 
 
 ### View Helper Functions
 The view helper functions are:
 - `decorate($decorator, $value, $filter, $is_indexed_array)` - easily decorate arrays and objects
-- `header_no_cache()` - send no cache header
 - `html($value)` - prepare safe HTML output string
-- `json($data, $value)` - easily output JSON response with content-type header
 
 Here is are `decorate()` function examples:
 ```php
@@ -228,14 +225,4 @@ $str = decorate('{$key}: {$value}<br />', ['one', 'two'], null, true);
 // outputs:
 // 0: one
 // 1: two
-```
-
-Here is a `json()` function example:
-```php
-json(['id' => 5, 'name' => 'some name']);
-// outputs: {"id":5,"name":"some name"}
-
-// or use as single key/value example:
-json('id', 5);
-// outputs: {"id":5}
 ```

@@ -11,6 +11,10 @@
 use Eco\System;
 
 /**
+ * Response helper functions
+ */
+
+/**
  * Redirect helper
  *
  * @param string $location
@@ -19,5 +23,5 @@ use Eco\System;
  */
 function redirect($location, $use_301 = false)
 {
-	System::redirect($location, $use_301);
+	System::response()->redirect($location, $use_301);
 }

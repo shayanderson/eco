@@ -217,6 +217,16 @@ return [
 		'request' => [
 
 			/**
+			 * Auto use form CSRF tokens
+			 */
+			'form_tokens' => false,
+
+			/**
+			 * Use single-use form CSRF tokens
+			 */
+			'form_tokens_single_use' => false,
+
+			/**
 			 * Auto sanitize request params GET and POST (default: true)
 			 */
 			'sanitize_params' => true

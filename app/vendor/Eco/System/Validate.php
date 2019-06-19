@@ -109,6 +109,41 @@ class Validate extends \Eco\Factory
 	}
 
 	/**
+	 * Validate private/public hashes
+	 *
+	 * @param type $internal_string
+	 * @param type $input_string
+	 * @return bool
+	 */
+	public function hash($internal_string, $input_string)
+	{
+		if(!is_string($internal_string) || !is_string($input_string))
+		{
+			return false;
+		}
+
+		if(!function_exists('hash_equals'))
+		{
+			function hash_equals($h1, $h2)
+			{
+				if(strlen($h1) !== strlen($h2))
+				{
+					return false;
+				}
+				$r = $h1 ^ $h2;
+				$x = 0;
+				for($i = strlen($r) - 1; $i >= 0; $i--)
+				{
+					$x |= ord($r[$i]);
+				}
+				return !$x;
+			}
+		}
+
+		return hash_equals($internal_string, $input_string);
+	}
+
+	/**
 	 * Validate value is IPv4 address
 	 *
 	 * @param mixed $value
@@ -188,6 +223,18 @@ class Validate extends \Eco\Factory
 	public function numeric($value)
 	{
 		return preg_match('/^[0-9]+$/', $value);
+	}
+
+	/**
+	 * Validate password (use with Format::password())
+	 *
+	 * @param string $password
+	 * @param string $hash
+	 * @return bool
+	 */
+	public function password($password, $hash)
+	{
+		return password_verify($password, $hash);
 	}
 
 	/**

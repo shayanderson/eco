@@ -134,6 +134,16 @@ function request()
 }
 
 /**
+ * Response helper
+ *
+ * @return \Eco\System\Response
+ */
+function response()
+{
+	return System::response();
+}
+
+/**
  * Session helper
  *
  * @param string $key

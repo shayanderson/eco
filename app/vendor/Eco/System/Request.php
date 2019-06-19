@@ -17,34 +17,6 @@ namespace Eco\System;
 class Request extends \Eco\Factory
 {
 	/**
-	 * Input var getter or check if exists
-	 *
-	 * @staticvar array $vars
-	 * @staticvar boolean $is_init
-	 * @param string $key
-	 * @param bool $is_has
-	 * @return mixed
-	 */
-	private static function __input($key, $is_has = false)
-	{
-		static $vars = [];
-		static $is_init = false;
-
-		if(!$is_init)
-		{
-			parse_str(file_get_contents('php://input'), $vars);
-			$is_init = true;
-		}
-
-		if($is_has)
-		{
-			return isset($vars[$key]);
-		}
-
-		return isset($vars[$key]) ? $vars[$key] : null;
-	}
-
-	/**
 	 * Request cookie value getters
 	 *
 	 * @param string $key
@@ -64,48 +36,6 @@ class Request extends \Eco\Factory
 	public function cookieHas($key)
 	{
 		return isset($_COOKIE[$key]);
-	}
-
-	/**
-	 * Remove cookie
-	 *
-	 * @param string $key
-	 * @param string $path
-	 * @return boolean (true on actual cookie send expired)
-	 */
-	public function cookieRemove($key, $path = '/')
-	{
-		if($this->cookieHas($key))
-		{
-			unset($_COOKIE[$key]);
-			return $this->cookieSet($key, null, time() - 3600, $path); // expire cookie to remove
-		}
-
-		return false;
-	}
-
-	/**
-	 * Cookie sender (see more docs at <http://www.php.net/manual/en/function.setcookie.php>)
-	 *
-	 * @param string $name (ex: 'my_id')
-	 * @param mixed $value (cookie value)
-	 * @param mixed $expire (string ex: '+30 days', int ex: time() + 3600 (expire in 1 hour))
-	 * @param string $path (optional, ex: '/account' (only accessible in /account directory + subdirectories))
-	 * @param string $domain (optional, ex: 'www.example.com' (accessible in www subdomain + higher))
-	 * @param boolean $only_secure (transmit cookie only over HTTPS connection)
-	 * @param boolean $http_only (accessible only in HTTP protocol)
-	 * @return boolean (false on fail, true on send to client - unknown if client accepts cookie)
-	 */
-	public function cookieSet($name, $value, $expire = '+1 day', $path = '/', $domain = null,
-		$only_secure = false, $http_only = false)
-	{
-		if(headers_sent())
-		{
-			return false;
-		}
-
-		return setcookie($name, $value, is_string($expire) ? strtotime($expire) : $expire, $path,
-			$domain, $only_secure, $http_only);
 	}
 
 	/**
@@ -178,25 +108,19 @@ class Request extends \Eco\Factory
 	}
 
 	/**
-	 * Request input variable value getter
+	 * Input data getter
 	 *
-	 * @param string $key
-	 * @return mixed
+	 * @param bool $convert_html_entities
+	 * @return string
 	 */
-	public function input($key)
+	public function input($convert_html_entities = true)
 	{
-		return self::__input($key);
-	}
+		if($convert_html_entities)
+		{
+			return html_entity_decode(file_get_contents('php://input'));
+		}
 
-	/**
-	 * Request input variable exists flag getter
-	 *
-	 * @param string $key
-	 * @return boolean
-	 */
-	public function inputHas($key)
-	{
-		return self::__input($key, true);
+		return file_get_contents('php://input');
 	}
 
 	/**
