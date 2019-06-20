@@ -70,7 +70,7 @@ class Request extends \Eco\Factory
 	public function header($name, $auto_trim = true)
 	{
 		return isset($this->headers()[$name])
-			? ( $auto_trim ? trim($this->headers()[$name]) : $this->headers()[$name] ) : null;
+			? ( $auto_trim ? trim($this->headers()[$name]) : $this->headers()[$name] ) : '';
 	}
 
 	/**
