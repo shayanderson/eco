@@ -1,9 +1,10 @@
 ## Response Class
 The Response class is used to access response methods:
 - `cookieRemove($key, $path)` - remove cookie
-- `cookieSet($name, $value, $expire, [...])` - set cookie
+- `cookieSet($key, $value, $expire, [...])` - set cookie
 - `header($key, $value)` - HTTP header setter
 - `headerNoCache()` - send no cache headers
+- `headerRemove($key)` - Remove HTTP header
 - `json($data, $value)` - output JSON response with content-type header
 - `redirect($location, $use_301)` - send redirect in response
 - `statusCode($code)` - send HTTP response status code

@@ -80,7 +80,7 @@ class Response extends \Eco\Factory
 	/**
 	 * Cookie sender (see more docs at <http://www.php.net/manual/en/function.setcookie.php>)
 	 *
-	 * @param string $name (ex: 'my_id')
+	 * @param string $key (ex: 'my_id')
 	 * @param mixed $value (cookie value)
 	 * @param mixed $expire (string ex: '+30 days', int ex: time() + 3600 (expire in 1 hour))
 	 * @param string $path (optional, ex: '/account' (only accessible in /account directory
@@ -90,7 +90,7 @@ class Response extends \Eco\Factory
 	 * @param boolean $http_only (accessible only in HTTP protocol)
 	 * @return boolean (false on fail, true on send to client - unknown if client accepts cookie)
 	 */
-	public function cookieSet($name, $value, $expire = '+1 day', $path = '/', $domain = null,
+	public function cookieSet($key, $value, $expire = '+1 day', $path = '/', $domain = null,
 		$only_secure = false, $http_only = false)
 	{
 		if(headers_sent())
@@ -98,7 +98,7 @@ class Response extends \Eco\Factory
 			return false;
 		}
 
-		return setcookie($name, $value, is_string($expire) ? strtotime($expire) : $expire, $path,
+		return setcookie($key, $value, is_string($expire) ? strtotime($expire) : $expire, $path,
 			$domain, $only_secure, $http_only);
 	}
 
@@ -107,6 +107,7 @@ class Response extends \Eco\Factory
 	 *
 	 * @param string $key (ex: "Content-Language")
 	 * @param string $value (ex: "en-US")
+	 * @return void
 	 */
 	public function header($key, $value)
 	{
@@ -129,6 +130,17 @@ class Response extends \Eco\Factory
 			header('Cache-Control: post-check=0, pre-check=0', false);
 			header('Pragma: no-cache');
 		}
+	}
+
+	/**
+	 * Remove HTTP header
+	 *
+	 * @param string $key (ex: "Content-Language")
+	 * @return void
+	 */
+	public function headerRemove($key)
+	{
+		header_remove($key);
 	}
 
 	/**
