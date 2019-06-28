@@ -11,6 +11,7 @@ The Request class is used to access request variables:
 - `isPost()` - is POST request
 - `isSecure()` - is HTTPS request
 - `method()` - request method getter
+- `port()` - request port getter
 - `post($key)` - POST var getter
 - `postHas($key)` - POST var exists
 - `server($key)` - SERVER var getter

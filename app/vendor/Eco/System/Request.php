@@ -164,6 +164,16 @@ class Request extends \Eco\Factory
 	}
 
 	/**
+	 * Request port getter
+	 *
+	 * @return int
+	 */
+	public function port()
+	{
+		return (int)$this->server('SERVER_PORT');
+	}
+
+	/**
 	 * Request POST variable value getter
 	 *
 	 * @param string $key
