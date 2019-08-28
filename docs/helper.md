@@ -176,8 +176,21 @@ eco::flash()->template('error', [template]);
 The request helper functions are:
 - `get($key)` - `eco::request()->get()` alias
 - `get_has($key)` - `eco::request()->getHas()` alias
+- `get_map(array $map)` - get request variable name to callable map function
 - `post($key)` - `eco::request()->post()` alias
 - `post_has($key)` - `eco::request()->postHas()` alias
+
+Here is a `get_map()` function example:
+```php
+get_map([
+	'a' => function(){
+		echo 'a called'; // when "?a"
+	},
+	'b' => function($value){
+		echo 'b called, value: ' . $value; // when "?b=value"
+	}
+]);
+```
 
 
 ### Response Helper Functions

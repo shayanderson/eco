@@ -54,6 +54,21 @@ db('remote')->count('table');
 ```
 > The database connection object `Eco\System\Database\Connection` will automatically reconnect to the database server when a `server has gone away` error is thrown - it will only try to reconnect once per query.
 
+A connection can be setup without auto selecting a database, example usage:
+```php
+'connection' => [
+	1 => [
+		'host' => 'localhost',
+		'database' => null, // no DB selected
+		'user' => 'dbuser',
+		'password' => 'userpwd',
+		'log' => false
+```
+Then commands can be executed like:
+```php
+db()->query('CREATE DATABASE test');
+db()->database('test'); // select DB
+```
 
 ### Logging
 When query logging is enabled for a connection (see [connection settings](#database-connections)) it will retain the last 1,000 executed statements. The log can be used for debugging, for example:

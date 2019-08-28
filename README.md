@@ -1,7 +1,7 @@
 # Eco Framework
 Eco is a PHP Framework for PHP 5.5+
 
-Latest release [v1.7.2](https://github.com/shayanderson/eco/releases/latest)
+Latest release [v1.7.3](https://github.com/shayanderson/eco/releases/latest)
 
 Install example:
 ```
@@ -262,7 +262,7 @@ Setup custom log handler example:
 eco::log()->setHandler(function($message, $level, $category, $info){
 	// if sending message to database
     // do no send if database connection error, example:
-    // if(substr($message, 0, 15) == 'SQLSTATE[HY000]')
+    // if(substr($message, 0, 17) == 'SQLSTATE[HY000] [')
     // {
     // 	return false;
     // }

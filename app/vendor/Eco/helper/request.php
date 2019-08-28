@@ -37,6 +37,23 @@ function get_has($key)
 }
 
 /**
+ * Request GET variable name to callable map
+ *
+ * @param array $map ([get_var_name => callable, ...])
+ * @return void
+ */
+function get_map(array $map)
+{
+	foreach($map as $k => $v)
+	{
+		if(get_has($k))
+		{
+			$v(get($k));
+		}
+	}
+}
+
+/**
  * Request POST variable value getter
  *
  * @param string $key
