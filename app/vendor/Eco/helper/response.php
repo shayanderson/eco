@@ -15,6 +15,20 @@ use Eco\System;
  */
 
 /**
+ * Enable output buffering, call callback, disable output buffering, return contents of output buffer
+ *
+ * @param callable $callback
+ * @param bool $is_clean (deletes current output buffer)
+ * @return null|string
+ */
+function buffer(callable $callback, $is_clean = true)
+{
+	ob_start();
+	$callback();
+	return $is_clean ? ob_get_clean() : ob_get_flush();
+}
+
+/**
  * Redirect helper
  *
  * @param string $location

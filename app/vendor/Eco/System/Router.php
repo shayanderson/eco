@@ -197,43 +197,61 @@ class Router extends \Eco\Factory
 	 */
 	private function __classRouteLoader($class_method)
 	{
-		$loader = explode('::', $class_method);
+		$load = $class = null;
 
-		if(count($loader) === 2) // static method
+		if(!is_array($class_method))
 		{
-			if($this->__classLoad($loader[0], 'Route loader'))
+			$loader = explode('::', $class_method);
+
+			if(count($loader) === 2) // static method
 			{
-				$loader[0] = $this->__classFormat($loader[0]);
-
-				if(method_exists($loader[0], $loader[1])
-					&& (new \ReflectionMethod("{$loader[0]}::{$loader[1]}"))->isStatic())
+				if($this->__classLoad($loader[0], 'Route loader'))
 				{
-					$load = $loader[0]::{$loader[1]}(); // call method loader
+					$loader[0] = $this->__classFormat($loader[0]);
+					$loader[1] = rtrim($loader[1], '()'); // strip '()' in 'method()'
 
-					if(is_array($load)) // array loader
+					if(method_exists($loader[0], $loader[1])
+						&& (new \ReflectionMethod("{$loader[0]}::{$loader[1]}"))->isStatic())
 					{
-						foreach($load as &$v)
-						{
-							if(strpos($v, '->') === false) // add class name
-							{
-								$v = $loader[0] . '->' . $v;
-							}
-						}
-
-						$this->addRoute($load);
+						$load = $loader[0]::{$loader[1]}(); // call method loader
+						$class = $loader[0];
+					}
+					else
+					{
+						System::error('Route loader class \'' . $loader[0] . '\' method \''
+							. $loader[1] . '\' does not exist or is not a static method', null, 'Eco');
 					}
 				}
-				else
-				{
-					System::error('Route loader class \'' . $loader[0] . '\' method \''
-						. $loader[1] . '\' does not exist or is not a static method', null, 'Eco');
-				}
+			}
+			else
+			{
+				System::error('Invalid route loader method call for \'' . $class_method . '\','
+					. ' must be a static method call', null, 'Eco');
 			}
 		}
-		else
+		else // handle route array outside of class loader method
 		{
-			System::error('Invalid route loader method call for \'' . $class_method . '\','
-				. ' must be a static method call', null, 'Eco');
+			$class = isset($class_method[0]) ? $class_method[0] : null;
+			if(!$class)
+			{
+				System::error('Invalid route loader method call, controller class must be first'
+					. ' in array and is not found', null, 'Eco');
+			}
+			array_shift($class_method); // rm class name
+			$load = &$class_method;
+		}
+
+		if(is_array($load)) // array loader
+		{
+			foreach($load as &$v)
+			{
+				if(strpos($v, '->') === false) // add class name
+				{
+					$v = $class . '->' . $v;
+				}
+			}
+
+			$this->addRoute($load);
 		}
 	}
 
@@ -372,7 +390,8 @@ class Router extends \Eco\Factory
 			return;
 		}
 
-		if(is_array($action)) // route/param callbacks
+		// route/param callbacks, do not accept: route => [route => method, ...]
+		if(is_array($action) && !(array_keys($action) !== $action))
 		{
 			$parts = $action;
 			$action = null;

@@ -195,7 +195,19 @@ get_map([
 
 ### Response Helper Functions
 The response helper functions are:
+- `buffer(callable $callback, $is_clean)` - output buffering helper
 - `redirect($location, $use_301)` - `eco::response()->redirect()` alias
+
+Here is a `buffer()` function example:
+```php
+// in controller: buffer output
+view()->phpinfo = buffer(function(){
+    phpinfo();
+});
+// in view: output buffer contents
+<h1>PHP Info</h1>
+<?=$phpinfo?>
+```
 
 
 ### View Helper Functions

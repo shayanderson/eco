@@ -1,7 +1,7 @@
 # Eco Framework
 Eco is a PHP Framework for PHP 5.5+
 
-Latest release [v1.7.3](https://github.com/shayanderson/eco/releases/latest)
+Latest release [v1.7.4](https://github.com/shayanderson/eco/releases/latest)
 
 Install example:
 ```
@@ -59,9 +59,10 @@ function auth() { /* do something */ }
 eco::route('account/secure',
 	['AccountController->secure', 'auth', function() { /* invoked */ }]);
 ```
+> Warning: Route Callbacks do not work with [Dynamic Route Setting](#dynamic-route-setting)
 
 #### Dynamic Route Setting
-Dynamic route setters can be used for larger applications that have many routes, for example:
+Dynamic route setters can be used for larger applications that have many routes (lazy load routes), for example:
 ```php
 eco::route('account*', 'AccountController::getRoutes()');
 ```
@@ -78,6 +79,14 @@ class AccountController
         ];
     }
 }
+```
+Dynamic route setting (lazy load routes) can also be set directly as an array, example:
+```php
+eco::route('account*', [
+    'AccountController', // the class name must be first (index:0)
+    'account/login' => 'login',
+    'account/logout' => 'logout'
+]);
 ```
 
 #### CLI Routing
@@ -266,7 +275,7 @@ eco::log()->setHandler(function($message, $level, $category, $info){
     // {
     // 	return false;
     // }
-    
+
     // handle custom logging
     return true; // handled
 });

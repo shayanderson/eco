@@ -76,7 +76,7 @@ class Request extends \Eco\Factory
 	/**
 	 * Headers getter
 	 *
-	 * @staticvar type $h
+	 * @staticvar array $h
 	 * @return array
 	 */
 	public function headers()
