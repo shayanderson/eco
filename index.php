@@ -25,10 +25,10 @@ try
 catch(Throwable $th)
 {
 	// handle application error
-	eco::error('Error occurred: ' . $th->getMessage());
+	eco::error($th->getMessage());
 }
 catch(Exception $ex)
 {
 	// handle application exception
-	eco::error('Exception occurred: ' . $ex->getMessage());
+	eco::error($ex->getMessage());
 }

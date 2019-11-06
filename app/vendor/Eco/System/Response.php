@@ -60,6 +60,25 @@ class Response extends \Eco\Factory
 	const CODE_VERSION_NOT_SUPPORTED = 505;
 
 	/**
+	 * Response content types
+	 */
+	const TYPE_APPLICATION_JAVASCRIPT = 'application/javascript';
+	const TYPE_APPLICATION_JSON = 'application/json';
+	const TYPE_APPLICATION_OCTET_STREAM = 'application/octet-stream';
+	const TYPE_APPLICATION_PDF = 'application/pdf';
+	const TYPE_APPLICATION_X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded';
+	const TYPE_APPLICATION_XML = 'application/xml';
+	const TYPE_APPLICATION_ZIP = 'application/zip';
+	const TYPE_IMAGE_GIF = 'image/gif';
+	const TYPE_IMAGE_JPEG = 'image/jpeg';
+	const TYPE_IMAGE_PNG = 'image/png';
+	const TYPE_TEXT_CSS = 'text/css';
+	const TYPE_TEXT_CSV = 'text/csv';
+	const TYPE_TEXT_HTML = 'text/html';
+	const TYPE_TEXT_PLAIN = 'text/plain';
+	const TYPE_TEXT_XML = 'text/xml';
+
+	/**
 	 * Remove cookie
 	 *
 	 * @param string $key
@@ -152,10 +171,7 @@ class Response extends \Eco\Factory
 	 */
 	public function json($data, $value = null)
 	{
-		if(!headers_sent())
-		{
-			header('Content-Type: application/json');
-		}
+		$this->type(self::TYPE_APPLICATION_JSON);
 
 		if(func_num_args() === 2) // single key/value
 		{
@@ -204,5 +220,16 @@ class Response extends \Eco\Factory
 		{
 			\http_response_code($code);
 		}
+	}
+
+	/**
+	 * Content-type setter
+	 *
+	 * @param string $type
+	 * @return void
+	 */
+	public function type($type)
+	{
+		$this->header('Content-Type', $type);
 	}
 }
