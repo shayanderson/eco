@@ -443,3 +443,12 @@ A table can be truncated using:
 ```php
 db()->truncate('table');
 ```
+
+#### Set Timezone
+The timezone can be set using:
+```php
+// set before executing queries as connection init command
+\Eco\System\Database\Connection::setTimezone('US/Eastern');
+// or after executing queries
+db()->query('SET time_zone = "US/Eastern"');
+```

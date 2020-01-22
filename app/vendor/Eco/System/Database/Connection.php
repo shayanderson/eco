@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2019 Shay Anderson <https://www.shayanderson.com>
+ * @copyright 2015-2020 Shay Anderson <https://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -85,6 +85,13 @@ class Connection
 	 * @var \PDO
 	 */
 	private $__pdo;
+
+	/**
+	 * Timezone
+	 *
+	 * @var string
+	 */
+	private static $__tz;
 
 	/**
 	 * User
@@ -182,8 +189,13 @@ class Connection
 		{
 			try
 			{
+				$opts = [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+				if(self::$__tz)
+				{
+					$opts[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET time_zone=\'' . self::$__tz . '\';';
+				}
 				$this->__pdo = new \PDO("mysql:host={$this->__host};dbname={$this->__database}",
-					$this->__user, $this->__password, [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+					$this->__user, $this->__password, $opts);
 			}
 			catch(\PDOException $ex)
 			{
@@ -290,5 +302,16 @@ class Connection
 		}
 
 		return false;
+	}
+
+	/**
+	 * Timezone setter for connection init command
+	 *
+	 * @param string $timezone
+	 * @return void
+	 */
+	public static function setTimezone($timezone)
+	{
+		self::$__tz = $timezone;
 	}
 }

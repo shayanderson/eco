@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2019 Shay Anderson <https://www.shayanderson.com>
+ * @copyright 2015-2020 Shay Anderson <https://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -35,7 +35,7 @@ function decorate($decorator, $value, callable $filter = null, $is_indexed_array
 			{
 				if($filter)
 				{
-					$v = $filter($v);
+					$v = $filter($v, $k);
 				}
 
 				$s .= str_replace('{$key}', $k, str_replace('{$value}', $v, $decorator));
