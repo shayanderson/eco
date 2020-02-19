@@ -243,7 +243,7 @@ class Connection
 	public function query($query, $params = null, $return_type = null, $is_reconnect = false)
 	{
 		if(( $return_type !== null && $return_type === self::QUERY_RETURN_TYPE_ROWS )
-				|| preg_match('/^\s*(select|show|describe|optimize|pragma|repair)/i', $query))
+				|| preg_match('/^[\s\(]*(select|show|describe|optimize|pragma|repair)/i', $query))
 		{
 			$return_type = self::QUERY_RETURN_TYPE_ROWS;
 
