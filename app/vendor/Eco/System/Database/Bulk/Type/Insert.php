@@ -168,6 +168,11 @@ class Insert extends \Eco\System\Database\Bulk\Type
 	 */
 	public function execute()
 	{
+		if(!$this->bind_values)
+		{
+			System::error(__METHOD__ . ': no data has been added', null, 'Eco');
+		}
+
 		return $this->connection->query(( $this->is_replace ? 'REPLACE' : 'INSERT' )
 			. ( $this->is_ignore ? ' IGNORE' : null ) . ' INTO ' . $this->table
 			. '(' . implode(',', $this->columns) . ') VALUES ' . implode(',', $this->sql),
