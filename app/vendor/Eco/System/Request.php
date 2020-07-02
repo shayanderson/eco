@@ -102,6 +102,12 @@ class Request extends \Eco\Factory
 				}
 			}
 			$h = getallheaders();
+			// convert all to lower case
+			foreach($h as $k => $v)
+			{
+				unset($h[$k]);
+				$h[strtolower($k)] = $v;
+			}
 		}
 
 		return $h;
