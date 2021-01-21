@@ -6,6 +6,11 @@
 
 RewriteEngine On
 
+# default PHP filter settings
+# https://www.php.net/manual/en/filter.filters.sanitize.php
+php_value filter.default full_special_chars
+php_value filter.default_flags 0
+
 # force www. (optional)
 # RewriteCond %{HTTP_HOST} !^www\.
 # RewriteRule ^(.*)$ http://www\.%{HTTP_HOST}/$1 [R=301,L]

@@ -3,7 +3,7 @@
  * Eco is a PHP Framework for PHP 5.5+
  *
  * @package Eco
- * @copyright 2015-2020 Shay Anderson <https://www.shayanderson.com>
+ * @copyright 2015-2021 Shay Anderson <https://www.shayanderson.com>
  * @license MIT License <https://github.com/shayanderson/eco/blob/master/LICENSE>
  * @link <https://github.com/shayanderson/eco>
  */
@@ -178,12 +178,7 @@ class Response extends \Eco\Factory
 			$data = [$data => $value];
 		}
 
-		if(is_object($data))
-		{
-			$data = (array)$data;
-		}
-
-		if(is_array($data))
+		if(is_object($data) || is_array($data))
 		{
 			$data = json_encode($data);
 		}
