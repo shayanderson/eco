@@ -248,16 +248,20 @@ class Http
 			curl_setopt($ch, CURLOPT_SSLVERSION, 6); // force TLS v1.2
 		}
 
-		if($this->verify_peer && $this->cert_file_path)
+		if($this->verify_peer)
 		{
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-			curl_setopt($ch, CURLOPT_CAINFO, $this->cert_file_path);
 		}
 		else
 		{
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		}
+
+		if($this->cert_file_path)
+		{
+			curl_setopt($ch, CURLOPT_CAINFO, $this->cert_file_path);
 		}
 
 		if($this->cookie)
